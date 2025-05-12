@@ -1,0 +1,226 @@
+/* Notificaciones ordenes de servicio */
+#notification-list .dropdown-item {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 300px;
+  /* ajusta al diseño de tu navbar */
+  display: inline-block;
+  vertical-align: top;
+}
+
+.dropdown-item.leida {
+  background-color: #f8f9fa;
+  font-weight: normal;
+  color: #6c757d;
+}
+
+.dropdown-item.no-leida {
+  background-color: #ffffff;
+  font-weight: 600;
+  color: #343a40;
+}
+
+/* Notificaciones */
+.notification-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  padding: 5px 8px;
+  border-radius: 50%;
+  background: #ff6b6b;
+  color: white;
+  font-size: 12px;
+}
+
+.dropdown-menu-lg {
+  max-width: 300px;
+  min-width: 280px;
+}
+
+.notification-item {
+  white-space: normal;
+  padding: 10px;
+}
+
+/*fin estilos notificaciones*/
+
+/**estilos para notificaciones de mantenimientos*/
+#maintenance-list .dropdown-item {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 300px;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.dropdown-item.leida-mantenimiento {
+  background-color: #f8f9fa;
+  font-weight: normal;
+  color: #6c757d;
+}
+
+.dropdown-item.no-leida-mantenimiento {
+  background-color: #ffffff;
+  font-weight: 600;
+  color: #343a40;
+}
+
+.maintenance-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  padding: 5px 8px;
+  border-radius: 50%;
+  background: #ffc107;
+  color: black;
+  font-size: 12px;
+}
+
+.dropdown-menu-lg {
+  max-width: 300px;
+  min-width: 280px;
+}
+
+.maintenance-item {
+  white-space: normal;
+  padding: 10px;
+}
+
+/* Ajustar tamaño del SweetAlert */
+.swal-wide {
+  width: 600px !important;
+}
+
+/* Mejorar apariencia de las notificaciones */
+.notification-item {
+  transition: background-color 0.3s;
+  border-left: 3px solid transparent;
+}
+
+.notification-item:hover {
+  background-color: #f8f9fa;
+  border-left-color: #007bff;
+}
+
+/* Estilos para notificaciones leídas/no leídas */
+.notification-unread {
+  border-left: 3px solid #007bff;
+  background-color: #f8f9fa;
+  font-weight: 500;
+}
+
+.notification-read {
+  border-left: 3px solid #6c757d;
+  color: #6c757d;
+}
+
+.notification-unread:hover {
+  background-color: #e9ecef;
+}
+
+/* Estilo para el badge de contador */
+.navbar-badge {
+  font-size: 0.6rem;
+  font-weight: 300;
+  padding: 2px 4px;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+/**
+     * Navbar
+     */
+
+/* Modo claro (por defecto) */
+.navbar {
+  background-color: #f8f9fa; /* Fondo claro para el modo claro */
+  padding: 0.5rem 1rem; /* Menor altura */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+}
+
+.navbar-nav {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-nav .nav-item {
+  margin-left: 15px; /* Menos espaciado entre los elementos */
+}
+
+.navbar-nav .nav-link {
+  font-size: 1rem;
+  padding: 0.5rem 1rem; /* Reducido para una altura más baja */
+  color: #343a40; /* Color oscuro para el texto */
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover {
+  color: #3498db; /* Azul al pasar el mouse */
+  transform: scale(1.05); /* Efecto de aumento */
+}
+
+.navbar-badge {
+  background-color: #f39c12; /* Color del badge */
+  font-size: 0.85rem;
+}
+
+.dropdown-menu {
+  border-radius: 5px; /* Bordes ligeramente redondeados */
+  background-color: #ffffff; /* Fondo blanco en modo claro */
+  border: none;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-item {
+  font-size: 1rem;
+  padding: 10px 15px;
+  color: #343a40; /* Texto oscuro */
+  transition: background-color 0.2s ease;
+}
+
+.dropdown-item:hover {
+  background-color: #3498db; /* Fondo azul al pasar el mouse */
+  color: white;
+}
+
+.dropdown-header {
+  color: #343a40; /* Título de notificaciones oscuro */
+}
+
+/* Modo oscuro */
+body.dark-mode .navbar {
+  background-color: #212529; /* Fondo oscuro */
+}
+
+body.dark-mode .navbar-nav .nav-link {
+  color: #e1e1e1; /* Texto claro en el modo oscuro */
+}
+
+body.dark-mode .navbar-nav .nav-link:hover {
+  color: #3498db; /* Azul al pasar el mouse en modo oscuro */
+}
+
+body.dark-mode .dropdown-menu {
+  background-color: #343a40; /* Fondo oscuro para las notificaciones */
+}
+
+body.dark-mode .dropdown-item {
+  color: #ccc; /* Texto claro en modo oscuro */
+}
+
+body.dark-mode .dropdown-item:hover {
+  background-color: #2c3e50; /* Fondo aún más oscuro para hover */
+  color: white;
+}
+
+body.dark-mode .dropdown-header {
+  color: #fff; /* Texto blanco para el encabezado de notificaciones */
+}
+
+body.dark-mode .navbar-badge {
+  background-color: #f39c12; /* Badge en modo oscuro */
+}
+
+
