@@ -1,7 +1,7 @@
 <?php
-include('app/config.php');
+include('App/config.php');
 #include('app/views/layout/sesion.php');
-include('app/views/layout/parte1.php');
+include('App/views/layout/parte1.php');
 
 ?>
 <style>
