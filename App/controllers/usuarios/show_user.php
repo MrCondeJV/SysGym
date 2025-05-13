@@ -1,5 +1,7 @@
-<?php
+ <?php
 include('../../config.php');
+
+$id_usuario = $_POST['id_usuario'] ?? '';
 
 if (isset($_GET['id']) && !empty($_GET['id'])) {
     $id_usuario_get = $_GET['id'];

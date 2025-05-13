@@ -438,13 +438,13 @@ if (!isset($_SESSION['sesion_usuario'])) {
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="<?php echo $URL; ?>usuarios/create.php" class="nav-link">
+                                    <a href="<?php echo $URL; ?>App/views/usuarios/create.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Crear Usuario</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="<?php echo $URL; ?>usuarios/create.php" class="nav-link">
+                                    <a href="<?php echo $URL; ?>App/views/usuarios/inactive.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Usuarios Inhabilitados</p>
                                     </a>

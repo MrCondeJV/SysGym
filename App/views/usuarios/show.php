@@ -12,13 +12,18 @@ include('../../controllers/usuarios/show_user.php');
         <div class="container-fluid">
             <div class="row mb-4">
                 <div class="col-sm-12 text-center">
-                    <div class="p-4 rounded shadow-lg" style="background: linear-gradient(90deg, #ffcc00, #ff9900); color: #fff; font-family: 'Arial', sans-serif;">
-                        <h1 class="m-0 text-uppercase font-weight-bold" style="font-size: 2rem;">
-                            <i class="fas fa-user-circle fa-lg"></i> Datos del Usuario
+                    <div class="p-4 rounded shadow-lg" style="background: linear-gradient(90deg,rgb(19, 108, 182),rgb(11, 191, 251)); color: #fff; font-family: 'Arial', sans-serif;">
+                        <h1 class="m-0 text-uppercase font-weight-bold" style="font-size: 2.5rem; letter-spacing: 2px;">
+                            <i class="fas fa-user-circle fa-lg"></i> Información del Usuario
                         </h1>
-                        <p class="mt-2 font-italic" style="font-size: 1.2rem;">
-                            <i class="fas fa-info-circle"></i> Consulta detallada de la información del usuario registrado
+                        <p class="mt-3 font-italic" style="font-size: 1.3rem; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);">
+                            <i class="fas fa-info-circle"></i> Consulta detallada de los datos registrados
                         </p>
+                        <div class="mt-3">
+                            <span class="badge badge-light text-dark p-2" style="font-size: 1rem; border-radius: 20px;">
+                                <i class="fas fa-calendar-alt"></i> Última actualización: <?= date('d/m/Y'); ?>
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -29,7 +34,7 @@ include('../../controllers/usuarios/show_user.php');
         <div class="container-fluid">
             <div class="row justify-content-center">
                 <div class="col-lg-10 col-md-12">
-                    <div class="card card-warning">
+                    <div class="card card-primary">
                         <div class="card-header text-center">
                             <h3 class="card-title" style="font-family: 'Arial', sans-serif; font-size: 1.5rem;">
                                 <i class="fas fa-info-circle"></i> Información del Usuario

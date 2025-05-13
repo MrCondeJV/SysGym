@@ -13,9 +13,9 @@ document.querySelectorAll('.btn-eliminar').forEach(button => {
         }).then((result) => {
             if (result.isConfirmed) {
                 const formData = new FormData();
-                formData.append('id_usuario', id);
+                formData.append('id', id);
 
-                fetch('../app/controllers/usuarios/delete_user.php', {
+                fetch('../../controllers/usuarios/delete_user.php', {
                     method: 'POST',
                     body: formData
                 })
