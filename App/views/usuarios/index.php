@@ -2,7 +2,7 @@
 include('../../config.php');
 //include('../layout/sesion.php');
 include('../layout/parte1.php');
-//include('../app/controllers/usuarios/listado_user.php');
+include('../../controllers/usuarios/list_user.php');
 ?>
 
 <!-- Content Wrapper. Contains page content -->
@@ -40,8 +40,8 @@ include('../layout/parte1.php');
                                     <thead>
                                         <tr>
                                             <th class="align-middle" style="width: 10%;">Nro</th>
-                                            <th class="align-middle" style="width: 30%;">Nombre Relacionado</th>
-                                            <th class="align-middle" style="width: 15%;">Tipo</th>
+                                            <th class="align-middle" style="width: 30%;">Nombres</th>
+                                            <th class="align-middle" style="width: 15%;">Apellidos</th>
                                             <th class="align-middle" style="width: 25%;">Usuario</th>
                                             <th class="align-middle" style="width: 15%;">Rol</th>
                                             <th class="align-middle" style="width: 20%;">Acciones</th>
@@ -51,13 +51,13 @@ include('../layout/parte1.php');
                                         <?php
                                         $contador = 0;
                                         foreach ($usuarios_datos as $usuarios_dato) {
-                                            $id_usuario = $usuarios_dato['UsuarioID']; ?>
+                                            $id_usuario = $usuarios_dato['id_usuario']; ?>
                                             <tr id="row-<?php echo $id_usuario; ?>">
                                                 <td class="align-middle"><?php echo ++$contador; ?></td>
-                                                <td class="align-middle text-truncate" style="max-width: 250px;"><?php echo $usuarios_dato['NombreRelacionado']; ?></td>
-                                                <td class="align-middle"><?php echo $usuarios_dato['TipoRelacionado']; ?></td>
-                                                <td class="align-middle text-truncate" style="max-width: 200px;"><?php echo $usuarios_dato['NombreUsuario']; ?></td>
-                                                <td class="align-middle"><?php echo $usuarios_dato['RolNombre']; ?></td>
+                                                <td class="align-middle text-truncate" style="max-width: 250px;"><?php echo $usuarios_dato['nombres']; ?></td>
+                                                <td class="align-middle"><?php echo $usuarios_dato['apellidos']; ?></td>
+                                                <td class="align-middle text-truncate" style="max-width: 200px;"><?php echo $usuarios_dato['nombre_usuario']; ?></td>
+                                                <td class="align-middle"><?php echo $usuarios_dato['rol']; ?></td>
                                                 <td class="align-middle">
                                                     <div class="btn-group">
                                                         <a href="show.php?id=<?php echo $id_usuario; ?>" class="btn btn-info btn-sm">

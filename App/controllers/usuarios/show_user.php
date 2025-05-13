@@ -1,36 +1,25 @@
 <?php
-include ('../app/config.php');
+include('../../config.php');
 
 if (isset($_GET['id']) && !empty($_GET['id'])) {
     $id_usuario_get = $_GET['id'];
 
-    // Consulta para obtener los datos del usuario con empleado, cliente y rol
+    // Consulta para obtener los datos del usuario con los campos requeridos
     $sql_usuario = "
         SELECT 
-            us.id AS id_usuario, 
-            us.rol_id AS rol_actual_usuario,
-            us.nombreusuario AS nombre_usuario, 
-            rol.nombre AS nombre_rol,
-            CASE 
-                WHEN emp.ID IS NOT NULL THEN emp.nombre
-                WHEN cli.ID IS NOT NULL THEN 
-                    CASE 
-                        WHEN cli.RazonSocial IS NOT NULL AND cli.RazonSocial <> '' 
-                        THEN cli.RazonSocial 
-                        ELSE CONCAT(cli.Nombres, ' ', cli.Apellidos) 
-                    END
-                ELSE 'Sin asignar'
-            END AS nombre_relacionado,
-            CASE 
-                WHEN emp.ID IS NOT NULL THEN 'Empleado'
-                WHEN cli.ID IS NOT NULL THEN 'Cliente'
-                ELSE 'Sin asignar'
-            END AS tipo_relacionado
-        FROM usuarios AS us
-        LEFT JOIN empleados AS emp ON us.empleadoid = emp.ID
-        LEFT JOIN clientes AS cli ON us.clienteid = cli.ID
-        LEFT JOIN roles AS rol ON us.rol_id = rol.id
-        WHERE us.id = :id_usuario
+            id_usuario,
+            nombres,
+            apellidos,
+            nombre_usuario,
+            contrasena_hash,
+            rol,
+            telefono,
+            correo_electronico,
+            ultimo_acceso,
+            estado,
+            creado_en
+        FROM usuariossistema
+        WHERE id_usuario = :id_usuario
     ";
 
     $query_usuario = $pdo->prepare($sql_usuario);
@@ -40,11 +29,16 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
 
     if ($usuario_datos) {
         $id_usuario = $usuario_datos['id_usuario'];
+        $nombres = $usuario_datos['nombres'];
+        $apellidos = $usuario_datos['apellidos'];
         $nombre_usuario = $usuario_datos['nombre_usuario'];
-        $nombre_relacionado = $usuario_datos['nombre_relacionado'];
-        $tipo_relacionado = $usuario_datos['tipo_relacionado'];
-        $rol_actual = $usuario_datos['rol_actual_usuario'];
-        $nombre_rol = $usuario_datos['nombre_rol'];
+        $contrasena_hash = $usuario_datos['contrasena_hash'];
+        $rol = $usuario_datos['rol'];
+        $telefono = $usuario_datos['telefono'];
+        $correo_electronico = $usuario_datos['correo_electronico'];
+        $ultimo_acceso = $usuario_datos['ultimo_acceso'];
+        $estado = $usuario_datos['estado'];
+        $creado_en = $usuario_datos['creado_en'];
     } else {
         echo "<script>alert('Usuario no encontrado'); window.location.href='index.php';</script>";
         exit();
