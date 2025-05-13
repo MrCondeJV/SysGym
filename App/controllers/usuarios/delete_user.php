@@ -4,7 +4,7 @@ include ('../../config.php');
 header('Content-Type: application/json');
 
 // Obtener el ID del usuario
-$id_usuario = $_POST['id_usuario'] ?? null;
+$id_usuario = $_POST['id'] ?? null;
 
 
 // Verificar que se haya pasado el ID del usuario
