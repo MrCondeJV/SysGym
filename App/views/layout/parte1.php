@@ -313,19 +313,19 @@ if (!isset($_SESSION['sesion_usuario'])) {
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="<?php echo $URL; ?>vehiculos/index.php" class="nav-link">
+                                    <a href="<?php echo $URL; ?>App/views/productos/index.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Listado de Productos</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="<?php echo $URL; ?>vehiculos/create.php" class="nav-link">
+                                    <a href="<?php echo $URL; ?>App/views/productos/create.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Agregar Producto</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="<?php echo $URL; ?>vehiculos/inactivos/index.php" class="nav-link">
+                                    <a href="<?php echo $URL; ?>App/views/productos/inactive.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Productos Inhabilitados</p>
                                     </a>
