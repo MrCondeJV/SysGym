@@ -2,7 +2,7 @@
 include('../../config.php');
 //include('../layout/sesion.php');
 include('../layout/parte1.php');
-include('../app/controllers/usuarios/show_user.php');
+include('../../controllers/usuarios/show_user.php');
 
 ?>
 
@@ -10,11 +10,16 @@ include('../app/controllers/usuarios/show_user.php');
 <div class="content-wrapper">
     <div class="content-header">
         <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1 class="m-0">
-                        <i class="fas fa-user"></i> Datos del Usuario
-                    </h1>
+            <div class="row mb-4">
+                <div class="col-sm-12 text-center">
+                    <div class="p-4 rounded shadow-lg" style="background: linear-gradient(90deg, #ffcc00, #ff9900); color: #fff; font-family: 'Arial', sans-serif;">
+                        <h1 class="m-0 text-uppercase font-weight-bold" style="font-size: 2rem;">
+                            <i class="fas fa-user-circle fa-lg"></i> Datos del Usuario
+                        </h1>
+                        <p class="mt-2 font-italic" style="font-size: 1.2rem;">
+                            <i class="fas fa-info-circle"></i> Consulta detallada de la información del usuario registrado
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -23,35 +28,67 @@ include('../app/controllers/usuarios/show_user.php');
     <div class="content">
         <div class="container-fluid">
             <div class="row justify-content-center">
-                <div class="col-lg-6 col-md-10">
+                <div class="col-lg-10 col-md-12">
                     <div class="card card-warning">
                         <div class="card-header text-center">
-                            <h3 class="card-title"><i class="fas fa-info-circle"></i> Información del Usuario</h3>
+                            <h3 class="card-title" style="font-family: 'Arial', sans-serif; font-size: 1.5rem;">
+                                <i class="fas fa-info-circle"></i> Información del Usuario
+                            </h3>
                         </div>
 
-                        <div class="card-body">
+                        <div class="card-body" style="font-family: 'Arial', sans-serif; font-size: 1rem;">
                             <div class="row">
-                                <div class="col-sm-12">
+                                <!-- ID Usuario -->
+                                <div class="col-md-4 col-sm-12 mb-3">
                                     <strong><i class="fas fa-id-badge"></i> ID Usuario:</strong>
-                                    <p><?php echo $id_usuario; ?></p>
+                                    <p class="text-muted"><?php echo $id_usuario; ?></p>
                                 </div>
-                                <div class="col-sm-12">
-                                    <strong><i class="fas fa-user"></i> Nombre Relacionado:</strong>
-                                    <p><?php echo $nombre_relacionado; ?></p>
+                                <!-- Nombres -->
+                                <div class="col-md-4 col-sm-12 mb-3">
+                                    <strong><i class="fas fa-user"></i> Nombres:</strong>
+                                    <p class="text-muted"><?php echo $nombres; ?></p>
                                 </div>
-                                <div class="col-sm-12">
-                                    <strong><i class="fas fa-user-circle"></i> Usuario:</strong>
-                                    <p><?php echo $nombre_usuario; ?></p>
+                                <!-- Apellidos -->
+                                <div class="col-md-4 col-sm-12 mb-3">
+                                    <strong><i class="fas fa-user-circle"></i> Apellidos:</strong>
+                                    <p class="text-muted"><?php echo $apellidos; ?></p>
                                 </div>
-                                <div class="col-sm-12">
-                                    <strong><i class="fas fa-user-tag"></i> Tipo Relacionado:</strong>
-                                    <p><?php echo $tipo_relacionado; ?></p>
+                                <!-- Nombre de Usuario -->
+                                <div class="col-md-4 col-sm-12 mb-3">
+                                    <strong><i class="fas fa-user-tag"></i> Nombre de Usuario:</strong>
+                                    <p class="text-muted"><?php echo $nombre_usuario; ?></p>
                                 </div>
-                                <div class="col-sm-12">
-                                    <strong><i class="fas fa-user-tag"></i> Rol:</strong>
-                                    <span class="badge badge-<?php echo getBadgeClass($nombre_rol); ?>">
-                                        <?php echo $nombre_rol; ?>
+                                <!-- Rol -->
+                                <div class="col-md-4 col-sm-12 mb-3">
+                                    <strong><i class="fas fa-user-shield"></i> Rol:</strong>
+                                    <span class="badge badge-<?php echo getBadgeClass($rol); ?>">
+                                        <?php echo $rol; ?>
                                     </span>
+                                </div>
+                                <!-- Teléfono -->
+                                <div class="col-md-4 col-sm-12 mb-3">
+                                    <strong><i class="fas fa-phone"></i> Teléfono:</strong>
+                                    <p class="text-muted"><?php echo $telefono; ?></p>
+                                </div>
+                                <!-- Correo Electrónico -->
+                                <div class="col-md-4 col-sm-12 mb-3">
+                                    <strong><i class="fas fa-envelope"></i> Correo Electrónico:</strong>
+                                    <p class="text-muted"><?php echo $correo_electronico; ?></p>
+                                </div>
+                                <!-- Último Acceso -->
+                                <div class="col-md-4 col-sm-12 mb-3">
+                                    <strong><i class="fas fa-clock"></i> Último Acceso:</strong>
+                                    <p class="text-muted"><?php echo $ultimo_acceso; ?></p>
+                                </div>
+                                <!-- Estado -->
+                                <div class="col-md-4 col-sm-12 mb-3">
+                                    <strong><i class="fas fa-toggle-on"></i> Estado:</strong>
+                                    <p class="text-muted"><?php echo $estado; ?></p>
+                                </div>
+                                <!-- Creado En -->
+                                <div class="col-md-4 col-sm-12 mb-3">
+                                    <strong><i class="fas fa-calendar-alt"></i> Creado En:</strong>
+                                    <p class="text-muted"><?php echo $creado_en; ?></p>
                                 </div>
                             </div>
                             <hr>
@@ -89,7 +126,6 @@ function getBadgeClass($rol)
     }
 }
 ?>
-
 
 <?php include('../layout/mensajes.php'); ?>
 <?php include('../layout/parte2.php'); ?>
