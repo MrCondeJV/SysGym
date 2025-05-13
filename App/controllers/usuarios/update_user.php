@@ -15,7 +15,6 @@ $id_usuario = $_GET['id'] ?? $_POST['id'] ?? null;
 if (!$id_usuario || !is_numeric($id_usuario)) {
     $_SESSION['mensaje'] = "No se especificó un usuario válido para editar." ;
     $_SESSION['icono'] = 'error';
-   
     header('Location: ' . $URL . 'App/views/usuarios/index.php');
     exit;
 }
