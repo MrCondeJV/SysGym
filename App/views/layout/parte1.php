@@ -392,25 +392,25 @@ if (!isset($_SESSION['sesion_usuario'])) {
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="<?php echo $URL; ?>rutas/index.php" class="nav-link">
+                                    <a href="<?php echo $URL; ?>App/views/proveedores/index.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Listado Proveedores</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="<?php echo $URL; ?>rutas/index.php" class="nav-link">
+                                    <a href="<?php echo $URL; ?>App/views/proveedores/create.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Agregar Proveedor</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="<?php echo $URL; ?>rutas/index.php" class="nav-link">
+                                    <a href="<?php echo $URL; ?>App/views/proveedores/index_compras.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Listado de Compras</p> <!-- Con reporte de todo lo comprado -->
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="<?php echo $URL; ?>rutas/index.php" class="nav-link">
+                                    <a href="<?php echo $URL; ?>App/views/proveedores/inactive.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Proveedores Inhabilitados</p>
                                     </a>
