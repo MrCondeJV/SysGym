@@ -44,7 +44,7 @@ try {
     die("Error al conectar a la base de datos. Por favor intente más tarde.");
 }
 
-$URL = "http://localhost/sisgym/";
+$URL = "http://localhost/SysGym/";
 
 date_default_timezone_set("America/Bogota");
 $fechaHora = date('Y-m-d H:i:s');
