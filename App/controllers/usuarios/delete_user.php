@@ -18,7 +18,7 @@ try {
     $pdo->beginTransaction();
 
     // Eliminar el usuario de la tabla usuarios
-    $sentencia = $pdo->prepare("DELETE FROM usuarios WHERE ID = :id_usuario");
+    $sentencia = $pdo->prepare("DELETE FROM usuariossistema WHERE id_usuario = :id_usuario");
     $sentencia->bindParam(':id_usuario', $id_usuario, PDO::PARAM_INT);
 
     if ($sentencia->execute()) {

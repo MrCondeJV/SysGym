@@ -1,17 +1,25 @@
 <?php
-include('../app/config.php');
-include('../layout/sesion.php');
+include('../../config.php');
 include('../layout/parte1.php');
-include('../app/controllers/usuarios/update_user.php');
-include('../app/controllers/roles/listado_de_roles.php');
+include('../../controllers/roles/list_rol.php');
+include('../../controllers/usuarios/update_user.php');
+//include('../layout/sesion.php');
 ?>
 
 <div class="content-wrapper">
     <div class="content-header">
         <div class="container-fluid">
-            <div class="row mb-2 justify-content-center">
-                <div class="col-sm-12">
-                    <h1 class="m-0">Actualizar usuario</h1>
+            <div class="row mb-4">
+                <div class="col-sm-12 text-center">
+                    <div class="p-4 rounded shadow-lg" style="background: linear-gradient(90deg,rgb(5, 99, 32),rgb(51, 240, 114)); color: #fff; font-family: 'Arial', sans-serif;">
+                        <h1 class="m-0 text-uppercase font-weight-bold" style="font-size: 2.5rem; letter-spacing: 2px;">
+                            <i class="fas fa-user-circle fa-lg"></i> Actualizar Usuario
+                        </h1>
+                        <p class="mt-3 font-italic" style="font-size: 1.3rem; text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);">
+                            <i class="fas fa-info-circle"></i> Actualizar Información del Usuario
+                        </p>
+                        
+                    </div>
                 </div>
             </div>
         </div>
@@ -31,65 +39,63 @@ include('../app/controllers/roles/listado_de_roles.php');
                             </div>
                         </div>
                         <div class="card-body">
-                            <form action="../app/controllers/usuarios/update.php" method="post">
-                                <input type="hidden" name="id_usuario" value="<?php echo $id_usuario; ?>">
+                            <form action="../../controllers/usuarios/update.php" method="post">
+                                <input type="hidden" name="id_usuario" value="<?= $id_usuario; ?>">
 
-                                <div class="form-group">
-                                    <label><?php echo htmlspecialchars($tipo_relacionado); ?> asociado</label>
-                                    <input type="text" class="form-control"
-                                        value="<?php echo htmlspecialchars($nombre_relacionado); ?>"
-                                        disabled>
-                                    <?php if ($tipo_relacionado === 'Cliente'): ?>
-                                        <small class="form-text text-muted">
-                                            Tipo: <?php echo htmlspecialchars($usuario_datos['cli_tipo'] ?? 'N/A'); ?>
-                                        </small>
-                                    <?php endif; ?>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="nombre_usuario">Nombre de Usuario</label>
-                                    <input type="text" name="nombre_usuario" class="form-control"
-                                        value="<?php echo htmlspecialchars($nombre_usuario); ?>" required>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="rol">Rol</label>
-                                    <select name="rol" class="form-control" required>
-                                        <?php foreach ($roles_datos as $rol_dato): ?>
-                                            <option value="<?php echo $rol_dato['id']; ?>"
-                                                <?php echo ($rol_dato['id'] == $rol_id) ? 'selected' : ''; ?>>
-                                                <?php echo htmlspecialchars($rol_dato['nombre']); ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>
-
-                                <div class="form-group position-relative">
-                                    <label for="password_user">Nueva Contraseña (Opcional)</label>
-                                    <div class="input-group">
-                                        <input type="password" name="password_user" class="form-control"
-                                            id="password_user">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-outline-secondary toggle-password" type="button"
-                                                data-target="#password_user">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                        </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-4">
+                                        <label for="nombres">Nombres</label>
+                                        <input type="text" name="nombres" class="form-control" placeholder="Escriba los nombres..." value="<?= htmlspecialchars($usuario['nombres'] ?? ''); ?>" required>
                                     </div>
-                                    <small class="form-text text-muted">Dejar en blanco para mantener la contraseña actual</small>
+                                    <div class="form-group col-md-4">
+                                        <label for="apellidos">Apellidos</label>
+                                        <input type="text" name="apellidos" class="form-control" placeholder="Escriba los apellidos..." value="<?= htmlspecialchars($usuario['apellidos'] ?? ''); ?>" required>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="nombre_usuario">Nombre de Usuario</label>
+                                        <input type="text" name="nombre_usuario" class="form-control" placeholder="Escriba el nombre de usuario..." value="<?= htmlspecialchars($usuario['nombre_usuario'] ?? ''); ?>" required>
+                                    </div>
                                 </div>
 
-                                <div class="form-group position-relative">
-                                    <label for="password_repeat">Repetir Contraseña</label>
-                                    <div class="input-group">
-                                        <input type="password" name="password_repeat" class="form-control"
-                                            id="password_repeat">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-outline-secondary toggle-password" type="button"
-                                                data-target="#password_repeat">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                        </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-4">
+                                        <label for="contrasena_hash">Contraseña</label>
+                                        <input type="password" name="contrasena_hash" class="form-control" id="contrasena_hash">
+                                        <small class="form-text text-muted">Dejar en blanco para mantener la contraseña actual.</small>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="contrasena_hash_repeat">Repita Contraseña</label>
+                                        <input type="password" name="contrasena_hash_repeat" class="form-control" id="contrasena_hash_repeat">
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="rol">Seleccione Rol</label>
+                                        <select name="rol" class="form-control" required>
+                                            <option value="">Seleccione...</option>
+                                            <?php foreach ($roles_datos as $roles_dato): ?>
+                                                <option value="<?= $roles_dato['id']; ?>" <?= ($roles_dato['id'] == ($usuario['rol'] ?? '')) ? 'selected' : ''; ?>>
+                                                    <?= htmlspecialchars($roles_dato['nombre']); ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group col-md-4">
+                                        <label for="telefono">Teléfono</label>
+                                        <input type="tel" name="telefono" class="form-control" placeholder="Escriba el teléfono..." pattern="[0-9]{10}" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')" value="<?= htmlspecialchars($usuario['telefono'] ?? ''); ?>" required>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="correo_electronico">Correo Electrónico</label>
+                                        <input type="email" name="correo_electronico" class="form-control" placeholder="Escriba el correo electrónico..." value="<?= htmlspecialchars($usuario['correo_electronico'] ?? ''); ?>" required>
+                                    </div>
+                                    <div class="form-group col-md-4">
+                                        <label for="estado">Estado</label>
+                                        <select name="estado" class="form-control" required>
+                                            <option value="activo" <?= ($usuario['estado'] ?? '') === 'activo' ? 'selected' : ''; ?>>Activo</option>
+                                            <option value="inactivo" <?= ($usuario['estado'] ?? '') === 'inactivo' ? 'selected' : ''; ?>>Inactivo</option>
+                                            <option value="suspendido" <?= ($usuario['estado'] ?? '') === 'suspendido' ? 'selected' : ''; ?>>Suspendido</option>
+                                        </select>
                                     </div>
                                 </div>
 
