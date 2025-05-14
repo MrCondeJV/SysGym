@@ -213,9 +213,21 @@ if (!isset($_SESSION['sesion_usuario'])) {
                                     </a>
                                 </li>
                                 <li class="nav-item">
+                                    <a href="<?php echo $URL; ?>App/views/clases/index_categorias.php" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Listado Categorias</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
                                     <a href="<?php echo $URL; ?>clientes/create.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Agregar Clase</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="<?php echo $URL; ?>App/views/clases/create_categoria.php" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Agregar Categorias</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
