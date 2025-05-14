@@ -240,6 +240,43 @@ if (!isset($_SESSION['sesion_usuario'])) {
                         </li>
                         <!--Fin Clases-->
 
+                        <!--Salas-->
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-building"></i>
+
+                                <p>
+                                    Salas
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="<?php echo $URL; ?>App/views/salas/index.php" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Listado de Salas</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="<?php echo $URL; ?>App/views/salas/create.php" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Agregar Sala</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="<?php echo $URL; ?>App/views/salas/inactive.php" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Salas Inhabilitadas</p>
+                                    </a>
+                                </li>
+                                
+                            </ul>
+                        </li>
+                        <!--Fin Clases-->
+
+
+
+
                          <!--Entrenadores-->
                          <li class="nav-item has-treeview">
                             <a href="#" class="nav-link">
