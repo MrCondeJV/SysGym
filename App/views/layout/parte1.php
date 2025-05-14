@@ -205,6 +205,7 @@ if (!isset($_SESSION['sesion_usuario'])) {
                                     <i class="right fas fa-angle-left"></i>
                                 </p>
                             </a>
+                         
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
                                     <a href="<?php echo $URL; ?>App/views/clases/index.php" class="nav-link">
@@ -219,7 +220,7 @@ if (!isset($_SESSION['sesion_usuario'])) {
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="<?php echo $URL; ?>clientes/create.php" class="nav-link">
+                                    <a href="<?php echo $URL; ?>App/views/clases/create.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Agregar Clase</p>
                                     </a>
@@ -231,19 +232,19 @@ if (!isset($_SESSION['sesion_usuario'])) {
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="<?php echo $URL; ?>rutas/create.php" class="nav-link">
+                                    <a href="<?php echo $URL; ?>App/views/clases/enroll.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Inscripción a Clases</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="<?php echo $URL; ?>rutas/create.php" class="nav-link">
+                                    <a href="<?php echo $URL; ?>App/views/clases/attendance.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Asistencia a Clases</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="<?php echo $URL; ?>clientes/inactivos/index.php" class="nav-link">
+                                    <a href="<?php echo $URL; ?>App/views/clases/inactive.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Clases Inhabilitadas</p>
                                     </a>
