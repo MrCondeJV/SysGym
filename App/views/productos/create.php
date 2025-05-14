@@ -2,7 +2,7 @@
 
 include('../../config.php');
 include('../layout/parte1.php');
-include('../../controllers/categorias/list_categorias.php');
+include('../../controllers/categorias_productos/list_categorias.php');
 include('../../controllers/proveedores/list_proveedores.php');
 //include('../layout/sesion.php');
 
