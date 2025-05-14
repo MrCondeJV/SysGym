@@ -108,9 +108,9 @@ include('../../controllers/categorias_clases/list_categorias_clases.php');
 
                                 <div class="form-row">
                                     <div class="form-group col-md-4">
-                                        <label for="duracion">Duración (minutos)</label>
+                                        <label for="duracion">Duracion (minutos)</label>
                                         <!-- Pre-llenar con la duración actual -->
-                                        <input type="number" name="duracion" class="form-control" placeholder="Ej: 60" value="<?= htmlspecialchars($clase_datos['duracion_minutos'] ?? ''); ?>" required min="1">
+                                        <input type="number" name="duracion_minutos" class="form-control" placeholder="Ej: 60" value="<?= htmlspecialchars($clase_datos['duracion_minutos'] ?? ''); ?>" required min="1">
                                     </div>
                                     <div class="form-group col-md-4">
                                         <label for="capacidad_maxima">Capacidad Máxima</label>
@@ -187,23 +187,7 @@ include('../../controllers/categorias_clases/list_categorias_clases.php');
     </div>
 </div>
 
-<script>
-    $(document).ready(function() {
-        // Script para mostrar/ocultar contraseñas - No necesario para este formulario de clase.
-        // Puedes eliminarlo si no se usa en esta página.
-        $('.toggle-password').on('click', function() {
-            const input = $($(this).data('target'));
-            const icon = $(this).find('i');
-            if (input.attr('type') === 'password') {
-                input.attr('type', 'text');
-                icon.removeClass('fa-eye').addClass('fa-eye-slash');
-            } else {
-                input.attr('type', 'password');
-                icon.removeClass('fa-eye-slash').addClass('fa-eye');
-            }
-        });
-    });
-</script>
+
 
 <?php include('../layout/mensajes.php'); ?>
 <?php include('../layout/parte2.php'); ?>

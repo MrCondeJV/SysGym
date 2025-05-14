@@ -40,6 +40,11 @@ include('../../controllers/clases/list_clases.php'); // Asumo que este script ca
 
                         <div class="card-body">
                             <div class="table-responsive">
+                                <div class="mb-3 text-right">
+                                    <a href="create.php" class="btn btn-success">
+                                        <i class="fas fa-plus-circle"></i> Nueva Clase
+                                    </a>
+                                </div>
                                 <table id="example1" class="table table-bordered table-striped table-sm text-center" style="table-layout: fixed; width: 100%;">
                                     <thead>
                                         <tr>

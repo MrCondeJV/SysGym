@@ -102,7 +102,7 @@ if (!isset($_SESSION['sesion_usuario'])) {
                         <img src="<?php
                                     echo !empty($_SESSION['foto_usuario'])
                                         ? $URL . '/' . $_SESSION['foto_usuario']
-                                        : $URL . '/uploads/empleados/default.png';
+                                        : $URL . '/img/empleados/default.png';
                                     ?>" class="img-circle elevation-2" alt="User Image"
                             style="width: 34px; height: 34px; object-fit: cover;">
                     </div>
@@ -540,7 +540,7 @@ if (!isset($_SESSION['sesion_usuario'])) {
             </div>
         </aside>
 
-        <script src="<?php echo $URL; ?>/layout/notificaciones.js"></script>
+        
 
         <style>
         .brand-link .logo-img {
