@@ -66,7 +66,7 @@ include('../../controllers/categorias_clases/list_categorias_clases.php');
                                                 <td class="align-middle">
                                                     <div class="btn-group">
                                                     
-                                                        <a href="update.php?id=<?php echo $id_categoria; ?>" class="btn btn-warning btn-sm">
+                                                        <a href="update_categoria.php?id=<?php echo $id_categoria; ?>" class="btn btn-warning btn-sm">
                                                             <i class="fas fa-edit"></i>
                                                         </a>
 
