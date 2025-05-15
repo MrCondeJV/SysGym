@@ -61,9 +61,9 @@ if (!isset($_SESSION['sesion_usuario'])) {
     <!-- jQuery (usa la CDN como respaldo) -->
     <script src="<?php echo $URL; ?>public/templates/AdminLTE-3.2.0/plugins/jquery/jquery.min.js"></script>
     <script>
-        if (typeof jQuery == 'undefined') {
-            document.write('<script src="https://code.jquery.com/jquery-3.6.0.min.js"><\/script>');
-        }
+    if (typeof jQuery == 'undefined') {
+        document.write('<script src="https://code.jquery.com/jquery-3.6.0.min.js"><\/script>');
+    }
     </script>
 
 
@@ -171,27 +171,52 @@ if (!isset($_SESSION['sesion_usuario'])) {
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="<?php echo $URL; ?>membresias/index.php" class="nav-link">
+                                    <a href="<?php echo $URL; ?>App/views/membresias/index.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Listado de Membresias</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="<?php echo $URL; ?>clientes/create.php" class="nav-link">
+                                    <a href="<?php echo $URL; ?>App/views/membresias/create.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Agregar Membresia</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="<?php echo $URL; ?>rutas/create.php" class="nav-link">
+                                    <a href="<?php echo $URL; ?>App/views/membresias/index.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Renovar Membresia</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="<?php echo $URL; ?>clientes/inactivos/index.php" class="nav-link">
+                                    <a href="<?php echo $URL; ?>App/views/membresias/index.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Membresias Inhabilitadas</p>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <!--Fin Membresias-->
+                        <!--Membresias-->
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-gem"></i>
+                                <p>
+                                    Tipos Membresias
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="<?php echo $URL; ?>App/views/membresias_tipo/index.php" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Listado Tipos Membresias</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="<?php echo $URL; ?>App/views/membresias_tipo/create.php" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Agregar Tipo Membresia</p>
                                     </a>
                                 </li>
                             </ul>
@@ -208,7 +233,7 @@ if (!isset($_SESSION['sesion_usuario'])) {
                                     <i class="right fas fa-angle-left"></i>
                                 </p>
                             </a>
-                             <ul class="nav nav-treeview">
+                            <ul class="nav nav-treeview">
                                 <li class="nav-item">
                                     <a href="<?php echo $URL; ?>App/views/clases/calendar.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
@@ -248,7 +273,7 @@ if (!isset($_SESSION['sesion_usuario'])) {
                                 </li>
                             </ul>
                         </li>
-                       
+
                         <!--Fin Clases-->
 
                         <!--Categorias Clases-->
@@ -263,13 +288,15 @@ if (!isset($_SESSION['sesion_usuario'])) {
 
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="<?php echo $URL; ?>App/views/categorias_clases/index_categorias.php" class="nav-link">
+                                    <a href="<?php echo $URL; ?>App/views/categorias_clases/index_categorias.php"
+                                        class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Listado Categorias</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="<?php echo $URL; ?>App/views/categorias_clases/create_categoria.php" class="nav-link">
+                                    <a href="<?php echo $URL; ?>App/views/categorias_clases/create_categoria.php"
+                                        class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Agregar Categorias</p>
                                     </a>
@@ -462,7 +489,7 @@ if (!isset($_SESSION['sesion_usuario'])) {
                         <!--Proveedores-->
                         <li class="nav-item has-treeview">
                             <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-money-bill-wave"></i>
+                                <i class="nav-icon fas fa-handshake"></i>
                                 <p>
                                     Proveedores
                                     <i class="right fas fa-angle-left"></i>
@@ -482,7 +509,8 @@ if (!isset($_SESSION['sesion_usuario'])) {
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="<?php echo $URL; ?>App/views/proveedores/index_compras.php" class="nav-link">
+                                    <a href="<?php echo $URL; ?>App/views/proveedores/index_compras.php"
+                                        class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Listado de Compras</p> <!-- Con reporte de todo lo comprado -->
                                     </a>
@@ -571,27 +599,27 @@ if (!isset($_SESSION['sesion_usuario'])) {
 
 
         <style>
-            .brand-link .logo-img {
-                width: 80px;
-                height: 80px;
-                transition: all 0.3s ease;
-            }
+        .brand-link .logo-img {
+            width: 80px;
+            height: 80px;
+            transition: all 0.3s ease;
+        }
 
-            .sidebar-mini.sidebar-collapse .brand-link {
-                flex-direction: column !important;
-                align-items: center !important;
-                justify-content: center;
-            }
+        .sidebar-mini.sidebar-collapse .brand-link {
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: center;
+        }
 
-            .sidebar-mini.sidebar-collapse .brand-link .logo-img {
-                width: 40px;
-                height: 40px;
-                margin-bottom: 0.5rem;
-            }
+        .sidebar-mini.sidebar-collapse .brand-link .logo-img {
+            width: 40px;
+            height: 40px;
+            margin-bottom: 0.5rem;
+        }
 
-            .sidebar-mini.sidebar-collapse .brand-link .brand-text {
-                display: none;
-            }
+        .sidebar-mini.sidebar-collapse .brand-link .brand-text {
+            display: none;
+        }
         </style>
 
         <?php
