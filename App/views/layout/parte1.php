@@ -139,19 +139,19 @@ if (!isset($_SESSION['sesion_usuario'])) {
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="<?php echo $URL; ?>empleados/index.php" class="nav-link">
+                                    <a href="<?php echo $URL; ?>App/views/miembros/index.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Listado de Miembros</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="<?php echo $URL; ?>empleados/create.php" class="nav-link">
+                                    <a href="<?php echo $URL; ?>App/views/miembros/create.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Agregar Miembro</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="<?php echo $URL; ?>empleados/inactivos/index.php" class="nav-link">
+                                    <a href="<?php echo $URL; ?>App/views/miembros/inactive.php"" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Miembros Inhabilitados</p>
                                     </a>
