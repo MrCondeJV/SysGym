@@ -61,9 +61,9 @@ if (!isset($_SESSION['sesion_usuario'])) {
     <!-- jQuery (usa la CDN como respaldo) -->
     <script src="<?php echo $URL; ?>public/templates/AdminLTE-3.2.0/plugins/jquery/jquery.min.js"></script>
     <script>
-    if (typeof jQuery == 'undefined') {
-        document.write('<script src="https://code.jquery.com/jquery-3.6.0.min.js"><\/script>');
-    }
+        if (typeof jQuery == 'undefined') {
+            document.write('<script src="https://code.jquery.com/jquery-3.6.0.min.js"><\/script>');
+        }
     </script>
 
 
@@ -73,6 +73,9 @@ if (!isset($_SESSION['sesion_usuario'])) {
     <!-- jQuery UI JS -->
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
+    <!-- FullCalendar (AdminLTE 3 plugin) -->
+    <link rel="stylesheet" href="<?php echo $URL; ?>/public/templates/AdminLTE-3.2.0/plugins/fullcalendar/main.min.css">
+    <script src="<?php echo $URL; ?>/public/templates/AdminLTE-3.2.0/plugins/fullcalendar/main.min.js"></script>
 
 </head>
 
@@ -196,8 +199,8 @@ if (!isset($_SESSION['sesion_usuario'])) {
                         <!--Fin Membresias-->
 
 
-                         <!--Clases-->
-                         <li class="nav-item has-treeview">
+                        <!--Clases-->
+                        <li class="nav-item has-treeview">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-chalkboard-teacher"></i>
                                 <p>
@@ -205,30 +208,24 @@ if (!isset($_SESSION['sesion_usuario'])) {
                                     <i class="right fas fa-angle-left"></i>
                                 </p>
                             </a>
-                         
-                            <ul class="nav nav-treeview">
+                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="<?php echo $URL; ?>App/views/clases/index.php" class="nav-link">
+                                    <a href="<?php echo $URL; ?>App/views/clases/calendar.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Calendario de Clases</p>
                                     </a>
                                 </li>
+
                                 <li class="nav-item">
-                                    <a href="<?php echo $URL; ?>App/views/clases/index_categorias.php" class="nav-link">
+                                    <a href="<?php echo $URL; ?>App/views/clases/index.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Listado Categorias</p>
+                                        <p>Listado de Clases</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a href="<?php echo $URL; ?>App/views/clases/create.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Agregar Clase</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="<?php echo $URL; ?>App/views/clases/create_categoria.php" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Agregar Categorias</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
@@ -251,12 +248,43 @@ if (!isset($_SESSION['sesion_usuario'])) {
                                 </li>
                             </ul>
                         </li>
+                       
                         <!--Fin Clases-->
+
+                        <!--Categorias Clases-->
+                        <li class="nav-item has-treeview">
+                            <a href="#" class="nav-link">
+                                <i class="nav-icon fas fa-th-list"></i>
+                                <p>
+                                    Categorias Clases
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
+                            </a>
+
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="<?php echo $URL; ?>App/views/categorias_clases/index_categorias.php" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Listado Categorias</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="<?php echo $URL; ?>App/views/categorias_clases/create_categoria.php" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Agregar Categorias</p>
+                                    </a>
+                                </li>
+
+                            </ul>
+                        </li>
+                        <!--Fin Categorias Clases-->
+
+
 
                         <!--Salas-->
                         <li class="nav-item has-treeview">
                             <a href="#" class="nav-link">
-                            <i class="nav-icon fas fa-building"></i>
+                                <i class="nav-icon fas fa-building"></i>
 
                                 <p>
                                     Salas
@@ -282,7 +310,7 @@ if (!isset($_SESSION['sesion_usuario'])) {
                                         <p>Salas Inhabilitadas</p>
                                     </a>
                                 </li>
-                                
+
                             </ul>
                         </li>
                         <!--Fin Clases-->
@@ -290,8 +318,8 @@ if (!isset($_SESSION['sesion_usuario'])) {
 
 
 
-                         <!--Entrenadores-->
-                         <li class="nav-item has-treeview">
+                        <!--Entrenadores-->
+                        <li class="nav-item has-treeview">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-dumbbell"></i>
                                 <p>
@@ -384,7 +412,7 @@ if (!isset($_SESSION['sesion_usuario'])) {
                         </li>
                         <!--Fin Productos-->
 
-                        
+
 
                         <!--Ventas-->
                         <li class="nav-item has-treeview">
@@ -425,7 +453,7 @@ if (!isset($_SESSION['sesion_usuario'])) {
                                         <p>Historial de pagos</p>
                                     </a>
                                 </li>
-                                
+
                             </ul>
                         </li>
                         <!--Fin Pagos-->
@@ -465,7 +493,7 @@ if (!isset($_SESSION['sesion_usuario'])) {
                                         <p>Proveedores Inhabilitados</p>
                                     </a>
                                 </li>
-                                
+
                             </ul>
                         </li>
                         <!--Fin Proveedores-->
@@ -540,30 +568,30 @@ if (!isset($_SESSION['sesion_usuario'])) {
             </div>
         </aside>
 
-        
+
 
         <style>
-        .brand-link .logo-img {
-            width: 80px;
-            height: 80px;
-            transition: all 0.3s ease;
-        }
+            .brand-link .logo-img {
+                width: 80px;
+                height: 80px;
+                transition: all 0.3s ease;
+            }
 
-        .sidebar-mini.sidebar-collapse .brand-link {
-            flex-direction: column !important;
-            align-items: center !important;
-            justify-content: center;
-        }
+            .sidebar-mini.sidebar-collapse .brand-link {
+                flex-direction: column !important;
+                align-items: center !important;
+                justify-content: center;
+            }
 
-        .sidebar-mini.sidebar-collapse .brand-link .logo-img {
-            width: 40px;
-            height: 40px;
-            margin-bottom: 0.5rem;
-        }
+            .sidebar-mini.sidebar-collapse .brand-link .logo-img {
+                width: 40px;
+                height: 40px;
+                margin-bottom: 0.5rem;
+            }
 
-        .sidebar-mini.sidebar-collapse .brand-link .brand-text {
-            display: none;
-        }
+            .sidebar-mini.sidebar-collapse .brand-link .brand-text {
+                display: none;
+            }
         </style>
 
         <?php
