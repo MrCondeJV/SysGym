@@ -4,11 +4,12 @@ let running = true;
 function animateGradient() {
     if (!running) return;
     angle += (Math.random() - 0.5) * 10; // Movimiento aleatorio en diferentes direcciones
-    
-    document.body.style.background = `radial-gradient(circle at center, #FF7E5F, #FFB88C, #FC913A, #FF4E50)`;
+
+    // Gradiente de escala de azules
+    document.body.style.background = `radial-gradient(circle at center, #0d47a1, #1976d2, #42a5f5, #90caf9, #e3f2fd)`;
     document.body.style.backgroundSize = "200% 200%";
     document.body.style.animation = "gradientMove 5s infinite alternate ease-in-out";
-    
+
     requestAnimationFrame(animateGradient);
 }
 

@@ -1,11 +1,10 @@
-
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Sistema de Transportes</title>
+    <title>Sistema de Gym</title>
     <link rel="icon" href="/public/images/logo.ico" type="image/x-icon">
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
@@ -23,6 +22,14 @@
 </head>
 
 <body>
+    <!-- Video de fondo -->
+    <video id="video-bg" autoplay muted loop>
+        <source src="/sysgym/public/videos/video.mp4" type="video/mp4">
+        Tu navegador no soporta el video de fondo.
+    </video>
+    <!-- Gradiente encima del video -->
+    <div id="gradient-bg"></div>
+
     <div class="login-box">
         <div class="login-logo">
             <img src="/sysgym/public/images/logo1.png" alt="Logo">
@@ -86,24 +93,24 @@
     <script src="<?php echo $URL; ?>/app/controllers/firebase/script.js"></script>
 
     <script>
-    $(document).ready(function() {
-        if (localStorage.getItem("sessionExpired") === "true") {
-            Swal.fire({
-                title: '<i class="fas fa-exclamation-triangle"></i> Sesión expirada',
-                html: 'Su sesión ha expirado por inactividad. Por favor, inicie sesión nuevamente.',
-                icon: 'error',
-                confirmButtonText: '<i class="fas fa-check"></i> Aceptar',
-                confirmButtonColor: '#d33',
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-                backdrop: 'rgba(0,0,0,0.7)'
-            }).then(() => {
-                localStorage.removeItem("sessionExpired"); // Limpia el flag
-                window.location.href = window.location.origin +
-                    "/SysGym/app/views/login/index.php"; // Redirige al login
-            });
-        }
-    });
+        $(document).ready(function() {
+            if (localStorage.getItem("sessionExpired") === "true") {
+                Swal.fire({
+                    title: '<i class="fas fa-exclamation-triangle"></i> Sesión expirada',
+                    html: 'Su sesión ha expirado por inactividad. Por favor, inicie sesión nuevamente.',
+                    icon: 'error',
+                    confirmButtonText: '<i class="fas fa-check"></i> Aceptar',
+                    confirmButtonColor: '#d33',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    backdrop: 'rgba(0,0,0,0.7)'
+                }).then(() => {
+                    localStorage.removeItem("sessionExpired"); // Limpia el flag
+                    window.location.href = window.location.origin +
+                        "/SysGym/app/views/login/index.php"; // Redirige al login
+                });
+            }
+        });
     </script>
 
     <!-- Cargar el script principal al final para evitar errores -->
