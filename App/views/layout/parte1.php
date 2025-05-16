@@ -449,13 +449,13 @@ if (!isset($_SESSION['sesion_usuario'])) {
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="<?php echo $URL; ?>ordenServicio/index.php" class="nav-link">
+                                    <a href="<?php echo $URL; ?>App/views/ventas/index.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Registrar Venta</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="<?php echo $URL; ?>ordenServicio/index.php" class="nav-link">
+                                    <a href="<?php echo $URL; ?>App/views/ventas/history.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Historial de Ventas</p>
                                     </a>
@@ -585,7 +585,7 @@ if (!isset($_SESSION['sesion_usuario'])) {
 
                         <!--Cerrar Session-->
                         <li class="nav-item">
-                            <a href="#" class="nav-link text-danger" onclick="confirmarLogout(event)">
+                            <a href="<?php echo $URL; ?>App/controllers/login/cerrar_sesion.php" class="nav-link text-danger" onclick="confirmarLogout(event)">
                                 <i class="nav-icon fas fa-sign-out-alt"></i>
                                 <p>Cerrar Sesión</p>
                             </a>

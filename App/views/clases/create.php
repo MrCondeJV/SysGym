@@ -6,8 +6,7 @@ include('../layout/parte1.php');
 include('../../controllers/categorias_clases/list_categorias_clases.php'); // Asumo que carga $categorias_clases_datos
 include('../../controllers/salas/list_salas.php'); // Asumo que carga $salas_datos
 include('../../controllers/entrenadores/list_entrenadores.php'); // Asumo que carga $entrenadores_datos
-
-//include('../layout/sesion.php'); // Asegúrate de incluir esto si usas sesiones para autenticación
+include('../layout/sesion.php'); // Asegúrate de incluir esto si usas sesiones para autenticación
 
 if (isset($_SESSION['mensaje'])): ?>
     <script>

@@ -3,7 +3,7 @@ include('../../config.php');
 include('../layout/parte1.php');
 include('../../controllers/roles/list_rol.php');
 include('../../controllers/usuarios/update_user.php');
-//include('../layout/sesion.php');
+include('../layout/sesion.php');
 ?>
 
 <div class="content-wrapper">

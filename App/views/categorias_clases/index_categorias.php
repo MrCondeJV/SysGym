@@ -2,7 +2,7 @@
 include('../../config.php');
 include('../layout/parte1.php');
 include('../../controllers/categorias_clases/list_categorias_clases.php');
-//include('../layout/sesion.php');
+include('../layout/sesion.php');
 ?>
 
 <!-- Content Wrapper. Contains page content -->

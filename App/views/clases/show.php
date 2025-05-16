@@ -1,7 +1,7 @@
 <?php
 
 include('../../config.php');
-//include('../layout/sesion.php'); // Asegúrate de incluir esto si usas sesiones para autenticación
+include('../layout/sesion.php'); // Asegúrate de incluir esto si usas sesiones para autenticación
 include('../layout/parte1.php');
 // Incluir el controlador que obtiene los datos de una clase específica (ahora con JOINs)
 include('../../controllers/clases/show_clase.php'); // Asumo que este script carga los datos, incluyendo los nombres

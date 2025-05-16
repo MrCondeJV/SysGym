@@ -1,7 +1,7 @@
 <?php
 
 include('../../config.php');
-//include('../layout/sesion.php');
+include('../layout/sesion.php');
 include('../layout/parte1.php');
 include('../../controllers/entrenadores/show_entrenador.php');
 ?>

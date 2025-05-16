@@ -2,7 +2,7 @@
 include('../../config.php');
 include('../layout/parte1.php');
 include('../../controllers/roles/list_rol.php');
-//include('../layout/sesion.php');
+include('../layout/sesion.php');
 
 if (isset($_SESSION['mensaje'])): ?>
     <script>
