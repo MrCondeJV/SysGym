@@ -60,10 +60,6 @@ try {
 } catch (Exception $e) {
     $pdo->rollBack();
 
-    // Guardar log de error
-    $logFile = __DIR__ . '/errores_ventas.log';
-    $errorMsg = "[" . date('Y-m-d H:i:s') . "] Error: " . $e->getMessage() . "\n";
-    file_put_contents($logFile, $errorMsg, FILE_APPEND);
 
     $_SESSION['mensaje'] = "Error al registrar la venta: " . $e->getMessage();
     $_SESSION['icono'] = "error";

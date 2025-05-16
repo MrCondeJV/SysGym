@@ -13,7 +13,7 @@ $query->bindParam(':nombre_usuario', $nombre_usuario, PDO::PARAM_STR);
 $query->execute();
 $usuario = $query->fetch(PDO::FETCH_ASSOC);
 
-$logFile = __DIR__ . '/login_debug.log'; // Log en la misma carpeta
+
 
 if ($usuario) {
     if (strtolower($usuario['estado']) !== 'activo') {
