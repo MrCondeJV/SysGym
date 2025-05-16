@@ -6,14 +6,12 @@ include('../layout/parte1.php');
 // Incluir controlador para obtener los datos de la clase a actualizar
 // Asumiendo que hay un controlador para obtener los detalles de una clase por su ID
 include('../../controllers/clases/show_clase.php');
-
 // Incluir controladores para obtener listas de datos para los desplegables (Entrenadores, Salas, Categorías)
 // Similar a como se hizo en la vista de creación de clases
 include('../../controllers/entrenadores/list_entrenadores.php');
 include('../../controllers/salas/list_salas.php');
 include('../../controllers/categorias_clases/list_categorias_clases.php');
-
-//include('../layout/sesion.php'); // Si necesitas control de sesión, descomenta esta línea
+include('../layout/sesion.php'); // Si necesitas control de sesión, descomenta esta línea
 
 // Asumiendo que el controlador show.php carga los datos de la clase en una variable $clase
 // y el ID de la clase en $id_clase (obtenido de la URL o POST)

@@ -2,6 +2,8 @@
 include('../../config.php');
 include('../layout/parte1.php');
 include('../../controllers/membresias_tipo/show_tipomembership.php');
+include('../layout/sesion.php');
+
 ?>
 
 <div class="content-wrapper">

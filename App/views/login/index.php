@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -5,16 +6,16 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Sistema de Transportes</title>
-    <link rel="icon" href="../public/images/logo.ico" type="image/x-icon">
+    <link rel="icon" href="/public/images/logo.ico" type="image/x-icon">
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
-    <link rel="stylesheet" href="../public/templates/AdminLTE-3.2.0/plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="/sysgym/public/templates/AdminLTE-3.2.0/plugins/fontawesome-free/css/all.min.css">
     <!-- icheck bootstrap -->
-    <link rel="stylesheet" href="../public/templates/AdminLTE-3.2.0/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <link rel="stylesheet" href="/sysgym/public/templates/AdminLTE-3.2.0/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
     <!-- Theme style -->
-    <link rel="stylesheet" href="../public/templates/AdminLTE-3.2.0/dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="/sysgym/public/templates/AdminLTE-3.2.0/dist/css/adminlte.min.css">
     <!-- SweetAlert2 -->
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -24,14 +25,14 @@
 <body>
     <div class="login-box">
         <div class="login-logo">
-            <img src="../public/images/logo.png" alt="Logo">
-            <h3 class="mt-2"><b>Sistema de Transportes</b></h3>
+            <img src="/sysgym/public/images/logo1.png" alt="Logo">
+            <h3 class="mt-2"><b>Sistema de Administracion Gym</b></h3>
         </div>
 
         <?php
         session_start();
         if (isset($_SESSION['sesion_usuario'])) {
-            header('Location: ../');
+            header('Location: ../../');
             exit();
         }
         if (isset($_SESSION['mensaje'])) {
@@ -51,7 +52,7 @@
         <div class="card card-outline card-light">
             <div class="card-body">
                 <p class="login-box-msg">Ingrese sus credenciales</p>
-                <form action="../app/controllers/login/ingreso.php" method="post" autocomplete="on">
+                <form action="../../controllers/login/ingreso.php" method="post" autocomplete="on">
                     <div class="input-group mb-3">
                         <input type="text" name="nombre_usuario" class="form-control" placeholder="Nombre de usuario"
                             required autocomplete="username">
@@ -75,8 +76,8 @@
 
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="../public/templates/AdminLTE-3.2.0/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="../public/templates/AdminLTE-3.2.0/dist/js/adminlte.min.js"></script>
+    <script src="/sysgym/public/templates/AdminLTE-3.2.0/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/sysgym/public/templates/AdminLTE-3.2.0/dist/js/adminlte.min.js"></script>
 
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
@@ -99,12 +100,11 @@
             }).then(() => {
                 localStorage.removeItem("sessionExpired"); // Limpia el flag
                 window.location.href = window.location.origin +
-                    "/sisTransporte/login/index.php"; // Redirige al login
+                    "/SysGym/app/views/login/index.php"; // Redirige al login
             });
         }
     });
     </script>
-
 
     <!-- Cargar el script principal al final para evitar errores -->
     <script src="main.js"></script>

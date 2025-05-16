@@ -18,7 +18,7 @@
         <p>No tienes permiso para acceder a esta página.</p>
         <script> console.log("Página actual: <?php echo htmlspecialchars($pagina_actual, ENT_QUOTES, 'UTF-8'); ?>"); </script>
 
-        <a href="/sistransporte/">Volver al inicio</a>
+        <a href="/sysgym/">Volver al inicio</a>
     </div>
 </body>
 </html>

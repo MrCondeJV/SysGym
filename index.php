@@ -1,6 +1,6 @@
 <?php
 include('App/config.php');
-#include('app/views/layout/sesion.php');
+include('App/views/layout/sesion.php');
 include('App/views/layout/parte1.php');
 
 ?>

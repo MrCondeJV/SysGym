@@ -2,7 +2,7 @@
 include('../../config.php');
 include('../layout/parte1.php');
 include('../../controllers/proveedores/update_proveedor.php');
-//include('../layout/sesion.php');
+include('../layout/sesion.php');
 ?>
 
 <div class="content-wrapper">

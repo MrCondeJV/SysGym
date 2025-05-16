@@ -3,7 +3,7 @@
 include('../../config.php');
 include('../layout/parte1.php');
 include('../../controllers/clases/list_clases.php');
-// include('../layout/sesion.php');
+include('../layout/sesion.php');
 
 ?>
 

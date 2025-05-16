@@ -3,7 +3,7 @@
 include('../../config.php');
 include('../layout/parte1.php');
 include('../../controllers/entrenadores/update_entrenador.php');
-//include('../layout/sesion.php');
+include('../layout/sesion.php');
 ?>
 
 <div class="content-wrapper">

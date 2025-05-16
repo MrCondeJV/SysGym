@@ -5,7 +5,7 @@ include('../layout/parte1.php');
 include('../../controllers/categorias_productos/list_categorias.php');
 include('../../controllers/proveedores/list_proveedores.php');
 include('../../controllers/productos/show_producto.php');
-//include('../layout/sesion.php');
+include('../layout/sesion.php');
 ?>
 
 <div class="content-wrapper">

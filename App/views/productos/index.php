@@ -3,7 +3,7 @@
 include('../../config.php');
 include('../layout/parte1.php');
 include('../../controllers/productos/list_productos.php');
-//include('../layout/sesion.php');
+include('../layout/sesion.php');
 ?>
 
 <!-- Content Wrapper. Contains page content -->

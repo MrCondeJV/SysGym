@@ -4,7 +4,7 @@ include('../../config.php');
 include('../layout/parte1.php');
 // Incluir el controlador que lista las clases
 include('../../controllers/clases/list_clases.php'); // Asumo que este script carga los datos en $clases_datos
-//include('../layout/sesion.php'); // Asegúrate de incluir esto si usas sesiones para autenticación
+include('../layout/sesion.php'); // Asegúrate de incluir esto si usas sesiones para autenticación
 ?>
 
 <!-- Content Wrapper. Contains page content -->
