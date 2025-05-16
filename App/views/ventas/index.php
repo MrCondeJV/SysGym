@@ -1,8 +1,10 @@
 <?php
 
+
 include('../../config.php');
 include('../layout/parte1.php');
 include('../layout/sesion.php');
+include('../../controllers/metodos_pagos/list_metodos_pagos.php');
 
 ?>
 
@@ -29,25 +31,27 @@ include('../layout/sesion.php');
                         <div class="card-header">
                             <h3 class="card-title">Venta de Productos</h3>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body" style="background: linear-gradient(90deg,#f8fafc 60%,#e3f2fd 100%); border-radius: 0 0 12px 12px;">
                             <!-- Buscador de productos -->
-                            <div class="form-row align-items-end">
+                            <div class="form-row align-items-end mb-3">
                                 <div class="form-group col-md-8">
-                                    <label for="buscar_producto">Buscar producto</label>
-                                    <input type="text" id="buscar_producto" class="form-control" placeholder="Nombre o código de producto">
+                                    <label for="buscar_producto" class="font-weight-bold text-primary">Buscar producto</label>
+                                    <input type="text" id="buscar_producto" class="form-control shadow-sm" placeholder="Nombre o código de producto">
                                     <div id="sugerencias_productos" class="list-group"></div>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="cantidad_producto">Cantidad</label>
-                                    <input type="number" id="cantidad_producto" class="form-control" min="1" value="1">
+                                    <label for="cantidad_producto" class="font-weight-bold text-primary">Cantidad</label>
+                                    <input type="number" id="cantidad_producto" class="form-control shadow-sm" min="1" value="1">
                                 </div>
                             </div>
-                            <button type="button" class="btn btn-primary mb-3" id="agregar_producto">Agregar a la venta</button>
+                            <button type="button" class="btn btn-gradient-primary mb-3" id="agregar_producto" style="background: linear-gradient(90deg,#136cb6,#0bbffb); color: #fff; font-weight: bold;">
+                                <i class="fas fa-plus"></i> Agregar a la venta
+                            </button>
 
                             <!-- Tabla de productos agregados -->
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-sm text-center" id="tabla_venta">
-                                    <thead>
+                            <div class="table-responsive mb-4">
+                                <table class="table table-bordered table-hover table-striped table-sm text-center shadow" id="tabla_venta" style="background: #fff; border-radius: 10px; overflow: hidden;">
+                                    <thead class="thead-dark" style="background: linear-gradient(90deg, #136cb6, #0bbffb); color: #fff;">
                                         <tr>
                                             <th>Producto</th>
                                             <th>Precio</th>
@@ -62,17 +66,34 @@ include('../layout/sesion.php');
                                     <tfoot>
                                         <tr>
                                             <th colspan="3" class="text-right">Total:</th>
-                                            <th id="total_venta">0.00</th>
+                                            <th id="total_venta" style="font-size:1.2rem; color:#136cb6;">0.00</th>
                                             <th></th>
                                         </tr>
                                     </tfoot>
                                 </table>
                             </div>
 
-                            <form action="../../controllers/ventas/registrar_venta.php" method="post" id="form_venta">
+                            <form action="../../controllers/ventas/registrar_venta.php" method="post" id="form_venta" class="mt-4">
                                 <input type="hidden" name="productos" id="productos_json">
+                                <div class="form-row">
+                                    <div class="form-group col-md-6 offset-md-3">
+                                        <label for="metodo_pago" class="font-weight-bold text-primary">Método de Pago</label>
+                                        <select name="metodo_pago" id="metodo_pago" class="form-control shadow-sm" required>
+                                            <option value="">Seleccione un método</option>
+                                            <?php foreach ($metodos as $metodo): ?>
+                                                <?php if ($metodo['activo']): ?>
+                                                    <option value="<?= htmlspecialchars($metodo['id_metodo']) ?>">
+                                                        <?= htmlspecialchars($metodo['nombre']) ?>
+                                                    </option>
+                                                <?php endif; ?>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                </div>
                                 <div class="form-group text-center">
-                                    <button type="submit" class="btn btn-success">Registrar Venta</button>
+                                    <button type="submit" class="btn btn-gradient-success" style="background: linear-gradient(90deg,#43e97b,#38f9d7); color: #fff; font-weight: bold;">
+                                        <i class="fas fa-check"></i> Registrar Venta
+                                    </button>
                                 </div>
                             </form>
                         </div>
@@ -82,6 +103,8 @@ include('../layout/sesion.php');
         </div>
     </div>
 </div>
+
+
 
 <script>
 // Variables para productos en la venta
@@ -179,4 +202,29 @@ document.getElementById('form_venta').addEventListener('submit', function(e) {
 });
 </script>
 
+<?php include('../layout/mensajes.php'); ?>
 <?php include('../layout/parte2.php'); ?>
+
+<style>
+.btn-gradient-primary {
+    background: linear-gradient(90deg,#136cb6,#0bbffb);
+    color: #fff;
+    border: none;
+}
+.btn-gradient-primary:hover {
+    background: linear-gradient(90deg,#0bbffb,#136cb6);
+    color: #fff;
+}
+.btn-gradient-success {
+    background: linear-gradient(90deg,#43e97b,#38f9d7);
+    color: #fff;
+    border: none;
+}
+.btn-gradient-success:hover {
+    background: linear-gradient(90deg,#38f9d7,#43e97b);
+    color: #fff;
+}
+.table thead th {
+    vertical-align: middle;
+}
+</style>

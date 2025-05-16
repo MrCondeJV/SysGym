@@ -5,6 +5,9 @@ include('../../config.php');
 include('../layout/parte1.php');
 include('../../controllers/ventas/historial_ventas.php');
 include('../layout/sesion.php');
+
+$fecha_inicio = $_GET['fecha_inicio'] ?? '';
+$fecha_fin = $_GET['fecha_fin'] ?? '';
 ?>
 
 <div class="content-wrapper">
@@ -23,6 +26,27 @@ include('../layout/sesion.php');
 
     <div class="content">
         <div class="container-fluid">
+            <!-- Filtro de fechas -->
+            <form method="get" class="mb-3">
+                <div class="row justify-content-center">
+                    <div class="col-md-3">
+                        <label for="fecha_inicio">Desde:</label>
+                        <input type="date" name="fecha_inicio" id="fecha_inicio" class="form-control" value="<?= htmlspecialchars($fecha_inicio) ?>">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="fecha_fin">Hasta:</label>
+                        <input type="date" name="fecha_fin" id="fecha_fin" class="form-control" value="<?= htmlspecialchars($fecha_fin) ?>">
+                    </div>
+                    <div class="col-md-2 align-self-end">
+                        <button type="submit" class="btn btn-primary btn-block"><i class="fas fa-filter"></i> Filtrar</button>
+                    </div>
+                    <div class="col-md-2 align-self-end">
+                        <a href="history.php" class="btn btn-secondary btn-block"><i class="fas fa-times"></i> Limpiar</a>
+                    </div>
+                </div>
+            </form>
+            <!-- Fin filtro de fechas -->
+
             <div class="row justify-content-center">
                 <div class="col-lg-10 col-md-12">
                     <div class="card card-info">
@@ -31,10 +55,11 @@ include('../layout/sesion.php');
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-bordered table-striped table-sm text-center" id="tabla_historial_ventas">
+                                <table class="table table-bordered table-striped table-sm text-center" id="example1">
                                     <thead>
                                         <tr>
                                             <th>ID Venta</th>
+                                            <th>Factura</th> <!-- Nueva columna -->
                                             <th>Fecha</th>
                                             <th>Total</th>
                                             <th>Usuario</th>
@@ -46,6 +71,7 @@ include('../layout/sesion.php');
                                             <?php foreach ($ventas as $venta): ?>
                                                 <tr>
                                                     <td><?= htmlspecialchars($venta['id_venta']) ?></td>
+                                                    <td><?= htmlspecialchars($venta['numero_factura'] ?? '-') ?></td> <!-- Mostrar número de factura -->
                                                     <td><?= htmlspecialchars($venta['fecha_venta']) ?></td>
                                                     <td>$<?= number_format($venta['total'], 2) ?></td>
                                                     <td><?= htmlspecialchars($venta['nombre_usuario'] ?? 'Desconocido') ?></td>
@@ -58,7 +84,7 @@ include('../layout/sesion.php');
                                             <?php endforeach; ?>
                                         <?php else: ?>
                                             <tr>
-                                                <td colspan="5">No hay ventas registradas.</td>
+                                                <td colspan="6">No hay ventas registradas.</td>
                                             </tr>
                                         <?php endif; ?>
                                     </tbody>
@@ -71,5 +97,5 @@ include('../layout/sesion.php');
         </div>
     </div>
 </div>
-
+<script src="datatable.js"></script>
 <?php include('../layout/parte2.php'); ?>

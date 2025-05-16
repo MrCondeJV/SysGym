@@ -2,16 +2,20 @@
 include('App/config.php');
 include('App/views/layout/sesion.php');
 include('App/views/layout/parte1.php');
+include_once('App/controllers/miembros/contar_activos.php'); // Debe definir $miembros_activos y $miembros_activos_semana
+include_once('App/controllers/clases/clases_hoy.php'); // Debe definir $clases_hoy, $clases_manana, $clases_tarde
+include_once('App/controllers/ventas/ingresos_mes.php'); // Debe definir $ingresos_mes
+include_once('App/controllers/miembros/nuevos_mes.php'); // Debe definir $nuevos_miembros y $porcentaje_nuevos
 
 ?>
+
 <style>
 @media (max-width: 576px) {
     .nombre-conductor span {
         display: block;
-        /* Fuerza el salto de línea */
         word-break: break-word;
-        /* Evita que el texto se salga del contenedor */
     }
+}
 </style>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
@@ -41,8 +45,8 @@ include('App/views/layout/parte1.php');
                             <div class="mb-3">
                                 <i class="fas fa-users fa-3x text-danger"></i>
                             </div>
-                            <h3 class="fw-bold">156</h3>
-                            <small class="text-success">+8 esta semana</small>
+                            <h3 class="fw-bold"><?= htmlspecialchars($miembros_activos) ?></h3>
+                            <small class="text-success">+<?= htmlspecialchars($miembros_activos_semana) ?> esta semana</small>
                         </div>
                     </div>
                 </div>
@@ -57,8 +61,8 @@ include('App/views/layout/parte1.php');
                             <div class="mb-3">
                                 <i class="fas fa-calendar-check fa-3x text-primary"></i>
                             </div>
-                            <h3 class="fw-bold">7</h3>
-                            <small>4 mañana, 3 tarde</small>
+                            <h3 class="fw-bold"><?= htmlspecialchars($clases_hoy) ?></h3>
+                            <small><?= htmlspecialchars($clases_manana) ?> mañana, <?= htmlspecialchars($clases_tarde) ?> tarde</small>
                         </div>
                     </div>
                 </div>
@@ -73,7 +77,7 @@ include('App/views/layout/parte1.php');
                             <div class="mb-3">
                                 <i class="fas fa-dollar-sign fa-3x text-warning"></i>
                             </div>
-                            <h3 class="fw-bold">$14,320</h3>
+                            <h3 class="fw-bold">$<?= number_format($ingresos_mes, 2) ?></h3>
                             <small>Este mes</small>
                         </div>
                     </div>
@@ -89,8 +93,8 @@ include('App/views/layout/parte1.php');
                             <div class="mb-3">
                                 <i class="fas fa-heartbeat fa-3x text-success"></i>
                             </div>
-                            <h3 class="fw-bold">12</h3>
-                            <small class="text-success">+25%</small>
+                            <h3 class="fw-bold"><?= htmlspecialchars($nuevos_miembros) ?></h3>
+                            <small class="text-success"><?= $porcentaje_nuevos >= 0 ? '+' : '' ?><?= htmlspecialchars($porcentaje_nuevos) ?>%</small>
                         </div>
                     </div>
                 </div>
@@ -182,4 +186,4 @@ include('App/views/layout/parte1.php');
 
 </div>
 
-<?php include('app/views/layout/parte2.php'); ?>
+<?php include('App/views/layout/parte2.php'); ?>
