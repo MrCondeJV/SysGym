@@ -111,7 +111,7 @@ if (!isset($_SESSION['sesion_usuario'])) {
                     </div>
                     <div class="info">
                         <a href="#" class="d-block">
-                            <?php echo $_SESSION['nombre_relacionado'] ?? 'Usuario'; ?>
+                            <?php echo $_SESSION['nombres']." ".$_SESSION['apellidos'] ?? 'Usuario'; ?>
                         </a>
                     </div>
                 </div>
