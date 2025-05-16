@@ -90,7 +90,7 @@ if (!isset($_SESSION['sesion_usuario'])) {
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <a href="#" class="nav-link brand-link d-flex flex-column align-items-center">
                 <div class="logo-img rounded-circle overflow-hidden shadow-lg mb-2">
-                    <img src="<?php echo $URL; ?>/public/images/logo1.png" alt="KEMUEL S.A.S Logo"
+                    <img src="<?php echo $URL; ?>/public/images/logo.jpg" alt="KEMUEL S.A.S Logo"
                         class="img-fluid h-100 w-100" style="object-fit: cover;">
                 </div>
                 <span class="brand-text text-white text-center">
@@ -105,7 +105,7 @@ if (!isset($_SESSION['sesion_usuario'])) {
                         <img src="<?php
                                     echo !empty($_SESSION['foto_usuario'])
                                         ? $URL . '/' . $_SESSION['foto_usuario']
-                                        : $URL . '/img/empleados/default.png';
+                                        : $URL . 'public/images/logo.jpg';
                                     ?>" class="img-circle elevation-2" alt="User Image"
                             style="width: 34px; height: 34px; object-fit: cover;">
                     </div>
