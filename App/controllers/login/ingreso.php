@@ -23,9 +23,7 @@ if ($usuario) {
         exit;
     }
 
-    // Guardar en log para depuración
-    file_put_contents($logFile, "[" . date('Y-m-d H:i:s') . "] Contraseña ingresada: $password_user\n", FILE_APPEND);
-    file_put_contents($logFile, "[" . date('Y-m-d H:i:s') . "] Hash en BD: " . $usuario['contrasena_hash'] . "\n", FILE_APPEND);
+    
 
     if (password_verify($password_user, $usuario['contrasena_hash'])) {
         $_SESSION['sesion_usuario'] = $usuario['nombre_usuario'];
@@ -39,7 +37,7 @@ if ($usuario) {
         $stmt_update = $pdo->prepare($sql_update);
         $stmt_update->execute([$usuario['id_usuario']]);
 
-        file_put_contents($logFile, "[" . date('Y-m-d H:i:s') . "] Login exitoso para: $nombre_usuario\n", FILE_APPEND);
+       
 
         // Redirigir al inicio general
        header('Location: ../../../index.php ');
