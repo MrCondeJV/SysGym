@@ -1,6 +1,10 @@
 <?php
 include('../../config.php');
 include('../layout/parte1.php');
+
+// Obtener tipos de membresía para el select
+$stmt = $pdo->query("SELECT id_tipo_membresia, nombre FROM tiposmembresia ORDER BY nombre ASC");
+$tiposMembresia = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <div class="content-wrapper">
@@ -30,6 +34,7 @@ include('../layout/parte1.php');
                         <form action="../../controllers/membresias/create_membership.php" method="POST">
                             <div class="card-body">
                                 <div class="form-row">
+                                    <!-- Campo Miembro con autocomplete (se mantiene igual) -->
                                     <div class="form-group col-md-6">
                                         <label for="miembro_autocomplete">Miembro</label>
                                         <input type="text" class="form-control" id="miembro_autocomplete"
@@ -38,12 +43,18 @@ include('../layout/parte1.php');
                                         <input type="hidden" name="id_miembro" id="id_miembro">
                                     </div>
 
+                                    <!-- Campo Tipo de Membresía cambiado a select -->
                                     <div class="form-group col-md-6">
-                                        <label for="tipo_autocomplete">Tipo de Membresía</label>
-                                        <input type="text" class="form-control" id="tipo_autocomplete"
-                                            autocomplete="off" name="tipo_autocomplete"
-                                            placeholder="Escribe y selecciona el tipo de membresía" required>
-                                        <input type="hidden" name="id_tipo_membresia" id="id_tipo_membresia">
+                                        <label for="id_tipo_membresia">Tipo de Membresía</label>
+                                        <select class="form-control" name="id_tipo_membresia" id="id_tipo_membresia"
+                                            required>
+                                            <option value="" disabled selected>Seleccione un tipo de membresía</option>
+                                            <?php foreach ($tiposMembresia as $tipo): ?>
+                                            <option value="<?= htmlspecialchars($tipo['id_tipo_membresia']) ?>">
+                                                <?= htmlspecialchars($tipo['nombre']) ?>
+                                            </option>
+                                            <?php endforeach; ?>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -61,7 +72,7 @@ include('../layout/parte1.php');
     </div>
 </div>
 
-<!-- Activar select2 -->
+<!-- Mantén solo el autocomplete para el campo miembro -->
 <script>
 $(function() {
     $("#miembro_autocomplete").autocomplete({
@@ -77,23 +88,8 @@ $(function() {
             }
         }
     });
-
-    $("#tipo_autocomplete").autocomplete({
-        source: "../../controllers/membresias_tipo/search_tipomembership.php",
-        minLength: 2,
-        select: function(event, ui) {
-            $("#id_tipo_membresia").val(ui.item.id);
-        },
-        change: function(event, ui) {
-            if (!ui.item) {
-                $("#id_tipo_membresia").val('');
-                $(this).val('');
-            }
-        }
-    });
 });
 </script>
-
 
 <?php include('../layout/mensajes.php'); ?>
 <?php include('../layout/parte2.php'); ?>
