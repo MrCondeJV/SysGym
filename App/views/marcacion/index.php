@@ -1,0 +1,375 @@
+<?php
+// filepath: c:\xampp\htdocs\SysGym\App\views\marcacion\index.php
+include('../../config.php');
+include('../layout/parte1.php');
+
+// Consulta campos disponibles en la tabla miembros
+$campos_miembro = [
+    'id_miembro',
+    'nombres',
+    'apellidos',
+    'fecha_nacimiento',
+    'genero',
+    'correo_electronico',
+    'telefono',
+    'direccion',
+    'fecha_registro',
+    'estado',
+    'url_foto',
+    'contacto_emergencia_nombre',
+    'contacto_emergencia_telefono',
+    'creado_por'
+];
+
+// Ejemplo: consulta para mostrar info de un miembro (aquí solo para demo, normalmente sería por huella o búsqueda)
+$id_demo = 1;
+$stmt = $pdo->prepare("SELECT * FROM miembros WHERE id_miembro = ?");
+$stmt->execute([$id_demo]);
+$miembro = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Simulación de membresía y accesos
+$membresia = [
+    'fecha_inicio' => '2024-05-01',
+    'fecha_fin' => '2024-06-01',
+    'dias_vigentes' => 15,
+    'dias_total' => 30,
+    'estado' => 'Activa'
+];
+$accesos = [
+    ['hora_entrada' => '07:10', 'hora_salida' => '08:00', 'fecha' => '2024-05-19'],
+    ['hora_entrada' => '18:20', 'hora_salida' => '19:10', 'fecha' => '2024-05-18'],
+];
+?>
+
+<style>
+    html,
+    body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    .marcacion-fullpanel {
+        min-height: 100vh;
+        width: 100vw;
+        background: #f4f8fb;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: stretch;
+        padding: 0;
+    }
+
+    .marcacion-flexrow {
+        display: flex;
+        flex: 1 1 0;
+        gap: 32px;
+        padding: 32px 0 0 0;
+    }
+
+    .marcacion-col-left {
+        flex: 0 0 340px;
+        background: #fff;
+        border-radius: 18px;
+        box-shadow: 0 4px 18px rgba(13, 71, 161, 0.08);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 32px 18px 24px 18px;
+        min-width: 280px;
+        max-width: 340px;
+    }
+
+    .marcacion-col-main {
+        flex: 1 1 0;
+        background: #fff;
+        border-radius: 18px;
+        box-shadow: 0 4px 18px rgba(13, 71, 161, 0.08);
+        padding: 32px 32px 24px 32px;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+    }
+
+    .foto-miembro {
+        width: 140px;
+        height: 140px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 4px solid #1976d2;
+        background: #fff;
+        margin-bottom: 18px;
+    }
+
+    .nombre-miembro {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #1976d2;
+        margin-bottom: 4px;
+        text-align: center;
+    }
+
+    .estado-miembro {
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: #43e97b;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+
+    .info-miembro-list {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 18px 0;
+        font-size: 1.05rem;
+    }
+
+    .info-miembro-list li {
+        margin-bottom: 6px;
+        color: #333;
+    }
+
+    .fingerprint-img {
+        width: 80px;
+        height: 80px;
+        margin: 18px 0 8px 0;
+        border-radius: 12px;
+        border: 1.5px dashed #1976d2;
+        background: #f4f8fb;
+        object-fit: contain;
+    }
+
+    .btn-lector {
+        width: 120px;
+        font-weight: bold;
+        font-size: 1.1rem;
+        margin-bottom: 8px;
+        border-radius: 22px;
+    }
+
+    .btn-lector.start {
+        background: #43e97b;
+        color: #fff;
+        border: none;
+    }
+
+    .btn-lector.stop {
+        background: #ff4e50;
+        color: #fff;
+        border: none;
+    }
+
+    .marcacion-membresia {
+        background: #f8fafc;
+        border-radius: 10px;
+        padding: 16px 18px;
+        margin-bottom: 18px;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 18px;
+        font-size: 1.1rem;
+    }
+
+    .marcacion-membresia .estado {
+        font-weight: bold;
+        color: #388e3c;
+    }
+
+    .marcacion-membresia .vencida {
+        color: #ff4e50;
+    }
+
+    .marcacion-actions {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 18px;
+    }
+
+    .btn-membresia {
+        background: #43e97b;
+        color: #fff;
+        border-radius: 18px;
+        border: none;
+        padding: 10px 28px;
+        font-weight: bold;
+    }
+
+    .btn-buscar {
+        background: #2196f3;
+        color: #fff;
+        border-radius: 18px;
+        border: none;
+        padding: 10px 28px;
+        font-weight: bold;
+    }
+
+    .table-marcacion {
+        width: 100%;
+        border-radius: 8px;
+        overflow: hidden;
+        margin-top: 10px;
+        background: #fff;
+        box-shadow: 0 2px 8px rgba(25, 118, 210, 0.07);
+    }
+
+    .table-marcacion th {
+        background: #2196f3;
+        color: #fff;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .table-marcacion td {
+        background: #f4f8fb;
+        text-align: center;
+    }
+
+    @media (max-width: 1100px) {
+        .marcacion-flexrow {
+            flex-direction: column;
+            gap: 18px;
+            padding: 18px 0 0 0;
+        }
+
+        .marcacion-col-left,
+        .marcacion-col-main {
+            max-width: 100%;
+            min-width: 0;
+        }
+    }
+
+    .fingerprint-btn {
+        background: linear-gradient(90deg, #1976d2, #42a5f5);
+        color: #fff;
+        border: none;
+        border-radius: 50%;
+        width: 90px;
+        height: 90px;
+        font-size: 2.5rem;
+        margin: 0 10px;
+        box-shadow: 0 2px 10px rgba(25, 118, 210, 0.15);
+        transition: background 0.2s, transform 0.2s;
+    }
+
+    .fingerprint-btn:hover {
+        background: linear-gradient(90deg, #42a5f5, #1976d2);
+        transform: scale(1.08);
+    }
+</style>
+
+<div class="content-wrapper">
+    <section class="content">
+        <div class="container-fluid" style="padding-top: 24px;">
+            <div class="marcacion-flexrow">
+                <!-- Columna izquierda: Foto y lector -->
+                <div class="marcacion-col-left">
+                    <img src="<?= htmlspecialchars($miembro['url_foto'] ?? '/sysgym/public/images/avatar_default.png') ?>" alt="Foto" class="foto-miembro" id="foto-miembro">
+                    <div class="nombre-miembro" id="nombre-miembro">
+                        <?= htmlspecialchars(($miembro['nombres'] ?? '') . ' ' . ($miembro['apellidos'] ?? '')) ?>
+                    </div>
+                    <div class="estado-miembro" id="estado-miembro">
+                        <?= htmlspecialchars($miembro['estado'] ?? '') ?>
+                    </div>
+                    <ul class="info-miembro-list">
+                        <li><b>ID:</b> <span id="id-miembro"><?= htmlspecialchars($miembro['id_miembro'] ?? '-') ?></span></li>
+                        <li><b>Identificación:</b> <span id="identificacion-miembro"><?= htmlspecialchars($miembro['id_miembro'] ?? '-') ?></span></li>
+                        <li><b>Correo:</b> <span id="correo-miembro"><?= htmlspecialchars($miembro['correo_electronico'] ?? '-') ?></span></li>
+                        <li><b>Teléfono:</b> <span id="telefono-miembro"><?= htmlspecialchars($miembro['telefono'] ?? '-') ?></span></li>
+                        <li><b>Dirección:</b> <span id="direccion-miembro"><?= htmlspecialchars($miembro['direccion'] ?? '-') ?></span></li>
+                        <li><b>Fecha Nacimiento:</b> <span id="fecha-nacimiento"><?= htmlspecialchars($miembro['fecha_nacimiento'] ?? '-') ?></span></li>
+                        <li><b>Género:</b> <span id="genero-miembro"><?= htmlspecialchars($miembro['genero'] ?? '-') ?></span></li>
+                        <li><b>Contacto Emergencia:</b> <span id="contacto-emergencia"><?= htmlspecialchars($miembro['contacto_emergencia_nombre'] ?? '-') ?> (<?= htmlspecialchars($miembro['contacto_emergencia_telefono'] ?? '-') ?>)</span></li>
+                    </ul>
+           
+                    <button class="fingerprint-btn" id="btn-huella" title="Marcar con huella">
+                        <i class="fas fa-fingerprint"></i>
+                    </button>
+                    <br>
+                    <button class="btn btn-lector start" id="btn-huella"><i class="fas fa-play"></i> Start</button>
+                    <button class="btn btn-lector stop" id="btn-stop"><i class="fas fa-stop"></i> Stop</button>
+                </div>
+                <!-- Columna principal: Info y acciones -->
+                <div class="marcacion-col-main">
+                    <div class="marcacion-membresia">
+                        <span><b>Fecha de Inicio:</b> <span id="fecha-inicio"><?= htmlspecialchars($membresia['fecha_inicio']) ?></span></span>
+                        <span><b>Fecha de Vencimiento:</b> <span id="fecha-fin"><?= htmlspecialchars($membresia['fecha_fin']) ?></span></span>
+                        <span><b>Días Vigentes:</b> <span id="dias-vigentes"><?= htmlspecialchars($membresia['dias_vigentes']) ?></span></span>
+                        <span><b>Días Totales:</b> <span id="dias"><?= htmlspecialchars($membresia['dias_total']) ?></span></span>
+                        <span class="estado <?= $membresia['estado'] == 'Vencida' ? 'vencida' : '' ?>">
+                            <?= htmlspecialchars($membresia['estado']) ?>
+                        </span>
+                    </div>
+                    <div class="marcacion-actions">
+                        <button class="btn btn-membresia" id="btn-pagar"><i class="fas fa-money-bill-wave"></i> Pagar Membresía</button>
+                        <button class="btn btn-buscar" id="btn-buscar"><i class="fas fa-search"></i> Buscar por Documento</button>
+                    </div>
+                    <div>
+                        <h5 class="mb-2" style="color:#1976d2;"><i class="fas fa-door-open"></i> Últimos Ingresos</h5>
+                        <table class="table table-marcacion">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Hora Entrada</th>
+                                    <th>Hora Salida</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabla-ingresos">
+                                <?php if (!empty($accesos)): foreach ($accesos as $acc): ?>
+                                        <tr>
+                                            <td><?= htmlspecialchars($acc['fecha']) ?></td>
+                                            <td><?= htmlspecialchars($acc['hora_entrada']) ?></td>
+                                            <td><?= htmlspecialchars($acc['hora_salida']) ?></td>
+                                        </tr>
+                                    <?php endforeach;
+                                else: ?>
+                                    <tr>
+                                        <td colspan="3" style="background:#e3eaf4;">Sin registros</td>
+                                    </tr>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="marcacion-resultado" class="mt-3"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+    document.getElementById('btn-huella').onclick = function() {
+        document.getElementById('marcacion-resultado').innerHTML =
+            '<span class="text-info"><i class="fas fa-spinner fa-spin"></i> Leyendo huella...</span>';
+        setTimeout(function() {
+            document.getElementById('marcacion-resultado').innerHTML =
+                '<span class="text-success"><i class="fas fa-check-circle"></i> ¡Ingreso registrado con huella!</span>';
+        }, 1500);
+    };
+
+    document.getElementById('btn-huella').onclick = function() {
+        // Simulación de lectura de huella
+        document.getElementById('marcacion-resultado').innerHTML =
+            '<span class="text-info"><i class="fas fa-spinner fa-spin"></i> Leyendo huella...</span>';
+        setTimeout(function() {
+            // Aquí deberías integrar con el lector real
+            document.getElementById('marcacion-resultado').innerHTML =
+                '<span class="text-success"><i class="fas fa-check-circle"></i> ¡Ingreso registrado con huella!</span>';
+        }, 1800);
+    };
+
+    document.getElementById('btn-stop').onclick = function() {
+        document.getElementById('marcacion-resultado').innerHTML =
+            '<span class="text-danger"><i class="fas fa-stop-circle"></i> Lector detenido.</span>';
+    };
+
+    document.getElementById('btn-pagar').onclick = function() {
+        alert('Funcionalidad de pago de membresía próximamente.');
+    };
+
+    document.getElementById('btn-buscar').onclick = function() {
+        alert('Funcionalidad de búsqueda por documento próximamente.');
+    };
+</script>
+
+<?php include('../layout/parte2.php'); ?>

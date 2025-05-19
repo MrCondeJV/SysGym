@@ -49,6 +49,12 @@ include('../layout/sesion.php');
                                         <input type="text" name="nombre" class="form-control" placeholder="Escriba el nombre del producto..." value="<?= htmlspecialchars($nombre ?? ''); ?>" required>
                                     </div>
                                     <div class="form-group col-md-6">
+                                        <label for="codigo_producto">Código del Producto</label>
+                                        <input type="text" name="codigo_producto" class="form-control" placeholder="Escriba el código del producto..." value="<?= htmlspecialchars($codigo_producto ?? ''); ?>" required>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-12">
                                         <label for="descripcion">Descripción</label>
                                         <input type="text" name="descripcion" class="form-control" placeholder="Escriba la descripción..." value="<?= htmlspecialchars($descripcion ?? ''); ?>" required>
                                     </div>
@@ -111,7 +117,7 @@ include('../layout/sesion.php');
                                         <input type="file" name="url_imagen" class="form-control" accept="image/*">
                                         <?php if (!empty($url_imagen)): ?>
                                             <small class="form-text text-muted">Imagen actual:</small>
-                                            <img src="../../<?= $url_imagen; ?>" alt="Imagen del Producto" class="img-thumbnail" style="max-width: 150px;">
+                                            <img src="<?= $url_imagen; ?>" alt="Imagen del Producto" class="img-thumbnail" style="max-width: 150px;">
                                         <?php endif; ?>
                                     </div>
                                     <div class="form-group col-md-6">

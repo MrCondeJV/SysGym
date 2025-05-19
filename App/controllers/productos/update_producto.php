@@ -86,16 +86,25 @@ if (isset($_FILES['url_imagen']) && $_FILES['url_imagen']['error'] === UPLOAD_ER
                 unlink('../../' . $producto['url_imagen']);
             }
             // Guardar la nueva URL relativa de la imagen
-            $url_imagen = 'img/productos/' . $nombre_imagen;
+            $url_imagen = '../../img/productos/' . $nombre_imagen;
         }
     }
 } else {
     // Mantener la imagen actual si no se sube una nueva
-    $url_imagen = $producto['url_imagen'];
+    $url_imagen = !empty($producto['url_imagen']) ? (strpos($producto['url_imagen'], '../../') === 0 ? $producto['url_imagen'] : '../../' . ltrim($producto['url_imagen'], '/')) : null;
 }
 
-// Si hay errores, redirigir con mensajes
+// Función para registrar errores en un archivo de log en la carpeta actual
+function log_error($mensaje) {
+    $logFile = __DIR__ . '/productos_error.log'; // Guardar en la carpeta actual del controlador
+    $fecha = date('Y-m-d H:i:s');
+    $linea = "[$fecha] $mensaje\n";
+    file_put_contents($logFile, $linea, FILE_APPEND);
+}
+
+// Si hay errores, registrar en el log y redirigir con mensajes
 if (!empty($errores)) {
+    log_error("Errores al actualizar producto ID $id_producto: " . implode(' | ', $errores));
     $_SESSION['errores'] = $errores;
     $_SESSION['mensaje'] = implode("<br>", $errores);
     $_SESSION['icono'] = "error";
@@ -144,6 +153,8 @@ if ($stmt->execute($params)) {
     header("Location: $URL/App/views/productos/index.php");
     exit();
 } else {
+    $errorInfo = $stmt->errorInfo();
+    log_error("Error SQL al actualizar producto ID $id_producto: " . print_r($errorInfo, true));
     $_SESSION['mensaje'] = "Error al actualizar el producto.";
     $_SESSION['icono'] = "error";
     header("Location: $URL/App/views/productos/update.php?id_producto=$id_producto");
