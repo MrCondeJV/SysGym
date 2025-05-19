@@ -1,0 +1,100 @@
+<?php
+include('../../config.php');
+include('../layout/parte1.php');
+include('../../controllers/membresias/list_membership.php');
+?>
+
+<div class="content-wrapper">
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-4">
+                <div class="col-sm-12 text-center">
+                    <div class="p-4 rounded shadow-lg"
+                        style="background: linear-gradient(90deg, #0e94a0, #0bbffb); color: #fff;">
+                        <h1 class="m-0 text-uppercase font-weight-bold" style="font-size: 2.5rem;">
+                            <i class="fas fa-id-card-alt"></i> Listado de Membresías
+                        </h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-lg-11 col-md-12">
+                    <div class="card card-info">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h3 class="card-title">Membresías Actuales</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="membresiasTable"
+                                    class="table table-bordered table-striped table-sm text-center">
+                                    <thead>
+                                        <tr>
+                                            <th style="width:5%;">Nro</th>
+                                            <th style="width:25%;">Miembro</th>
+                                            <th style="width:25%;">Tipo de Membresía</th>
+                                            <th style="width:20%;">Periodo</th>
+                                            <th style="width:15%;">Dias restantes</th>
+                                            <th style="width:10%;">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php $contador = 0;
+                                        foreach ($membresias_datos as $m) { ?>
+                                        <tr id="row-<?php echo $m['id_membresia']; ?>">
+                                            <td><?php echo ++$contador; ?></td>
+                                            <td><?php echo htmlspecialchars($m['nombre_miembro']); ?></td>
+                                            <td><?php echo htmlspecialchars($m['nombre_membresia']); ?></td>
+                                            <td><?php echo date('d/m/Y', strtotime($m['fecha_inicio'])) . ' - ' . date('d/m/Y', strtotime($m['fecha_fin'])); ?>
+                                            </td>
+                                            <td><?php echo htmlspecialchars($m['dias_restantes']); ?></td>
+                                            <td>
+                                                <div class="btn-group">
+                                                    <a href="show.php?id=<?php echo $m['id_membresia']; ?>"
+                                                        class="btn btn-info btn-sm">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                    <a href="update.php?id=<?php echo $m['id_membresia']; ?>"
+                                                        class="btn btn-warning btn-sm">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <button class="btn btn-danger btn-sm btn-eliminar"
+                                                        data-id="<?php echo $m['id_membresia']; ?>"
+                                                        data-row-id="row-<?php echo $m['id_membresia']; ?>">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <?php } ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div> <!-- /.card-body -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- DataTables y lógica de eliminación -->
+<script>
+$(function() {
+    $('#membresiasTable').DataTable({
+        "responsive": true,
+        "autoWidth": false,
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
+        }
+    });
+});
+</script>
+
+<script src="delete.js"></script>
+<?php include('../layout/mensajes.php'); ?>
+<?php include('../layout/parte2.php'); ?>
