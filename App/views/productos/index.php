@@ -1,12 +1,11 @@
 <?php
-
+// filepath: c:\xampp\htdocs\SysGym\App\views\productos\index.php
 include('../../config.php');
 include('../layout/parte1.php');
 include('../../controllers/productos/list_productos.php');
 include('../layout/sesion.php');
 ?>
 
-<!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <div class="content-header">
         <div class="container-fluid">
@@ -25,78 +24,65 @@ include('../layout/sesion.php');
     <!-- Main content -->
     <div class="content">
         <div class="container-fluid">
-            <div class="row justify-content-center">
-                <div class="col-lg-12 col-md-10 col-sm-12 mx-auto">
-                    <div class="card card-info">
-                        <div class="card-header">
-                            <h3 class="card-title">Productos Registrados</h3>
-                            <div class="card-tools">
-                                <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                    <i class="fas fa-minus"></i>
-                                </button>
+            <div class="row">
+                <?php
+                $contador = 0;
+                foreach ($productos_datos as $producto) {
+                    $id_producto = $producto['id_producto'];
+                    $img = !empty($producto['url_imagen']) ? $producto['url_imagen'] : '../../img/productos/product_default.png';
+                ?>
+                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 mb-4">
+                    <div class="card h-100 shadow card-product">
+                        <img src="<?= htmlspecialchars($img) ?>" class="card-img-top" alt="Imagen del producto" style="height:180px;object-fit:cover;">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title font-weight-bold text-primary text-truncate"><?= htmlspecialchars($producto['nombre']) ?></h5>
+                            <p class="card-text mb-1"><b>Descripción:</b> <?= htmlspecialchars($producto['descripcion']) ?></p>
+                            <p class="card-text mb-1"><b>Precio:</b> $<?= number_format($producto['precio'], 2) ?></p>
+                            <p class="card-text mb-1"><b>Stock:</b> <?= htmlspecialchars($producto['cantidad_stock']) ?></p>
+                            <p class="card-text mb-2"><b>Categoría:</b> <?= htmlspecialchars($producto['nombre_categoria']) ?></p>
+                            <div class="mt-auto">
+                                <div class="btn-group btn-group-sm w-100">
+                                    <a href="show.php?id=<?= $id_producto ?>" class="btn btn-info"><i class="fas fa-eye"></i></a>
+                                    <a href="update.php?id=<?= $id_producto ?>" class="btn btn-warning"><i class="fas fa-edit"></i></a>
+                                    <button class="btn btn-danger btn-eliminar"
+                                        data-id="<?= $id_producto ?>"
+                                        data-row-id="row-<?= $id_producto ?>">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
-
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table id="example1" class="table table-bordered table-striped table-sm text-center" style="table-layout: fixed; width: 100%;">
-                                    <thead>
-                                        <tr>
-                                            <th class="align-middle" style="width: 5%;">Nro</th>
-                                            <th class="align-middle" style="width: 20%;">Nombre</th>
-                                            <th class="align-middle" style="width: 20%;">Descripción</th>
-                                            <th class="align-middle" style="width: 10%;">Precio</th>
-                                            <th class="align-middle" style="width: 10%;">Stock</th>
-                                            <th class="align-middle" style="width: 15%;">Categoría</th>
-                                            <th class="align-middle" style="width: 20%;">Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php
-                                        $contador = 0;
-                                        foreach ($productos_datos as $producto) {
-                                            $id_producto = $producto['id_producto']; ?>
-                                            <tr id="row-<?php echo $id_producto; ?>">
-                                                <td class="align-middle"><?php echo ++$contador; ?></td>
-                                                <td class="align-middle text-truncate" style="max-width: 250px;"><?php echo $producto['nombre']; ?></td>
-                                                <td class="align-middle text-truncate" style="max-width: 250px;"><?php echo $producto['descripcion']; ?></td>
-                                                <td class="align-middle"><?php echo number_format($producto['precio'], 2); ?></td>
-                                                <td class="align-middle"><?php echo $producto['cantidad_stock']; ?></td>
-                                                <td class="align-middle"><?php echo $producto['id_categoria']; ?></td>
-                                                <td class="align-middle">
-                                                    <div class="btn-group">
-                                                        <a href="show.php?id=<?php echo $id_producto; ?>" class="btn btn-info btn-sm">
-                                                            <i class="fas fa-eye"></i>
-                                                        </a>
-                                                        <a href="update.php?id=<?php echo $id_producto; ?>" class="btn btn-warning btn-sm">
-                                                            <i class="fas fa-edit"></i>
-                                                        </a>
-                                                        <!-- Botón de eliminación con SweetAlert2 -->
-                                                        <button class="btn btn-danger btn-sm btn-eliminar"
-                                                            data-id="<?php echo $id_producto; ?>"
-                                                            data-row-id="row-<?php echo $id_producto; ?>">
-                                                            <i class="fas fa-trash"></i>
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        <?php } ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div> <!-- /.card-body -->
                     </div>
                 </div>
-            </div> <!-- /.row -->
+                <?php } ?>
+            </div>
         </div><!-- /.container-fluid -->
     </div>
     <!-- /.content -->
 </div>
 
-<!-- /.content-wrapper -->
+<style>
+.card-product {
+    transition: box-shadow 0.2s;
+}
+.card-product:hover {
+    box-shadow: 0 8px 32px rgba(25,118,210,0.18);
+}
+.card-title {
+    font-size: 1.15rem;
+}
+.card-product .card-img-top {
+    padding: 12px;
+    border-radius: 18px;
+    transition: transform 0.25s cubic-bezier(.4,2,.6,1), box-shadow 0.2s;
+}
 
-<script src="datatable.js"></script>
+.card-product:hover .card-img-top {
+    transform: scale(1.06);
+    box-shadow: 0 8px 32px rgba(25,118,210,0.18);
+}
+</style>
+
 <script src="delete.js"></script>
-
 <?php include('../layout/mensajes.php'); ?>
 <?php include('../layout/parte2.php'); ?>

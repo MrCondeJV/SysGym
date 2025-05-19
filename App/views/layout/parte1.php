@@ -393,13 +393,13 @@ if (!isset($_SESSION['sesion_usuario'])) {
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="<?php echo $URL; ?>mantenimientos/index.php" class="nav-link">
+                                    <a href="<?php echo $URL; ?>App/views/marcacion/index.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Registrar Ingreso</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="<?php echo $URL; ?>mantenimientos/index.php" class="nav-link">
+                                    <a href="<?php echo $URL; ?>App/views/marcacion/history.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Historial de Ingresos</p>
                                     </a>
