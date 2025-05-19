@@ -38,13 +38,20 @@ include('../../controllers/membresias/list_membership.php');
                                             <th style="width:25%;">Miembro</th>
                                             <th style="width:25%;">Tipo de Membresía</th>
                                             <th style="width:20%;">Periodo</th>
-                                            <th style="width:15%;">Dias restantes</th>
-                                            <th style="width:10%;">Acciones</th>
+                                            <th style="width:15%;">Días restantes</th>
+                                            <th style="width:10%;">Estado</th> <!-- Nueva columna -->
+                                            <th style="width:15%;">Acciones</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php $contador = 0;
-                                        foreach ($membresias_datos as $m) { ?>
+                                        $hoy = new DateTime();
+                                        foreach ($membresias_datos as $m) {
+                                            $fechaFinObj = new DateTime($m['fecha_fin']);
+                                            $estado = ($fechaFinObj >= $hoy)
+                                                ? '<span class="badge bg-success">Activa</span>'
+                                                : '<span class="badge bg-danger">Vencida</span>';
+                                        ?>
                                         <tr id="row-<?php echo $m['id_membresia']; ?>">
                                             <td><?php echo ++$contador; ?></td>
                                             <td><?php echo htmlspecialchars($m['nombre_miembro']); ?></td>
@@ -52,21 +59,18 @@ include('../../controllers/membresias/list_membership.php');
                                             <td><?php echo date('d/m/Y', strtotime($m['fecha_inicio'])) . ' - ' . date('d/m/Y', strtotime($m['fecha_fin'])); ?>
                                             </td>
                                             <td><?php echo htmlspecialchars($m['dias_restantes']); ?></td>
+                                            <td><?php echo $estado; ?></td> <!-- Estado -->
                                             <td>
-                                                <div class="btn-group">
-                                                    <a href="show.php?id=<?php echo $m['id_membresia']; ?>"
-                                                        class="btn btn-info btn-sm">
-                                                        <i class="fas fa-eye"></i>
-                                                    </a>
-                                                    <a href="update.php?id=<?php echo $m['id_membresia']; ?>"
-                                                        class="btn btn-warning btn-sm">
-                                                        <i class="fas fa-edit"></i>
-                                                    </a>
-                                                    <button class="btn btn-danger btn-sm btn-eliminar"
-                                                        data-id="<?php echo $m['id_membresia']; ?>"
-                                                        data-row-id="row-<?php echo $m['id_membresia']; ?>">
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
+                                                <div class="btn-group" role="group" aria-label="Acciones">
+                                                    <!-- Botón para Renovar -->
+                                                    <form method="POST" action="renovar.php" style="display:inline;">
+                                                        <input type="hidden" name="id_membresia"
+                                                            value="<?php echo $m['id_membresia']; ?>">
+                                                        <button type="submit" class="btn btn-success btn-sm"
+                                                            title="Renovar membresía">
+                                                            <i class="fas fa-sync-alt"></i>
+                                                        </button>
+                                                    </form>
                                                 </div>
                                             </td>
                                         </tr>
@@ -94,7 +98,5 @@ $(function() {
     });
 });
 </script>
-
-<script src="delete.js"></script>
 <?php include('../layout/mensajes.php'); ?>
 <?php include('../layout/parte2.php'); ?>

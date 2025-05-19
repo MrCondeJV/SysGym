@@ -151,7 +151,7 @@ if (!isset($_SESSION['sesion_usuario'])) {
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="<?php echo $URL; ?>App/views/miembros/inactive.php"" class="nav-link">
+                                    <a href="<?php echo $URL; ?>App/views/miembros/inactive.php"" class=" nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Miembros Inhabilitados</p>
                                     </a>
@@ -183,7 +183,7 @@ if (!isset($_SESSION['sesion_usuario'])) {
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="<?php echo $URL; ?>App/views/membresias/index.php" class="nav-link">
+                                    <a href="<?php echo $URL; ?>App/views/membresias/renovar.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Renovar Membresia</p>
                                     </a>
