@@ -338,24 +338,49 @@ $accesos = [
 </div>
 
 <script>
-    document.getElementById('btn-huella').onclick = function() {
-        document.getElementById('marcacion-resultado').innerHTML =
-            '<span class="text-info"><i class="fas fa-spinner fa-spin"></i> Leyendo huella...</span>';
-        setTimeout(function() {
-            document.getElementById('marcacion-resultado').innerHTML =
-                '<span class="text-success"><i class="fas fa-check-circle"></i> ¡Ingreso registrado con huella!</span>';
-        }, 1500);
-    };
+    // Obtén el id del miembro mostrado (puedes cambiar esto según tu lógica)
+    var idMiembro = document.getElementById('id-miembro').textContent.trim();
 
+    // Este botón inicia la captura de huella
     document.getElementById('btn-huella').onclick = function() {
-        // Simulación de lectura de huella
         document.getElementById('marcacion-resultado').innerHTML =
             '<span class="text-info"><i class="fas fa-spinner fa-spin"></i> Leyendo huella...</span>';
-        setTimeout(function() {
-            // Aquí deberías integrar con el lector real
-            document.getElementById('marcacion-resultado').innerHTML =
-                '<span class="text-success"><i class="fas fa-check-circle"></i> ¡Ingreso registrado con huella!</span>';
-        }, 1800);
+
+        // Paso 1: Llama al aplicativo C# para capturar la huella y obtener la plantilla
+        fetch('http://localhost:5000/capturar_huella')
+            .then(response => response.json())
+            .then(data => {
+                console.log(data); // <-- Verifica que data.plantilla exista y tenga valor
+                if (data.success && data.plantilla) {
+                    // Paso 2: Envía la plantilla a PHP para buscar coincidencia
+                    return fetch('http://localhost/SysGym/App/controllers/huellasdigitales/verificar_huella.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: 'huella=' + encodeURIComponent(data.plantilla)
+                    });
+                } else {
+                    throw new Error(data.message || 'No se pudo capturar la huella');
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.coincide) {
+                    document.getElementById('marcacion-resultado').innerHTML =
+                        '<span class="text-success"><i class="fas fa-check-circle"></i> ¡Huella verificada! Acceso permitido.<br>' +
+                        'Usuario: ' + data.usuario.nombres + ' ' + data.usuario.apellidos + ' (ID: ' + data.usuario.id_miembro + ')</span>';
+                    // Aquí puedes mostrar más info o registrar el acceso
+                } else if (data.success && !data.coincide) {
+                    document.getElementById('marcacion-resultado').innerHTML =
+                        '<span class="text-danger"><i class="fas fa-times-circle"></i> Huella no coincide. Acceso denegado.</span>';
+                } else {
+                    document.getElementById('marcacion-resultado').innerHTML =
+                        '<span class="text-danger"><i class="fas fa-exclamation-triangle"></i> ' + (data.message || 'Error al verificar la huella') + '</span>';
+                }
+            })
+            .catch(error => {
+                document.getElementById('marcacion-resultado').innerHTML =
+                    '<span class="text-danger"><i class="fas fa-exclamation-triangle"></i> ' + error.message + '</span>';
+            });
     };
 
     document.getElementById('btn-stop').onclick = function() {

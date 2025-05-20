@@ -140,21 +140,37 @@ $(document).ready(function() {
         $('#spinnerHuella').show();
         $('#modalHuella').modal('show');
 
-        // Llama al aplicativo C# usando fetch a localhost (ajusta el puerto si es necesario)
+        // Paso 1: Llama al C# para capturar la huella
         fetch('http://localhost:5000/registrar_huella?id_miembro=' + idMiembro)
             .then(response => response.json())
             .then(data => {
-                $('#spinnerHuella').hide();
-                if (data.success) {
-                    // Mensaje de éxito tras recibir confirmación del C#
-                    $('#estadoHuella').html('<span class="text-success">¡Huella registrada correctamente!<br>El registro de las 4 muestras fue exitoso.</span>');
+                if (data.success && data.plantilla) {
+                    const bodyData = 'id_miembro=' + encodeURIComponent(idMiembro) +
+                                     '&huella=' + encodeURIComponent(data.plantilla) +
+                                     '&modo=registrar';
+                    console.log('Body enviado a guardar_huella.php:', bodyData); // <-- Aquí ves el contenido
+                    // Paso 2: Envía la plantilla a PHP
+                    return fetch('http://localhost/SysGym/App/controllers/huellasdigitales/guardar_huella.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: bodyData
+                    });
                 } else {
-                    $('#estadoHuella').html('<span class="text-danger">Error: ' + (data.message || 'No se pudo registrar la huella') + '</span>');
+                    throw new Error(data.message || 'No se pudo capturar la huella');
+                }
+            })
+            .then(response => response.json())
+            .then(result => {
+                $('#spinnerHuella').hide();
+                if (result.success) {
+                    $('#estadoHuella').html('<span class="text-success">' + result.message + '</span>');
+                } else {
+                    $('#estadoHuella').html('<span class="text-danger">' + result.message + '</span>');
                 }
             })
             .catch(error => {
                 $('#spinnerHuella').hide();
-                $('#estadoHuella').html('<span class="text-danger">No se pudo conectar con el lector de huellas.<br>Verifique que el aplicativo esté ejecutándose.</span>');
+                $('#estadoHuella').html('<span class="text-danger">' + error.message + '</span>');
             });
     });
 
