@@ -73,12 +73,20 @@ include('../layout/sesion.php');
                                                         <a href="update.php?id=<?php echo $id_miembro; ?>" class="btn btn-warning btn-sm">
                                                             <i class="fas fa-edit"></i>
                                                         </a>
+                                                         <!-- Botón para registrar huella digital -->
+                                                        <a href="#" 
+                                                           class="btn btn-success btn-sm btn-huella" 
+                                                           data-id="<?php echo $id_miembro; ?>" 
+                                                           title="Registrar huella digital">
+                                                            <i class="fas fa-fingerprint"></i>
+                                                        </a>
                                                         <!-- Botón de eliminación con SweetAlert2 -->
                                                         <button class="btn btn-danger btn-sm btn-eliminar"
                                                             data-id="<?php echo $id_miembro; ?>"
                                                             data-row-id="row-<?php echo $id_miembro; ?>">
                                                             <i class="fas fa-trash"></i>
                                                         </button>
+                                                       
                                                     </div>
                                                 </td>
                                             </tr>
@@ -95,10 +103,68 @@ include('../layout/sesion.php');
     <!-- /.content -->
 </div>
 
+<!-- Modal para registro de huella digital -->
+<div class="modal fade" id="modalHuella" tabindex="-1" role="dialog" aria-labelledby="modalHuellaLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title" id="modalHuellaLabel">Registro de Huella Digital</h5>
+        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Cerrar">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body text-center">
+        <p id="estadoHuella">Conectando con el lector de huellas...</p>
+        <div id="spinnerHuella" class="mb-2">
+          <i class="fas fa-spinner fa-spin fa-2x"></i>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- /.content-wrapper -->
 
 <script src="datatable.js"></script>
 <script src="delete.js"></script>
+
+<script>
+$(document).ready(function() {
+    $('.btn-huella').on('click', function(e) {
+        e.preventDefault();
+        var idMiembro = $(this).data('id');
+        $('#estadoHuella').text('Conectando con el lector de huellas...');
+        $('#spinnerHuella').show();
+        $('#modalHuella').modal('show');
+
+        // Llama al aplicativo C# usando fetch a localhost (ajusta el puerto si es necesario)
+        fetch('http://localhost:5000/registrar_huella?id_miembro=' + idMiembro)
+            .then(response => response.json())
+            .then(data => {
+                $('#spinnerHuella').hide();
+                if (data.success) {
+                    // Mensaje de éxito tras recibir confirmación del C#
+                    $('#estadoHuella').html('<span class="text-success">¡Huella registrada correctamente!<br>El registro de las 4 muestras fue exitoso.</span>');
+                } else {
+                    $('#estadoHuella').html('<span class="text-danger">Error: ' + (data.message || 'No se pudo registrar la huella') + '</span>');
+                }
+            })
+            .catch(error => {
+                $('#spinnerHuella').hide();
+                $('#estadoHuella').html('<span class="text-danger">No se pudo conectar con el lector de huellas.<br>Verifique que el aplicativo esté ejecutándose.</span>');
+            });
+    });
+
+    // Limpiar estado al cerrar el modal
+    $('#modalHuella').on('hidden.bs.modal', function () {
+        $('#estadoHuella').text('Conectando con el lector de huellas...');
+        $('#spinnerHuella').show();
+    });
+});
+</script>
 
 <?php include('../layout/mensajes.php'); ?>
 <?php include('../layout/parte2.php'); ?>
