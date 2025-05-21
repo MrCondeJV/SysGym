@@ -1,11 +1,8 @@
 <?php
-
 include(__DIR__ . '/../../config.php');
 
-// Configuración de la sesión para 15 minutos
-$session_lifetime = 900; // 15 minutos en segundos
+$session_lifetime = 18000; // 5 horas
 
-// Configuración segura de la sesión
 if (session_status() === PHP_SESSION_NONE) {
     session_set_cookie_params([
         'lifetime' => $session_lifetime,
@@ -18,10 +15,9 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+// Renovar sesión vía AJAX
 if (isset($_GET['renew']) && $_GET['renew'] == "true") {
-    session_regenerate_id(true);
     $_SESSION['LAST_ACTIVITY'] = time();
-
     setcookie(
         session_name(),
         session_id(),
@@ -34,7 +30,6 @@ if (isset($_GET['renew']) && $_GET['renew'] == "true") {
             'samesite' => 'Lax'
         ]
     );
-
     header('Content-Type: application/json');
     echo json_encode(['status' => 'success', 'message' => 'Sesión renovada']);
     exit();
@@ -45,7 +40,6 @@ if (isset($_SESSION['LAST_ACTIVITY'])) {
     if (time() - $_SESSION['LAST_ACTIVITY'] > $session_lifetime) {
         session_unset();
         session_destroy();
-
         setcookie(
             session_name(),
             '',
@@ -57,31 +51,28 @@ if (isset($_SESSION['LAST_ACTIVITY'])) {
                 'httponly' => true
             ]
         );
-
         header('Content-Type: application/json');
         echo json_encode(['status' => 'expired', 'message' => 'La sesión ha expirado']);
         exit();
+    } else {
+        // Solo aquí actualiza el tiempo de actividad y la cookie
+        $_SESSION['LAST_ACTIVITY'] = time();
+        setcookie(
+            session_name(),
+            session_id(),
+            [
+                'expires' => time() + $session_lifetime,
+                'path' => '/',
+                'domain' => $_SERVER['HTTP_HOST'] ?? 'localhost',
+                'secure' => isset($_SERVER['HTTPS']),
+                'httponly' => true,
+                'samesite' => 'Lax'
+            ]
+        );
     }
 } else {
     $_SESSION['LAST_ACTIVITY'] = time();
 }
-
-// Actualizar tiempo de actividad en cada carga
-$_SESSION['LAST_ACTIVITY'] = time();
-
-// Renovar cookie de sesión en cada interacción
-setcookie(
-    session_name(),
-    session_id(),
-    [
-        'expires' => time() + $session_lifetime,
-        'path' => '/',
-        'domain' => $_SERVER['HTTP_HOST'] ?? 'localhost',
-        'secure' => isset($_SERVER['HTTPS']),
-        'httponly' => true,
-        'samesite' => 'Lax'
-    ]
-);
 
 // Si hay un usuario en sesión, obtener datos
 if (isset($_SESSION['sesion_usuario'])) {
@@ -129,4 +120,3 @@ if (isset($_SESSION['sesion_usuario'])) {
     header('Location: /SysGym/App/views/login/index.php');
     exit();
 }
-?>
