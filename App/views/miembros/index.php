@@ -130,57 +130,87 @@ include('../layout/sesion.php');
 
 <script src="datatable.js"></script>
 <script src="delete.js"></script>
-
 <script>
 $(document).ready(function() {
-    $('.btn-huella').on('click', function(e) {
-        e.preventDefault();
-        var idMiembro = $(this).data('id');
-        $('#estadoHuella').text('Conectando con el lector de huellas...');
-        $('#spinnerHuella').show();
-        $('#modalHuella').modal('show');
+    const HUELLA_API_URL = 'http://localhost:5000/registrar_huella';
+    const GUARDAR_HUELLA_URL = 'http://localhost/SysGym/App/controllers/huellasdigitales/guardar_huella.php';
+    const MODAL_HUELLA = $('#modalHuella');
+    const ESTADO_HUELLA = $('#estadoHuella');
+    const SPINNER_HUELLA = $('#spinnerHuella');
 
-        // Paso 1: Llama al C# para capturar la huella
-        fetch('http://localhost:5000/registrar_huella?id_miembro=' + idMiembro)
-            .then(response => response.json())
-            .then(data => {
-                if (data.success && data.plantilla) {
-                    const bodyData = 'id_miembro=' + encodeURIComponent(idMiembro) +
-                                     '&huella=' + encodeURIComponent(data.plantilla) +
-                                     '&modo=registrar';
-                    console.log('Body enviado a guardar_huella.php:', bodyData); // <-- Aquí ves el contenido
-                    // Paso 2: Envía la plantilla a PHP
-                    return fetch('http://localhost/SysGym/App/controllers/huellasdigitales/guardar_huella.php', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                        body: bodyData
-                    });
-                } else {
-                    throw new Error(data.message || 'No se pudo capturar la huella');
-                }
-            })
-            .then(response => response.json())
-            .then(result => {
-                $('#spinnerHuella').hide();
-                if (result.success) {
-                    $('#estadoHuella').html('<span class="text-success">' + result.message + '</span>');
-                } else {
-                    $('#estadoHuella').html('<span class="text-danger">' + result.message + '</span>');
-                }
-            })
-            .catch(error => {
-                $('#spinnerHuella').hide();
-                $('#estadoHuella').html('<span class="text-danger">' + error.message + '</span>');
+    $('.btn-huella').on('click', async function(e) {
+        e.preventDefault();
+        const idMiembro = $(this).data('id');
+        
+        try {
+            // Configurar modal
+            ESTADO_HUELLA.text('Iniciando comunicación con el lector...');
+            SPINNER_HUELLA.show();
+            MODAL_HUELLA.modal('show');
+
+            // Paso 1: Capturar huella con C#
+            const responseCaptura = await fetch(`${HUELLA_API_URL}?id_miembro=${encodeURIComponent(idMiembro)}`);
+            
+            if (!responseCaptura.ok) {
+                throw new Error(`Error HTTP: ${responseCaptura.status}`);
+            }
+            
+            const dataCaptura = await responseCaptura.json();
+            
+            if (!dataCaptura.success || !dataCaptura.plantilla) {
+                throw new Error(dataCaptura.message || 'Error al capturar la huella');
+            }
+
+            // Paso 2: Enviar a PHP
+            const formData = new URLSearchParams();
+            formData.append('id_miembro', idMiembro);
+            formData.append('huella', dataCaptura.plantilla);
+            formData.append('modo', 'registrar');
+
+            const responseGuardar = await fetch(GUARDAR_HUELLA_URL, {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+                },
+                body: formData
             });
+
+            if (!responseGuardar.ok) {
+                throw new Error(`Error HTTP: ${responseGuardar.status}`);
+            }
+
+            const resultado = await responseGuardar.json();
+            
+            SPINNER_HUELLA.hide();
+            ESTADO_HUELLA.html(resultado.success ? 
+                `<span class="text-success">${resultado.message}</span>` :
+                `<span class="text-danger">${resultado.message}</span>`
+            );
+
+            if (resultado.success) {
+                setTimeout(() => MODAL_HUELLA.modal('hide'), 2000);
+            }
+
+        } catch (error) {
+            console.error('Error en proceso:', error);
+            SPINNER_HUELLA.hide();
+            ESTADO_HUELLA.html(`<span class="text-danger">${error.message || 'Error desconocido'}</span>`);
+            
+            // Auto-cierre seguro del modal
+            if (!MODAL_HUELLA.data('bs.modal')._isShown) {
+                setTimeout(() => MODAL_HUELLA.modal('hide'), 3000);
+            }
+        }
     });
 
-    // Limpiar estado al cerrar el modal
-    $('#modalHuella').on('hidden.bs.modal', function () {
-        $('#estadoHuella').text('Conectando con el lector de huellas...');
-        $('#spinnerHuella').show();
+    // Reiniciar estado del modal
+    MODAL_HUELLA.on('hidden.bs.modal', () => {
+        ESTADO_HUELLA.text('Conectando con el lector de huellas...');
+        SPINNER_HUELLA.show();
     });
 });
 </script>
+
 
 <?php include('../layout/mensajes.php'); ?>
 <?php include('../layout/parte2.php'); ?>

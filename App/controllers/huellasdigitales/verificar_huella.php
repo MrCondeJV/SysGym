@@ -4,6 +4,7 @@
 include('../../config.php');
 header('Content-Type: application/json');
 
+// Log para depuración (opcional, puedes quitarlo en producción)
 file_put_contents(__DIR__ . '/debug_post.log', print_r($_POST, true));
 
 $plantilla = $_POST['huella'] ?? null;

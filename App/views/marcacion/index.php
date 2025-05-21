@@ -264,7 +264,7 @@ $accesos = [
             <div class="marcacion-flexrow">
                 <!-- Columna izquierda: Foto y lector -->
                 <div class="marcacion-col-left">
-                    <img src="<?= htmlspecialchars($miembro['url_foto'] ?? '/sysgym/public/images/avatar_default.png') ?>" alt="Foto" class="foto-miembro" id="foto-miembro">
+                    <img src="<?= htmlspecialchars($miembro['url_foto'] ?? '/sysgym/public/images/avatar.png') ?>" alt="Foto" class="foto-miembro" id="foto-miembro">
                     <div class="nombre-miembro" id="nombre-miembro">
                         <?= htmlspecialchars(($miembro['nombres'] ?? '') . ' ' . ($miembro['apellidos'] ?? '')) ?>
                     </div>
@@ -286,8 +286,7 @@ $accesos = [
                         <i class="fas fa-fingerprint"></i>
                     </button>
                     <br>
-                    <button class="btn btn-lector start" id="btn-huella"><i class="fas fa-play"></i> Start</button>
-                    <button class="btn btn-lector stop" id="btn-stop"><i class="fas fa-stop"></i> Stop</button>
+                    
                 </div>
                 <!-- Columna principal: Info y acciones -->
                 <div class="marcacion-col-main">
@@ -338,63 +337,96 @@ $accesos = [
 </div>
 
 <script>
-    // Obtén el id del miembro mostrado (puedes cambiar esto según tu lógica)
-    var idMiembro = document.getElementById('id-miembro').textContent.trim();
+    // Configuración global
+const HUELLA_API_URL = 'http://localhost:5000/verificar_huella';
+const RESULTADO_ELEMENTO = document.getElementById('marcacion-resultado');
 
-    // Este botón inicia la captura de huella
-    document.getElementById('btn-huella').onclick = function() {
-        document.getElementById('marcacion-resultado').innerHTML =
-            '<span class="text-info"><i class="fas fa-spinner fa-spin"></i> Leyendo huella...</span>';
-
-        // Paso 1: Llama al aplicativo C# para capturar la huella y obtener la plantilla
-        fetch('http://localhost:5000/capturar_huella')
-            .then(response => response.json())
-            .then(data => {
-                console.log(data); // <-- Verifica que data.plantilla exista y tenga valor
-                if (data.success && data.plantilla) {
-                    // Paso 2: Envía la plantilla a PHP para buscar coincidencia
-                    return fetch('http://localhost/SysGym/App/controllers/huellasdigitales/verificar_huella.php', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                        body: 'huella=' + encodeURIComponent(data.plantilla)
-                    });
-                } else {
-                    throw new Error(data.message || 'No se pudo capturar la huella');
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success && data.coincide) {
-                    document.getElementById('marcacion-resultado').innerHTML =
-                        '<span class="text-success"><i class="fas fa-check-circle"></i> ¡Huella verificada! Acceso permitido.<br>' +
-                        'Usuario: ' + data.usuario.nombres + ' ' + data.usuario.apellidos + ' (ID: ' + data.usuario.id_miembro + ')</span>';
-                    // Aquí puedes mostrar más info o registrar el acceso
-                } else if (data.success && !data.coincide) {
-                    document.getElementById('marcacion-resultado').innerHTML =
-                        '<span class="text-danger"><i class="fas fa-times-circle"></i> Huella no coincide. Acceso denegado.</span>';
-                } else {
-                    document.getElementById('marcacion-resultado').innerHTML =
-                        '<span class="text-danger"><i class="fas fa-exclamation-triangle"></i> ' + (data.message || 'Error al verificar la huella') + '</span>';
-                }
-            })
-            .catch(error => {
-                document.getElementById('marcacion-resultado').innerHTML =
-                    '<span class="text-danger"><i class="fas fa-exclamation-triangle"></i> ' + error.message + '</span>';
-            });
+// Función para mostrar mensajes de estado
+function mostrarEstado(mensaje, tipo = 'info', icono = 'fa-spinner fa-spin') {
+    const tipos = {
+        info: 'text-info',
+        success: 'text-success',
+        danger: 'text-danger',
+        warning: 'text-warning'
     };
+    RESULTADO_ELEMENTO.innerHTML = `
+        <span class="${tipos[tipo]}">
+            <i class="fas ${icono}"></i> ${mensaje}
+        </span>
+    `;
+}
 
-    document.getElementById('btn-stop').onclick = function() {
-        document.getElementById('marcacion-resultado').innerHTML =
-            '<span class="text-danger"><i class="fas fa-stop-circle"></i> Lector detenido.</span>';
-    };
+// Función para manejar errores
+function manejarError(error) {
+    console.error('Error:', error);
+    mostrarEstado(error.message || 'Error desconocido', 'danger', 'fa-exclamation-triangle');
+}
 
-    document.getElementById('btn-pagar').onclick = function() {
-        alert('Funcionalidad de pago de membresía próximamente.');
-    };
+// Función principal para verificar huella
+async function verificarHuella() {
+    try {
+        mostrarEstado('Iniciando lectura y verificación de huella...', 'info');
+        // Llama directamente al endpoint de C#
+        const response = await fetch(HUELLA_API_URL);
+        if (!response.ok) {
+            throw new Error(`Error en el servidor: ${response.status}`);
+        }
+        const data = await response.json();
 
-    document.getElementById('btn-buscar').onclick = function() {
-        alert('Funcionalidad de búsqueda por documento próximamente.');
-    };
+        if (!data.success) {
+            throw new Error(data.message || 'Error al verificar la huella');
+        }
+
+        if (data.success && data.id_miembro) {
+            mostrarEstado(
+                `¡Huella verificada! Acceso permitido.<br>
+                Usuario ID: ${escape(data.id_miembro)}`,
+                'success',
+                'fa-check-circle'
+            );
+
+            // --- NUEVO BLOQUE: Consultar info del usuario y mostrarla ---
+            fetch('http://localhost/SysGym/App/controllers/miembros/get_miembro.php?id=' + encodeURIComponent(data.id_miembro))
+                .then(resp => resp.json())
+                .then(usuario => {
+                    if (usuario.success && usuario.miembro) {
+                        document.getElementById('foto-miembro').src = usuario.miembro.url_foto || '/sysgym/public/images/avatar_default.png';
+                        document.getElementById('nombre-miembro').textContent = usuario.miembro.nombres + ' ' + usuario.miembro.apellidos;
+                        document.getElementById('estado-miembro').textContent = usuario.miembro.estado || '';
+                        document.getElementById('id-miembro').textContent = usuario.miembro.id_miembro;
+                        document.getElementById('identificacion-miembro').textContent = usuario.miembro.id_miembro;
+                        document.getElementById('correo-miembro').textContent = usuario.miembro.correo_electronico || '';
+                        document.getElementById('telefono-miembro').textContent = usuario.miembro.telefono || '';
+                        document.getElementById('direccion-miembro').textContent = usuario.miembro.direccion || '';
+                        document.getElementById('fecha-nacimiento').textContent = usuario.miembro.fecha_nacimiento || '';
+                        document.getElementById('genero-miembro').textContent = usuario.miembro.genero || '';
+                        document.getElementById('contacto-emergencia').textContent = 
+                            (usuario.miembro.contacto_emergencia_nombre || '-') + 
+                            ' (' + (usuario.miembro.contacto_emergencia_telefono || '-') + ')';
+                    }
+                });
+            // --- FIN NUEVO BLOQUE ---
+        } else {
+            mostrarEstado(
+                'Huella no registrada o no coincide. Acceso denegado.',
+                'danger',
+                'fa-times-circle'
+            );
+        }
+    } catch (error) {
+        manejarError(error);
+    }
+}
+
+// Event Listeners
+document.getElementById('btn-huella').addEventListener('click', verificarHuella);
+
+document.getElementById('btn-pagar').addEventListener('click', () => {
+    alert('Funcionalidad de pago de membresía en desarrollo.');
+});
+document.getElementById('btn-buscar').addEventListener('click', () => {
+    alert('Funcionalidad de búsqueda por documento en desarrollo.');
+});
 </script>
 
 <?php include('../layout/parte2.php'); ?>
