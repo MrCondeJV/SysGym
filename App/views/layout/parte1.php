@@ -165,7 +165,7 @@ if (!isset($_SESSION['sesion_usuario'])) {
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-id-card"></i>
                                 <p>
-                                    Membresias
+                                    Renovar Membresia
                                     <i class="right fas fa-angle-left"></i>
                                 </p>
                             </a>
@@ -173,27 +173,15 @@ if (!isset($_SESSION['sesion_usuario'])) {
                                 <li class="nav-item">
                                     <a href="<?php echo $URL; ?>App/views/membresias/index.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Listado de Membresias</p>
+                                        <p>Listado de Renovaciones</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a href="<?php echo $URL; ?>App/views/membresias/create.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Agregar Membresia</p>
+                                        <p>Agregar Renovacion</p>
                                     </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="<?php echo $URL; ?>App/views/membresias/renovar.php" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Renovar Membresia</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="<?php echo $URL; ?>App/views/membresias/index.php" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Membresias Inhabilitadas</p>
-                                    </a>
-                                </li>
+                                </li>                              
                             </ul>
                         </li>
                         <!--Fin Membresias-->
@@ -202,7 +190,7 @@ if (!isset($_SESSION['sesion_usuario'])) {
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-gem"></i>
                                 <p>
-                                    Tipos Membresias
+                                    Membresias
                                     <i class="right fas fa-angle-left"></i>
                                 </p>
                             </a>
@@ -210,13 +198,13 @@ if (!isset($_SESSION['sesion_usuario'])) {
                                 <li class="nav-item">
                                     <a href="<?php echo $URL; ?>App/views/membresias_tipo/index.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Listado Tipos Membresias</p>
+                                        <p>Listado de Membresias</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
                                     <a href="<?php echo $URL; ?>App/views/membresias_tipo/create.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Agregar Tipo Membresia</p>
+                                        <p>Agregar Membresia</p>
                                     </a>
                                 </li>
                             </ul>

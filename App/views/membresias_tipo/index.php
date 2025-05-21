@@ -14,7 +14,7 @@ include('../layout/sesion.php');
                     <div class="p-4 rounded shadow-lg"
                         style="background: linear-gradient(90deg,rgb(14, 148, 160),rgb(11, 191, 251)); color: #fff; font-family: 'Arial', sans-serif;">
                         <h1 class="m-0 text-uppercase font-weight-bold" style="font-size: 2.5rem; letter-spacing: 2px;">
-                            <i class="fas fa-tags fa-lg"></i> Tipos de Membresía
+                            <i class="fas fa-tags fa-lg"></i> Listado de Membresía
                         </h1>
                     </div>
                 </div>

@@ -3,6 +3,7 @@
 include('../../config.php');
 include('../layout/parte1.php');
 include('../../controllers/marcacion/list_historial.php');
+include('../layout/sesion.php');
 ?>
 
 <div class="content-wrapper">

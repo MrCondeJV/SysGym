@@ -1,6 +1,6 @@
 <script>
   $(document).ready(function () {
-    let sessionDuration = 900; // 15 minutos
+    let sessionDuration = 9000; // 15 minutos
     let warningTime = 60;      // 1 minuto de advertencia
 
     let warningTimer, logoutTimer, countdownInterval, sessionCountdownInterval;
@@ -90,12 +90,12 @@
       clearInterval(countdownInterval);
       clearInterval(sessionCountdownInterval);
       localStorage.setItem("sessionExpired", "true");
-      window.location.href = window.location.origin + "/sisTransporte/login/index.php";
+      window.location.href = window.location.origin + "/SysGym/App/views/login/index.php";
     }
 
     function renewSession() {
       //console.log("Renovando sesión...");
-      fetch("http://localhost/sisgym/layout/sesion.php?renew=true")
+      fetch("http://localhost/SysGym/App/views/layout/sesion.php?renew=true")
         .then(response => response.json())
         .then(data => {
           console.log("Respuesta del servidor:", data);

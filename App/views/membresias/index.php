@@ -12,7 +12,7 @@ include('../../controllers/membresias/list_membership.php');
                     <div class="p-4 rounded shadow-lg"
                         style="background: linear-gradient(90deg, #0e94a0, #0bbffb); color: #fff;">
                         <h1 class="m-0 text-uppercase font-weight-bold" style="font-size: 2.5rem;">
-                            <i class="fas fa-id-card-alt"></i> Listado de Membresías
+                            <i class="fas fa-id-card-alt"></i> Listado de Renovaciones
                         </h1>
                     </div>
                 </div>
