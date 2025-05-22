@@ -2,8 +2,22 @@
 include('../../config.php');
 include('../layout/parte1.php');
 
-// Consulta todas las renovaciones con datos del miembro
-$stmt = $pdo->query("
+// Filtro de fechas
+$where = [];
+$params = [];
+
+if (!empty($_GET['fecha_inicio'])) {
+    $where[] = "DATE(r.fecha) >= :fecha_inicio";
+    $params[':fecha_inicio'] = $_GET['fecha_inicio'];
+}
+if (!empty($_GET['fecha_fin'])) {
+    $where[] = "DATE(r.fecha) <= :fecha_fin";
+    $params[':fecha_fin'] = $_GET['fecha_fin'];
+}
+
+$where_sql = $where ? 'WHERE ' . implode(' AND ', $where) : '';
+
+$stmt = $pdo->prepare("
     SELECT r.*, 
            me.nombres AS nombre_miembro, 
            me.apellidos AS apellido_miembro,
@@ -18,9 +32,16 @@ $stmt = $pdo->query("
     JOIN membresias m ON r.id_membresia = m.id_membresia
     JOIN tiposmembresia t ON m.id_tipo_membresia = t.id_tipo_membresia
     LEFT JOIN usuariossistema u ON r.renovado_por = u.id_usuario
+    $where_sql
     ORDER BY r.fecha DESC
 ");
+$stmt->execute($params);
 $renovaciones = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$total = 0;
+foreach ($renovaciones as $r) {
+    $total += floatval($r['precio']);
+}
 ?>
 
 <div class="content-wrapper">
@@ -40,6 +61,26 @@ $renovaciones = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="container-fluid">
             <div class="row justify-content-center">
                 <div class="col-12">
+                    <form method="get" class="mb-3">
+                        <div class="form-row align-items-end">
+                            <div class="col-auto">
+                                <label for="fecha_inicio" class="mb-0">Desde</label>
+                                <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio"
+                                    value="<?= htmlspecialchars($_GET['fecha_inicio'] ?? '') ?>">
+                            </div>
+                            <div class="col-auto">
+                                <label for="fecha_fin" class="mb-0">Hasta</label>
+                                <input type="date" class="form-control" id="fecha_fin" name="fecha_fin"
+                                    value="<?= htmlspecialchars($_GET['fecha_fin'] ?? '') ?>">
+                            </div>
+                            <div class="col-auto">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-filter"></i> Filtrar
+                                </button>
+                                <a href="" class="btn btn-outline-secondary">Limpiar</a>
+                            </div>
+                        </div>
+                    </form>
                     <div class="card card-info card-outline">
                         <div class="card-header">
                             <h3 class="card-title"><i class="fas fa-history"></i> Todas las renovaciones</h3>
@@ -94,6 +135,14 @@ $renovaciones = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                         <?php endforeach; ?>
                                     </tbody>
                                 </table>
+                                <div class="mt-3 text-right">
+                                    <span class="h5">
+                                        <strong>Total:</strong>
+                                        <span class="badge badge-primary">
+                                            $<?= number_format($total, 2, ',', '.') ?>
+                                        </span>
+                                    </span>
+                                </div>
                             </div>
                         </div>
                         <div class="card-footer text-right">
