@@ -8,8 +8,6 @@ $id_miembro = $_POST['id_miembro'] ?? null;
 $plantilla = $_POST['huella'] ?? null;
 $modo = $_POST['modo'] ?? 'registrar';
 
-// Log de la huella recibida
-file_put_contents(__DIR__ . '/log_huella.txt', date('Y-m-d H:i:s') . " | id_miembro: $id_miembro | huella: $plantilla\n", FILE_APPEND);
 
 if ($id_miembro && $plantilla) {
     // Verificar si ya existe una huella para ese miembro
