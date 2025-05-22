@@ -2,10 +2,13 @@
 // filepath: c:\xampp\htdocs\SysGym\App\views\marcacion\index.php
 include('../../config.php');
 include('../layout/parte1.php');
+include('../layout/sesion.php');
 
 // Consulta campos disponibles en la tabla miembros
 $campos_miembro = [
     'id_miembro',
+    'tipo_documento',
+    'numero_documento',
     'nombres',
     'apellidos',
     'fecha_nacimiento',
@@ -29,15 +32,15 @@ $miembro = $stmt->fetch(PDO::FETCH_ASSOC);
 
 // Simulación de membresía y accesos
 $membresia = [
-    'fecha_inicio' => '2024-05-01',
-    'fecha_fin' => '2024-06-01',
-    'dias_vigentes' => 15,
-    'dias_total' => 30,
-    'estado' => 'Activa'
+    'fecha_inicio' => '',
+    'fecha_fin' => '',
+    'dias_vigentes' => '',
+    'dias_total' => '',
+    'estado' => ''
 ];
 $accesos = [
-    ['hora_entrada' => '07:10', 'hora_salida' => '08:00', 'fecha' => '2024-05-19'],
-    ['hora_entrada' => '18:20', 'hora_salida' => '19:10', 'fecha' => '2024-05-18'],
+    ['hora_entrada' => '', 'hora_salida' => '', 'fecha' => ''],
+
 ];
 ?>
 
@@ -260,7 +263,7 @@ $accesos = [
 
 <div class="content-wrapper">
     <section class="content">
-        <div class="container-fluid" style="padding-top: 24px;">
+        <div class="container-fluid" ">
             <div class="marcacion-flexrow">
                 <!-- Columna izquierda: Foto y lector -->
                 <div class="marcacion-col-left">
@@ -273,7 +276,8 @@ $accesos = [
                     </div>
                     <ul class="info-miembro-list">
                         <li><b>ID:</b> <span id="id-miembro"><?= htmlspecialchars($miembro['id_miembro'] ?? '-') ?></span></li>
-                        <li><b>Identificación:</b> <span id="identificacion-miembro"><?= htmlspecialchars($miembro['id_miembro'] ?? '-') ?></span></li>
+                        <li><b>Tipo Documento:</b> <span id="tipo-documento-miembro"><?= htmlspecialchars($miembro['tipo_documento'] ?? '-') ?></span></li>
+                        <li><b>Número Documento:</b> <span id="numero-documento-miembro"><?= htmlspecialchars($miembro['numero_documento'] ?? '-') ?></span></li>
                         <li><b>Correo:</b> <span id="correo-miembro"><?= htmlspecialchars($miembro['correo_electronico'] ?? '-') ?></span></li>
                         <li><b>Teléfono:</b> <span id="telefono-miembro"><?= htmlspecialchars($miembro['telefono'] ?? '-') ?></span></li>
                         <li><b>Dirección:</b> <span id="direccion-miembro"><?= htmlspecialchars($miembro['direccion'] ?? '-') ?></span></li>
@@ -281,12 +285,12 @@ $accesos = [
                         <li><b>Género:</b> <span id="genero-miembro"><?= htmlspecialchars($miembro['genero'] ?? '-') ?></span></li>
                         <li><b>Contacto Emergencia:</b> <span id="contacto-emergencia"><?= htmlspecialchars($miembro['contacto_emergencia_nombre'] ?? '-') ?> (<?= htmlspecialchars($miembro['contacto_emergencia_telefono'] ?? '-') ?>)</span></li>
                     </ul>
-           
+
                     <button class="fingerprint-btn" id="btn-huella" title="Marcar con huella">
                         <i class="fas fa-fingerprint"></i>
                     </button>
                     <br>
-                    
+
                 </div>
                 <!-- Columna principal: Info y acciones -->
                 <div class="marcacion-col-main">
@@ -300,12 +304,12 @@ $accesos = [
                         </span>
                     </div>
                     <div class="marcacion-actions">
-                        <button class="btn btn-membresia" id="btn-pagar"><i class="fas fa-money-bill-wave"></i> Pagar Membresía</button>
-                        <button class="btn btn-buscar" id="btn-buscar"><i class="fas fa-search"></i> Buscar por Documento</button>
+                        <button class="btn btn-membresia" id="btn-pagar"><i class="fas fa-money-bill-wave"></i> Renovar Membresía</button>
+                        
                     </div>
                     <div>
                         <h5 class="mb-2" style="color:#1976d2;"><i class="fas fa-door-open"></i> Últimos Ingresos</h5>
-                        <table class="table table-marcacion">
+                        <table class="table table-bordered table-marcacion">
                             <thead>
                                 <tr>
                                     <th>Fecha</th>
@@ -336,97 +340,175 @@ $accesos = [
     </section>
 </div>
 
+<!-- Modal de membresía vencida -->
+<div id="modalMembresiaVencida" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.4); align-items:center; justify-content:center;">
+  <div style="background:#fff; padding:32px 24px; border-radius:12px; max-width:350px; margin:auto; text-align:center;">
+    <h4 style="color:#d32f2f;"><i class="fas fa-exclamation-triangle"></i> Membresía vencida</h4>
+    <p>El usuario debe renovar la membresía para poder ingresar.</p>
+    <button onclick="cerrarModalMembresiaVencida()" style="margin-top:18px; background:#1976d2; color:#fff; border:none; border-radius:8px; padding:8px 24px;">Cerrar</button>
+  </div>
+</div>
+
 <script>
     // Configuración global
-const HUELLA_API_URL = 'http://localhost:5000/verificar_huella';
-const RESULTADO_ELEMENTO = document.getElementById('marcacion-resultado');
+    const HUELLA_API_URL = 'http://localhost:5000/verificar_huella';
+    const RESULTADO_ELEMENTO = document.getElementById('marcacion-resultado');
 
-// Función para mostrar mensajes de estado
-function mostrarEstado(mensaje, tipo = 'info', icono = 'fa-spinner fa-spin') {
-    const tipos = {
-        info: 'text-info',
-        success: 'text-success',
-        danger: 'text-danger',
-        warning: 'text-warning'
-    };
-    RESULTADO_ELEMENTO.innerHTML = `
+    // Función para mostrar mensajes de estado
+    function mostrarEstado(mensaje, tipo = 'info', icono = 'fa-spinner fa-spin') {
+        const tipos = {
+            info: 'text-info',
+            success: 'text-success',
+            danger: 'text-danger',
+            warning: 'text-warning'
+        };
+        RESULTADO_ELEMENTO.innerHTML = `
         <span class="${tipos[tipo]}">
             <i class="fas ${icono}"></i> ${mensaje}
         </span>
     `;
-}
-
-// Función para manejar errores
-function manejarError(error) {
-    console.error('Error:', error);
-    mostrarEstado(error.message || 'Error desconocido', 'danger', 'fa-exclamation-triangle');
-}
-
-// Función principal para verificar huella
-async function verificarHuella() {
-    try {
-        mostrarEstado('Iniciando lectura y verificación de huella...', 'info');
-        // Llama directamente al endpoint de C#
-        const response = await fetch(HUELLA_API_URL);
-        if (!response.ok) {
-            throw new Error(`Error en el servidor: ${response.status}`);
-        }
-        const data = await response.json();
-
-        if (!data.success) {
-            throw new Error(data.message || 'Error al verificar la huella');
-        }
-
-        if (data.success && data.id_miembro) {
-            mostrarEstado(
-                `¡Huella verificada! Acceso permitido.<br>
-                Usuario ID: ${escape(data.id_miembro)}`,
-                'success',
-                'fa-check-circle'
-            );
-
-            // --- NUEVO BLOQUE: Consultar info del usuario y mostrarla ---
-            fetch('http://localhost/SysGym/App/controllers/miembros/get_miembro.php?id=' + encodeURIComponent(data.id_miembro))
-                .then(resp => resp.json())
-                .then(usuario => {
-                    if (usuario.success && usuario.miembro) {
-                        document.getElementById('foto-miembro').src = usuario.miembro.url_foto || '/sysgym/public/images/avatar_default.png';
-                        document.getElementById('nombre-miembro').textContent = usuario.miembro.nombres + ' ' + usuario.miembro.apellidos;
-                        document.getElementById('estado-miembro').textContent = usuario.miembro.estado || '';
-                        document.getElementById('id-miembro').textContent = usuario.miembro.id_miembro;
-                        document.getElementById('identificacion-miembro').textContent = usuario.miembro.id_miembro;
-                        document.getElementById('correo-miembro').textContent = usuario.miembro.correo_electronico || '';
-                        document.getElementById('telefono-miembro').textContent = usuario.miembro.telefono || '';
-                        document.getElementById('direccion-miembro').textContent = usuario.miembro.direccion || '';
-                        document.getElementById('fecha-nacimiento').textContent = usuario.miembro.fecha_nacimiento || '';
-                        document.getElementById('genero-miembro').textContent = usuario.miembro.genero || '';
-                        document.getElementById('contacto-emergencia').textContent = 
-                            (usuario.miembro.contacto_emergencia_nombre || '-') + 
-                            ' (' + (usuario.miembro.contacto_emergencia_telefono || '-') + ')';
-                    }
-                });
-            // --- FIN NUEVO BLOQUE ---
-        } else {
-            mostrarEstado(
-                'Huella no registrada o no coincide. Acceso denegado.',
-                'danger',
-                'fa-times-circle'
-            );
-        }
-    } catch (error) {
-        manejarError(error);
     }
-}
 
-// Event Listeners
-document.getElementById('btn-huella').addEventListener('click', verificarHuella);
+    // Función para manejar errores
+    function manejarError(error) {
+        console.error('Error:', error);
+        mostrarEstado(error.message || 'Error desconocido', 'danger', 'fa-exclamation-triangle');
 
-document.getElementById('btn-pagar').addEventListener('click', () => {
-    alert('Funcionalidad de pago de membresía en desarrollo.');
-});
-document.getElementById('btn-buscar').addEventListener('click', () => {
-    alert('Funcionalidad de búsqueda por documento en desarrollo.');
-});
+    }
+
+    // Función principal para verificar huella
+    async function verificarHuella() {
+        try {
+            mostrarEstado('Iniciando lectura y verificación de huella...', 'info');
+            // Llama directamente al endpoint de C#
+            const response = await fetch(HUELLA_API_URL);
+            if (!response.ok) {
+                throw new Error(`Error en el servidor: ${response.status}`);
+            }
+            const data = await response.json();
+
+            if (!data.success) {
+                throw new Error(data.message || 'Error al verificar la huella');
+            }
+
+            if (data.success && data.id_miembro) {
+                mostrarEstado(
+                    `¡Huella verificada! Acceso permitido.<br>
+                Usuario ID: ${escape(data.id_miembro)}`,
+                    'success',
+                    'fa-check-circle'
+                );
+
+                // --- NUEVO BLOQUE: Consultar info del usuario y mostrarla ---
+                fetch('http://localhost/SysGym/App/controllers/miembros/get_miembro.php?id=' + encodeURIComponent(data.id_miembro))
+                    .then(resp => resp.json())
+                    .then(usuario => {
+                        if (usuario.success && usuario.miembro) {
+                            // ...actualizas los datos del usuario...
+                            document.getElementById('foto-miembro').src = usuario.miembro.url_foto || '/sysgym/public/images/avatar_default.png';
+                            document.getElementById('nombre-miembro').textContent = usuario.miembro.nombres + ' ' + usuario.miembro.apellidos;
+                            document.getElementById('estado-miembro').textContent = usuario.miembro.estado || '';
+                            document.getElementById('id-miembro').textContent = usuario.miembro.id_miembro;
+                            document.getElementById('tipo-documento-miembro').textContent = usuario.miembro.tipo_documento || '-';
+                            document.getElementById('numero-documento-miembro').textContent = usuario.miembro.numero_documento || '-';
+                            document.getElementById('correo-miembro').textContent = usuario.miembro.correo_electronico || '';
+                            document.getElementById('telefono-miembro').textContent = usuario.miembro.telefono || '';
+                            document.getElementById('direccion-miembro').textContent = usuario.miembro.direccion || '';
+                            document.getElementById('fecha-nacimiento').textContent = usuario.miembro.fecha_nacimiento || '';
+                            document.getElementById('genero-miembro').textContent = usuario.miembro.genero || '';
+                            document.getElementById('contacto-emergencia').textContent =
+                                (usuario.miembro.contacto_emergencia_nombre || '-') +
+                                ' (' + (usuario.miembro.contacto_emergencia_telefono || '-') + ')';
+
+                            // Mostrar solo los datos de membresía solicitados
+                            document.getElementById('fecha-inicio').textContent = usuario.miembro.fecha_inicio || '-';
+                            document.getElementById('fecha-fin').textContent = usuario.miembro.fecha_fin || '-';
+                            document.getElementById('dias-vigentes').textContent = usuario.miembro.dias_vigentes || '-';
+                            document.getElementById('dias').textContent = usuario.miembro.dias_total || '-';
+
+                            // Validar días vigentes antes de registrar acceso
+                            const diasVigentes = parseInt(usuario.miembro.dias_vigentes, 10) || 0;
+                            if (diasVigentes <= 0) {
+                                mostrarModalMembresiaVencida();
+                                return; // No registrar acceso
+                            }
+
+                            // Actualizar historial de accesos
+                            actualizarHistorialAccesos(data.id_miembro);
+
+                            // Registrar acceso
+                            fetch('http://localhost/SysGym/App/controllers/accesos/registrar_acceso.php', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded'
+                                },
+                                body: 'id_miembro=' + encodeURIComponent(data.id_miembro) + '&metodo_acceso=huella'
+                            })
+                            .then(resp => resp.json())
+                            .then(res => {
+                                if (res.success) {
+                                    mostrarEstado(res.message, 'success', 'fa-door-open');
+                                } else {
+                                    mostrarEstado(res.message, 'danger', 'fa-exclamation-triangle');
+                                }
+                            });
+                        }
+                    });
+                // --- FIN NUEVO BLOQUE ---
+
+            } else {
+                mostrarEstado(
+                    'Huella no registrada o no coincide. Acceso denegado.',
+                    'danger',
+                    'fa-times-circle'
+                );
+            }
+        } catch (error) {
+            manejarError(error);
+        }
+    }
+
+    // Función para actualizar el historial de accesos
+    function actualizarHistorialAccesos(idMiembro) {
+        fetch('http://localhost/SysGym/App/controllers/accesos/get_historial.php?id_miembro=' + encodeURIComponent(idMiembro))
+            .then(resp => resp.json())
+            .then(data => {
+                const tbody = document.getElementById('tabla-ingresos');
+                tbody.innerHTML = '';
+                if (data.success && data.accesos.length > 0) {
+                    data.accesos.forEach(acc => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                        <td>${acc.fecha || '-'}</td>
+                        <td>${acc.fecha_entrada ? acc.fecha_entrada.substring(11, 19) : '-'}</td>
+                        <td>${acc.fecha_salida ? acc.fecha_salida.substring(11, 19) : '-'}</td>
+                    `;
+                        tbody.appendChild(tr);
+                    });
+                } else {
+                    tbody.innerHTML = `<tr><td colspan="3" style="background:#e3eaf4;">Sin registros</td></tr>`;
+                }
+            });
+    }
+
+    // Event Listeners
+    document.getElementById('btn-huella').addEventListener('click', verificarHuella);
+
+    document.getElementById('btn-pagar').addEventListener('click', () => {
+        window.location.href = '../membresias/create.php';
+    });
+    document.getElementById('btn-buscar').addEventListener('click', () => {
+        alert('Funcionalidad de búsqueda por documento en desarrollo.');
+    });
+
+    // Función para cerrar el modal de membresía vencida
+    function cerrarModalMembresiaVencida() {
+        document.getElementById('modalMembresiaVencida').style.display = 'none';
+    }
+
+    function mostrarModalMembresiaVencida() {
+        document.getElementById('modalMembresiaVencida').style.display = 'flex';
+    }
 </script>
 
 <?php include('../layout/parte2.php'); ?>

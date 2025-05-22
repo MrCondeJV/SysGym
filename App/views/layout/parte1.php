@@ -679,13 +679,7 @@ if (!isset($_SESSION['sesion_usuario'])) {
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Agregar Producto</p>
                                     </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="<?php echo $URL; ?>App/views/productos/inactive.php" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Productos Inhabilitados</p>
-                                    </a>
-                                </li>
+                                </li>                              
                             </ul>
                         </li>
                         <!--Fin Productos-->
@@ -772,13 +766,7 @@ if (!isset($_SESSION['sesion_usuario'])) {
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Listado de Compras</p> <!-- Con reporte de todo lo comprado -->
                                     </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="<?php echo $URL; ?>App/views/proveedores/inactive.php" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Proveedores Inhabilitados</p>
-                                    </a>
-                                </li>
+                                </li>                              
 
                             </ul>
                         </li>

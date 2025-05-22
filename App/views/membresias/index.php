@@ -59,7 +59,7 @@ include('../../controllers/membresias/list_membership.php');
                                             <td><?php echo htmlspecialchars($m['nombre_membresia']); ?></td>
                                             <td><?php echo date('d/m/Y', strtotime($m['fecha_inicio'])) . ' - ' . date('d/m/Y', strtotime($m['fecha_fin'])); ?>
                                             </td>
-                                            <td><?php echo htmlspecialchars($m['dias_restantes']); ?></td>
+                                            <td><?php echo max(0, (int)$m['dias_restantes']); ?></td>
                                             <td><?php echo $estado; ?></td> <!-- Estado -->
                                             <td>
                                                 <div class="btn-group" role="group" aria-label="Acciones">

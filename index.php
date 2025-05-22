@@ -117,7 +117,7 @@ include_once('App/controllers/miembros/nuevos_mes.php'); // Debe definir $nuevos
                 <div class="col">
                     <div class="titulo-bienvenida-corporativo">
                         <i class="fas fa-dumbbell icon-corporate"></i>
-                        <span class="main-text">BIENVENIDO AL GIMNASIO MAMBACODE</span>
+                        <span class="main-text">BIENVENIDO AL GIMNASIO </span>
                         <span class="sub">¡Entrena con excelencia y profesionalismo!</span>
                     </div>
                 </div>
