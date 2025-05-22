@@ -66,6 +66,10 @@ if (!isset($_SESSION['sesion_usuario'])) {
     }
     </script>
 
+    <!-- Select2 CSS y JS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 
     <!-- jQuery UI CSS -->
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
@@ -111,7 +115,7 @@ if (!isset($_SESSION['sesion_usuario'])) {
                     </div>
                     <div class="info">
                         <a href="#" class="d-block">
-                            <?php echo $_SESSION['nombres']." ".$_SESSION['apellidos'] ?? 'Usuario'; ?>
+                            <?php echo $_SESSION['nombres'] . " " . $_SESSION['apellidos'] ?? 'Usuario'; ?>
                         </a>
                     </div>
                 </div>
@@ -181,7 +185,7 @@ if (!isset($_SESSION['sesion_usuario'])) {
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Agregar Renovacion</p>
                                     </a>
-                                </li>                              
+                                </li>
                             </ul>
                         </li>
                         <!--Fin Membresias-->
@@ -463,7 +467,7 @@ if (!isset($_SESSION['sesion_usuario'])) {
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="<?php echo $URL; ?>rutas/index.php" class="nav-link">
+                                    <a href="<?php echo $URL; ?>App/views/pagos/index.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Historial de pagos</p>
                                     </a>
@@ -573,7 +577,8 @@ if (!isset($_SESSION['sesion_usuario'])) {
 
                         <!--Cerrar Session-->
                         <li class="nav-item">
-                            <a href="<?php echo $URL; ?>App/controllers/login/cerrar_sesion.php" class="nav-link text-danger" onclick="confirmarLogout(event)">
+                            <a href="<?php echo $URL; ?>App/controllers/login/cerrar_sesion.php"
+                                class="nav-link text-danger" onclick="confirmarLogout(event)">
                                 <i class="nav-icon fas fa-sign-out-alt"></i>
                                 <p>Cerrar Sesión</p>
                             </a>

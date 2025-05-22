@@ -1,4 +1,5 @@
 <?php
+session_start();
 include('../../config.php');
 include('../layout/parte1.php');
 include('../../controllers/membresias/list_membership.php');
@@ -63,14 +64,10 @@ include('../../controllers/membresias/list_membership.php');
                                             <td>
                                                 <div class="btn-group" role="group" aria-label="Acciones">
                                                     <!-- Botón para Renovar -->
-                                                    <form method="POST" action="renovar.php" style="display:inline;">
-                                                        <input type="hidden" name="id_membresia"
-                                                            value="<?php echo $m['id_membresia']; ?>">
-                                                        <button type="submit" class="btn btn-success btn-sm"
-                                                            title="Renovar membresía">
-                                                            <i class="fas fa-sync-alt"></i>
-                                                        </button>
-                                                    </form>
+                                                    <a href="renovar_form.php?id_membresia=<?php echo $m['id_membresia']; ?>"
+                                                        class="btn btn-success btn-sm" title="Renovar membresía">
+                                                        <i class="fas fa-sync-alt"></i>
+                                                    </a>
                                                 </div>
                                             </td>
                                         </tr>
@@ -98,5 +95,6 @@ $(function() {
     });
 });
 </script>
+
 <?php include('../layout/mensajes.php'); ?>
 <?php include('../layout/parte2.php'); ?>
