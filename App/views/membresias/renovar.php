@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
-    function renovarMembresia($pdo, $id_membresia, $diasReserva = 5)
+    function renovarMembresia($pdo, $id_membresia, $diasReserva = 15)
     {
         $stmt = $pdo->prepare("
             SELECT m.id_miembro, m.id_tipo_membresia, m.fecha_inicio, m.fecha_fin, t.duracion_dias 
