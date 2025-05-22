@@ -25,13 +25,13 @@ include_once('App/controllers/miembros/nuevos_mes.php'); // Debe definir $nuevos
 
             <!-- Título de bienvenida animado -->
             <style>
-            @keyframes shine {
+            @keyframes gradientMoveFormal {
                 0% {
-                    background-position: -120px 0;
+                    background-position: 0% 50%;
                 }
 
                 100% {
-                    background-position: 120px 0;
+                    background-position: 100% 50%;
                 }
             }
 
@@ -39,7 +39,7 @@ include_once('App/controllers/miembros/nuevos_mes.php'); // Debe definir $nuevos
                 background: #232526;
                 color: #fff;
                 font-weight: 700;
-                font-size: 1.25rem;
+                font-size: 1.15rem;
                 letter-spacing: 1.2px;
                 box-shadow: 0 2px 12px rgba(14, 148, 160, 0.08);
                 border-radius: 0.8rem;
@@ -51,26 +51,30 @@ include_once('App/controllers/miembros/nuevos_mes.php'); // Debe definir $nuevos
                 align-items: center;
                 justify-content: center;
                 gap: 0.7rem;
-                border-left: 6px solid #0bbffb;
+                border-left: 6px solid #FFFFFF;
             }
 
             .titulo-bienvenida-corporativo .icon-corporate {
                 font-size: 1.5rem;
-                color: #0bbffb;
+                color: #e0e0e0;
                 margin-right: 0.5rem;
-                filter: drop-shadow(0 2px 4px #0e94a088);
+                /*filter: drop-shadow(0 2px 4px #0e94a088);*/
                 opacity: 0.92;
             }
 
-            .titulo-bienvenida-corporativo .shine-text {
+            .titulo-bienvenida-corporativo .main-text {
                 display: inline-block;
-                background: linear-gradient(90deg, #fff 20%, #0bbffb 40%, #fff 60%);
-                background-size: 120px 100%;
+                background: linear-gradient(90deg, #e0e0e0, #fff, #b2bec3, #e0e0e0);
+                background-size: 250% 100%;
                 color: inherit;
                 -webkit-background-clip: text;
+                background-clip: text;
+                /* estándar */
                 -webkit-text-fill-color: transparent;
-                animation: shine 2.2s linear infinite;
+                /* text-fill-color: transparent; <-- ELIMINAR ESTA LÍNEA */
+                animation: gradientMoveFormal 4s linear infinite alternate;
                 font-weight: bold;
+                letter-spacing: 1.2px;
             }
 
             .titulo-bienvenida-corporativo .sub {
@@ -80,6 +84,8 @@ include_once('App/controllers/miembros/nuevos_mes.php'); // Debe definir $nuevos
                 margin-top: 0.2rem;
                 letter-spacing: 0.5px;
                 color: #eafaff;
+                opacity: 0;
+                animation: fadeUp 1.1s 0.5s cubic-bezier(.77, 0, .18, 1) forwards;
             }
 
             @media (max-width: 576px) {
@@ -106,28 +112,16 @@ include_once('App/controllers/miembros/nuevos_mes.php'); // Debe definir $nuevos
                     transform: translateY(0);
                 }
             }
-
-            .titulo-bienvenida-corporativo .sub {
-                display: block;
-                font-size: 0.98rem;
-                font-weight: 400;
-                margin-top: 0.2rem;
-                letter-spacing: 0.5px;
-                color: #eafaff;
-                opacity: 0;
-                animation: fadeUp 1.1s 0.5s cubic-bezier(.77, 0, .18, 1) forwards;
-            }
             </style>
             <div class="row mb-3 mt-4">
                 <div class="col">
                     <div class="titulo-bienvenida-corporativo">
                         <i class="fas fa-dumbbell icon-corporate"></i>
-                        <span class="shine-text">BIENVENIDO AL GIMNASIO MAMBACODE</span>
+                        <span class="main-text">BIENVENIDO AL GIMNASIO MAMBACODE</span>
                         <span class="sub">¡Entrena con excelencia y profesionalismo!</span>
                     </div>
                 </div>
             </div>
-
             <!-- Tarjetas de métricas -->
             <div class="row">
                 <!-- Miembros Activos -->

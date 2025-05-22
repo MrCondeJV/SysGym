@@ -118,19 +118,22 @@ if (!isset($_SESSION['sesion_usuario'])) {
         transition: background 0.18s, color 0.18s;
     }
 
-    .nav-sidebar .nav-link.active,
-    .nav-sidebar .nav-link:hover,
-    .nav-sidebar .nav-link:focus {
-        background: linear-gradient(90deg, #0e94a0, #0bbffb) !important;
-        color: #fff !important;
-        font-weight: 600;
-    }
-
+    /* Cambios aquí: iconos gris claro y acento blanco translúcido */
     .nav-sidebar .nav-icon {
         font-size: 1.15rem !important;
         margin-right: 0.65rem;
-        color: #0bbffb !important;
+        color: #e0e0e0 !important;
+        /* Gris claro */
         transition: color 0.18s;
+    }
+
+    .nav-sidebar .nav-link.active,
+    .nav-sidebar .nav-link:hover,
+    .nav-sidebar .nav-link:focus {
+        background: rgba(255, 255, 255, 0.13) !important;
+        /* Blanco translúcido */
+        color: #fff !important;
+        font-weight: 600;
     }
 
     .nav-sidebar .nav-link.active .nav-icon,
@@ -147,7 +150,7 @@ if (!isset($_SESSION['sesion_usuario'])) {
 
     .nav-sidebar .nav-treeview .nav-link.active,
     .nav-sidebar .nav-treeview .nav-link:hover {
-        background: linear-gradient(90deg, #0e94a0, #0bbffb) !important;
+        background: rgba(255, 255, 255, 0.10) !important;
         color: #fff !important;
     }
 
@@ -169,8 +172,8 @@ if (!isset($_SESSION['sesion_usuario'])) {
     .main-header.navbar {
         min-height: 46px !important;
         background: linear-gradient(180deg, #232526 0%, #414345 100%) !important;
-        border-bottom: 1.5px solid #232526;
-        box-shadow: 0 2px 8px rgba(44, 44, 44, 0.07);
+        border-bottom: 3px solid #0bbffb;
+        box-shadow: 0 2px 8px rgba(14, 148, 160, 0.10);
         padding-top: 0.1rem;
         padding-bottom: 0.1rem;
     }
@@ -196,8 +199,8 @@ if (!isset($_SESSION['sesion_usuario'])) {
         border-radius: 0.5rem;
         box-shadow: 0 2px 8px rgba(44, 44, 44, 0.10);
         border: none;
-        background: #fff;
-        color: #232526;
+        background: #232526;
+        color: #fff;
     }
 
     .main-header .navbar-nav .dropdown-item:active,
@@ -219,31 +222,6 @@ if (!isset($_SESSION['sesion_usuario'])) {
         background: #fff;
         color: #0e94a0;
         font-weight: bold;
-    }
-
-    /* Navbar con línea inferior de acento */
-    .main-header.navbar {
-        border-bottom: 3px solid #0bbffb;
-        box-shadow: 0 2px 8px rgba(14, 148, 160, 0.10);
-    }
-
-    /* Menú desplegable oscuro */
-    .main-header .navbar-nav .dropdown-menu {
-        background: #232526;
-        color: #fff;
-        border: none;
-        box-shadow: 0 2px 8px rgba(14, 148, 160, 0.10);
-    }
-
-    .main-header .navbar-nav .dropdown-item {
-        color: #fff;
-    }
-
-    .main-header .navbar-nav .dropdown-item:active,
-    .main-header .navbar-nav .dropdown-item:focus,
-    .main-header .navbar-nav .dropdown-item:hover {
-        background: linear-gradient(90deg, #0e94a0, #0bbffb) !important;
-        color: #fff !important;
     }
 
     /* Mejor alineación de íconos */
