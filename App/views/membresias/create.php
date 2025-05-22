@@ -56,6 +56,11 @@ $tiposMembresia = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                             <?php endforeach; ?>
                                         </select>
                                     </div>
+
+                                    <div class="form-group col-md-6">
+                                        <label for="numero_factura">Número de Factura</label>
+                                        <input type="text" class="form-control" name="numero_factura" id="numero_factura" required placeholder="Ingrese el número de factura">
+                                    </div>
                                 </div>
                             </div>
 

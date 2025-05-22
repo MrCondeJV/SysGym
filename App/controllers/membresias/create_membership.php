@@ -7,9 +7,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Obtener datos del formulario
     $id_miembro = isset($_POST['id_miembro']) ? intval($_POST['id_miembro']) : 0;
     $id_tipo_membresia = isset($_POST['id_tipo_membresia']) ? intval($_POST['id_tipo_membresia']) : 0;
+    $numero_factura = isset($_POST['numero_factura']) ? trim($_POST['numero_factura']) : '';
 
-    if ($id_miembro <= 0 || $id_tipo_membresia <= 0) {
-        $_SESSION['error'] = "Datos inválidos.";
+    if ($id_miembro <= 0 || $id_tipo_membresia <= 0 || $numero_factura === '') {
+        $_SESSION['error'] = "Datos inválidos o falta el número de factura.";
         header("Location: ../../views/membresias/create.php");
         exit();
     }
@@ -20,6 +21,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute([$id_miembro]);
         if ($stmt->fetchColumn() == 0) {
             $_SESSION['error'] = "El miembro seleccionado no existe.";
+            header("Location: ../../views/membresias/create.php");
+            exit();
+        }
+
+        // Validar que no tenga membresía activa
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM membresias WHERE id_miembro = ? AND fecha_fin >= CURDATE()");
+        $stmt->execute([$id_miembro]);
+        if ($stmt->fetchColumn() > 0) {
+            $_SESSION['error'] = "El miembro ya tiene una membresía activa.";
             header("Location: ../../views/membresias/create.php");
             exit();
         }
@@ -39,10 +49,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $fecha_inicio = date('Y-m-d');
         $fecha_fin = date('Y-m-d', strtotime("+$duracion days"));
 
-        // Insertar membresía
-        $insert = $pdo->prepare("INSERT INTO membresias (id_miembro, id_tipo_membresia, creado_por, fecha_inicio, fecha_fin)
-    VALUES (?, ?, ?, ?, ?)");
-        $insert->execute([$id_miembro, $id_tipo_membresia, $creado_por, $fecha_inicio, $fecha_fin]);
+        // Insertar membresía (agregando numero_factura)
+        $insert = $pdo->prepare("INSERT INTO membresias (id_miembro, id_tipo_membresia, creado_por, fecha_inicio, fecha_fin, numero_factura)
+            VALUES (?, ?, ?, ?, ?, ?)");
+        $insert->execute([$id_miembro, $id_tipo_membresia, $creado_por, $fecha_inicio, $fecha_fin, $numero_factura]);
 
         $_SESSION['success'] = "Membresía registrada correctamente.";
         header("Location: ../../views/membresias/index.php");
