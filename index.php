@@ -23,12 +23,107 @@ include_once('App/controllers/miembros/nuevos_mes.php'); // Debe definir $nuevos
     <section class="content">
         <div class="container-fluid">
 
-            <!-- Título de bienvenida con margen superior -->
-            <div class="row mb-3 mt-5">
-                <!-- Agregamos mt-5 para margen superior -->
+            <!-- Título de bienvenida animado -->
+            <style>
+            @keyframes shine {
+                0% {
+                    background-position: -120px 0;
+                }
+
+                100% {
+                    background-position: 120px 0;
+                }
+            }
+
+            .titulo-bienvenida-corporativo {
+                background: #232526;
+                color: #fff;
+                font-weight: 700;
+                font-size: 1.25rem;
+                letter-spacing: 1.2px;
+                box-shadow: 0 2px 12px rgba(14, 148, 160, 0.08);
+                border-radius: 0.8rem;
+                padding: 0.8rem 1rem 0.8rem 1.2rem;
+                margin-bottom: 1.2rem;
+                position: relative;
+                overflow: hidden;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.7rem;
+                border-left: 6px solid #0bbffb;
+            }
+
+            .titulo-bienvenida-corporativo .icon-corporate {
+                font-size: 1.5rem;
+                color: #0bbffb;
+                margin-right: 0.5rem;
+                filter: drop-shadow(0 2px 4px #0e94a088);
+                opacity: 0.92;
+            }
+
+            .titulo-bienvenida-corporativo .shine-text {
+                display: inline-block;
+                background: linear-gradient(90deg, #fff 20%, #0bbffb 40%, #fff 60%);
+                background-size: 120px 100%;
+                color: inherit;
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                animation: shine 2.2s linear infinite;
+                font-weight: bold;
+            }
+
+            .titulo-bienvenida-corporativo .sub {
+                display: block;
+                font-size: 0.98rem;
+                font-weight: 400;
+                margin-top: 0.2rem;
+                letter-spacing: 0.5px;
+                color: #eafaff;
+            }
+
+            @media (max-width: 576px) {
+                .titulo-bienvenida-corporativo {
+                    font-size: 0.95rem;
+                    padding: 0.6rem 0.5rem 0.6rem 0.7rem;
+                    border-radius: 0.6rem;
+                    gap: 0.4rem;
+                }
+
+                .titulo-bienvenida-corporativo .icon-corporate {
+                    font-size: 1.1rem;
+                }
+            }
+
+            @keyframes fadeUp {
+                0% {
+                    opacity: 0;
+                    transform: translateY(18px);
+                }
+
+                100% {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            .titulo-bienvenida-corporativo .sub {
+                display: block;
+                font-size: 0.98rem;
+                font-weight: 400;
+                margin-top: 0.2rem;
+                letter-spacing: 0.5px;
+                color: #eafaff;
+                opacity: 0;
+                animation: fadeUp 1.1s 0.5s cubic-bezier(.77, 0, .18, 1) forwards;
+            }
+            </style>
+            <div class="row mb-3 mt-4">
                 <div class="col">
-                    <div class="alert alert-dark text-center font-weight-bold mb-0 py-3 rounded">
-                        BIENVENIDO AL GYMNASIO ESFIM
+                    <div class="titulo-bienvenida-corporativo">
+                        <i class="fas fa-dumbbell icon-corporate"></i>
+                        <span class="shine-text">BIENVENIDO AL GIMNASIO MAMBACODE</span>
+                        <span class="sub">¡Entrena con excelencia y profesionalismo!</span>
                     </div>
                 </div>
             </div>
@@ -46,7 +141,8 @@ include_once('App/controllers/miembros/nuevos_mes.php'); // Debe definir $nuevos
                                 <i class="fas fa-users fa-3x text-danger"></i>
                             </div>
                             <h3 class="fw-bold"><?= htmlspecialchars($miembros_activos) ?></h3>
-                            <small class="text-success">+<?= htmlspecialchars($miembros_activos_semana) ?> esta semana</small>
+                            <small class="text-success">+<?= htmlspecialchars($miembros_activos_semana) ?> esta
+                                semana</small>
                         </div>
                     </div>
                 </div>
@@ -62,7 +158,8 @@ include_once('App/controllers/miembros/nuevos_mes.php'); // Debe definir $nuevos
                                 <i class="fas fa-calendar-check fa-3x text-primary"></i>
                             </div>
                             <h3 class="fw-bold"><?= htmlspecialchars($clases_hoy) ?></h3>
-                            <small><?= htmlspecialchars($clases_manana) ?> mañana, <?= htmlspecialchars($clases_tarde) ?> tarde</small>
+                            <small><?= htmlspecialchars($clases_manana) ?> mañana,
+                                <?= htmlspecialchars($clases_tarde) ?> tarde</small>
                         </div>
                     </div>
                 </div>
@@ -94,7 +191,8 @@ include_once('App/controllers/miembros/nuevos_mes.php'); // Debe definir $nuevos
                                 <i class="fas fa-heartbeat fa-3x text-success"></i>
                             </div>
                             <h3 class="fw-bold"><?= htmlspecialchars($nuevos_miembros) ?></h3>
-                            <small class="text-success"><?= $porcentaje_nuevos >= 0 ? '+' : '' ?><?= htmlspecialchars($porcentaje_nuevos) ?>%</small>
+                            <small
+                                class="text-success"><?= $porcentaje_nuevos >= 0 ? '+' : '' ?><?= htmlspecialchars($porcentaje_nuevos) ?>%</small>
                         </div>
                     </div>
                 </div>

@@ -2,33 +2,24 @@
 include('../../config.php');
 include('../layout/parte1.php');
 
-$id_miembro = isset($_GET['id_miembro']) ? intval($_GET['id_miembro']) : 0;
-if ($id_miembro <= 0) {
-    echo "<div class='alert alert-danger'>Usuario no válido.</div>";
-    include('../layout/parte2.php');
-    exit;
-}
-
-// Consulta renovaciones del usuario
-$stmt = $pdo->prepare("
+// Consulta todas las renovaciones con datos del miembro
+$stmt = $pdo->query("
     SELECT r.*, 
+           me.nombres AS nombre_miembro, 
+           me.apellidos AS apellido_miembro,
+           me.numero_documento,
            mp.nombre AS metodo_pago, 
            t.nombre AS tipo_membresia, 
            t.precio,
-           me.nombres AS nombre_miembro,
-           me.apellidos AS apellido_miembro,
-           me.numero_documento,
            CONCAT(u.nombres, ' ', u.apellidos) AS nombre_usuario_renovo
     FROM renovaciones r
+    JOIN miembros me ON r.id_miembro = me.id_miembro
     JOIN metodos_pago mp ON r.id_metodo_pago = mp.id_metodo
     JOIN membresias m ON r.id_membresia = m.id_membresia
     JOIN tiposmembresia t ON m.id_tipo_membresia = t.id_tipo_membresia
-    JOIN miembros me ON r.id_miembro = me.id_miembro
     LEFT JOIN usuariossistema u ON r.renovado_por = u.id_usuario
-    WHERE r.id_miembro = ?
     ORDER BY r.fecha DESC
 ");
-$stmt->execute([$id_miembro]);
 $renovaciones = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
@@ -38,9 +29,9 @@ $renovaciones = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <div class="row mb-2 justify-content-center text-center">
                 <div class="col-sm-12">
                     <h1 class="m-0 text-primary">
-                        <i class="fas fa-list"></i> Historial de Renovaciones
+                        <i class="fas fa-list"></i> Historial General de Renovaciones
                     </h1>
-                    <p class="text-muted mt-2">Renovaciones realizadas por el usuario seleccionado.</p>
+                    <p class="text-muted mt-2">Consulta todas las renovaciones realizadas por los miembros.</p>
                 </div>
             </div>
         </div>
@@ -48,22 +39,20 @@ $renovaciones = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <div class="content">
         <div class="container-fluid">
             <div class="row justify-content-center">
-                <div class="col-md-12">
+                <div class="col-12">
                     <div class="card card-info card-outline">
                         <div class="card-header">
-                            <a href="index.php" class="btn btn-secondary btn-sm float-right">
-                                <i class="fas fa-arrow-left"></i> Volver
-                            </a>
-                            <h3 class="card-title"><i class="fas fa-history"></i> Renovaciones realizadas</h3>
+                            <h3 class="card-title"><i class="fas fa-history"></i> Todas las renovaciones</h3>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table id="renovacionesTable" class="table table-bordered table-striped table-hover">
+                                <table id="renovacionesGeneralTable"
+                                    class="table table-bordered table-striped table-hover">
                                     <thead class="thead-dark">
                                         <tr>
                                             <th>#</th>
                                             <th>Miembro</th>
-                                            <th>Número de Documento</th>
+                                            <th>Documento</th>
                                             <th>Fecha</th>
                                             <th>N° Factura</th>
                                             <th>Membresía</th>
@@ -97,7 +86,9 @@ $renovaciones = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                 </span>
                                             </td>
                                             <td><?php echo htmlspecialchars($r['metodo_pago']); ?></td>
-                                            <td><?php echo htmlspecialchars($r['nombre_usuario_renovo'] ?? ''); ?></td>
+                                            <td>
+                                                <?php echo htmlspecialchars($r['nombre_usuario_renovo'] ?? ''); ?>
+                                            </td>
                                             <td><?php echo nl2br(htmlspecialchars($r['observaciones'])); ?></td>
                                         </tr>
                                         <?php endforeach; ?>
@@ -106,7 +97,7 @@ $renovaciones = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             </div>
                         </div>
                         <div class="card-footer text-right">
-                            <a href="index.php" class="btn btn-secondary">
+                            <a href="../pagos/index.php" class="btn btn-secondary">
                                 <i class="fas fa-arrow-left"></i> Volver
                             </a>
                         </div>
@@ -120,7 +111,7 @@ $renovaciones = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <!-- DataTables -->
 <script>
 $(function() {
-    $('#renovacionesTable').DataTable({
+    $('#renovacionesGeneralTable').DataTable({
         "responsive": true,
         "autoWidth": false,
         "language": {

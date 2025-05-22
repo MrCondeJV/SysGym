@@ -1,5 +1,6 @@
 <?php
 session_start();
+$creado_por = $_SESSION['id_usuario'] ?? null; // Ajusta según tu sistema de login
 require_once '../../config.php'; // Ajusta la ruta a tu conexión PDO
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -39,8 +40,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $fecha_fin = date('Y-m-d', strtotime("+$duracion days"));
 
         // Insertar membresía
-        $insert = $pdo->prepare("INSERT INTO membresias (id_miembro, id_tipo_membresia, fecha_inicio, fecha_fin) VALUES (?, ?, ?, ?)");
-        $insert->execute([$id_miembro, $id_tipo_membresia, $fecha_inicio, $fecha_fin]);
+        $insert = $pdo->prepare("INSERT INTO membresias (id_miembro, id_tipo_membresia, creado_por, fecha_inicio, fecha_fin)
+    VALUES (?, ?, ?, ?, ?)");
+        $insert->execute([$id_miembro, $id_tipo_membresia, $creado_por, $fecha_inicio, $fecha_fin]);
 
         $_SESSION['success'] = "Membresía registrada correctamente.";
         header("Location: ../../views/membresias/index.php");

@@ -1,7 +1,7 @@
 <?php
 
 
-include ('../../config.php');
+include('../../config.php');
 session_start();
 
 // Guardar datos del formulario para repoblación en caso de error
@@ -9,6 +9,9 @@ $_SESSION['old_data'] = $_POST;
 
 // Obtener datos del formulario
 $id_miembro = $_POST['id_miembro'] ?? null;
+$tipo_documento = trim($_POST['tipo_documento'] ?? '');
+$numero_documento = trim($_POST['numero_documento'] ?? '');
+
 $nombres = trim($_POST['nombres'] ?? '');
 $apellidos = trim($_POST['apellidos'] ?? '');
 $fecha_nacimiento = trim($_POST['fecha_nacimiento'] ?? '');
@@ -29,6 +32,8 @@ if (!$id_miembro || !is_numeric($id_miembro)) {
     header("Location: $URL/App/views/miembros/index.php");
     exit();
 }
+
+
 
 // Validar campos obligatorios
 $errores = [];
@@ -62,6 +67,12 @@ $stmt = $pdo->prepare("SELECT COUNT(*) FROM miembros WHERE correo_electronico = 
 $stmt->execute([$correo_electronico, $id_miembro]);
 if ($stmt->fetchColumn() > 0) {
     $errores[] = "El correo electrónico ya está en uso.";
+}
+
+$stmt = $pdo->prepare("SELECT COUNT(*) FROM miembros WHERE tipo_documento = ? AND numero_documento = ? AND id_miembro != ?");
+$stmt->execute([$tipo_documento, $numero_documento, $id_miembro]);
+if ($stmt->fetchColumn() > 0) {
+    $errores[] = "El número de documento ya está registrado para otro miembro.";
 }
 
 // Manejar la carga de la foto si se subió una nueva
@@ -100,6 +111,8 @@ if (!empty($errores)) {
 
 // Construir consulta SQL
 $sql = "UPDATE miembros SET 
+    tipo_documento = :tipo_documento,
+    numero_documento = :numero_documento,
     nombres = :nombres,
     apellidos = :apellidos,
     fecha_nacimiento = :fecha_nacimiento,
@@ -114,7 +127,10 @@ $sql = "UPDATE miembros SET
     creado_por = :creado_por
     WHERE id_miembro = :id_miembro";
 
+
 $params = [
+    ':tipo_documento' => $tipo_documento,
+    ':numero_documento' => $numero_documento,
     ':nombres' => $nombres,
     ':apellidos' => $apellidos,
     ':fecha_nacimiento' => $fecha_nacimiento,

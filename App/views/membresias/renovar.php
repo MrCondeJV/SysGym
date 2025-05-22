@@ -1,5 +1,6 @@
 <?php
 session_start();
+$renovado_por = $_SESSION['id_usuario'] ?? null; // Ajusta según tu sistema de login
 require_once '../../config.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -70,16 +71,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         list($exito, $mensaje, $id_membresia_actualizada, $id_miembro) = renovarMembresia($pdo, $id_membresia);
 
         if ($exito) {
-            $stmt = $pdo->prepare("INSERT INTO renovaciones (id_membresia, id_miembro, numero_factura, id_metodo_pago, observaciones) VALUES (?, ?, ?, ?, ?)");
+            $stmt = $pdo->prepare("INSERT INTO renovaciones (id_membresia, id_miembro, numero_factura, id_metodo_pago, renovado_por, observaciones) VALUES (?, ?, ?, ?, ?, ?)");
             $stmt->execute([
                 $id_membresia_actualizada,
                 $id_miembro,
                 $numero_factura,
                 $metodo_pago,
+                $renovado_por,
                 $observaciones
             ]);
-            $id_renovacion = $pdo->lastInsertId(); // <--- OBTIENE EL ID DEL TICKET
-            header("Location: ticket_renovacion.php?id_renovacion=" . $id_renovacion); // <--- REDIRECCIÓN AL TICKET
+            $id_renovacion = $pdo->lastInsertId();
+            header("Location: ticket_renovacion.php?id_renovacion=" . $id_renovacion);
             exit();
         } else {
             $_SESSION['mensaje'] = $mensaje;

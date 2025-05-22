@@ -80,14 +80,309 @@ if (!isset($_SESSION['sesion_usuario'])) {
     <!-- FullCalendar (AdminLTE 3 plugin) -->
     <link rel="stylesheet" href="<?php echo $URL; ?>/public/templates/AdminLTE-3.2.0/plugins/fullcalendar/main.min.css">
     <script src="<?php echo $URL; ?>/public/templates/AdminLTE-3.2.0/plugins/fullcalendar/main.min.js"></script>
+    <style>
+    /* --- SIDEBAR --- */
+    .main-sidebar {
+        background: linear-gradient(180deg, #232526 0%, #414345 100%);
+        box-shadow: 2px 0 8px rgba(0, 0, 0, 0.08);
+    }
 
+    .main-sidebar .brand-link {
+        padding: 0.8rem 0.5rem 0.5rem 0.5rem;
+        background: #232526;
+        border-bottom: 1px solid #2c2c2c;
+    }
+
+    .main-sidebar .logo-img {
+        width: 44px !important;
+        height: 44px !important;
+        border-radius: 50%;
+        border: 2px solid #0bbffb;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .main-sidebar .brand-text {
+        font-size: 1em !important;
+        color: #fff !important;
+        letter-spacing: 1px;
+        margin-top: 0.2rem;
+    }
+
+    .nav-sidebar .nav-link {
+        padding: 0.38rem 1rem !important;
+        font-size: 0.93rem;
+        color: #e0e0e0;
+        border-radius: 0.28rem;
+        margin-bottom: 0.08rem;
+        min-height: 34px;
+        transition: background 0.18s, color 0.18s;
+    }
+
+    .nav-sidebar .nav-link.active,
+    .nav-sidebar .nav-link:hover,
+    .nav-sidebar .nav-link:focus {
+        background: linear-gradient(90deg, #0e94a0, #0bbffb) !important;
+        color: #fff !important;
+        font-weight: 600;
+    }
+
+    .nav-sidebar .nav-icon {
+        font-size: 1.15rem !important;
+        margin-right: 0.65rem;
+        color: #0bbffb !important;
+        transition: color 0.18s;
+    }
+
+    .nav-sidebar .nav-link.active .nav-icon,
+    .nav-sidebar .nav-link:hover .nav-icon {
+        color: #fff !important;
+    }
+
+    .nav-sidebar .nav-treeview .nav-link {
+        padding-left: 2.1rem !important;
+        font-size: 0.89rem;
+        color: #b2bec3;
+        background: transparent;
+    }
+
+    .nav-sidebar .nav-treeview .nav-link.active,
+    .nav-sidebar .nav-treeview .nav-link:hover {
+        background: linear-gradient(90deg, #0e94a0, #0bbffb) !important;
+        color: #fff !important;
+    }
+
+    .sidebar .nav-sidebar>.nav-item {
+        margin-bottom: 0.06rem;
+    }
+
+    .sidebar::-webkit-scrollbar {
+        width: 7px;
+        background: #232526;
+    }
+
+    .sidebar::-webkit-scrollbar-thumb {
+        background: #0bbffb;
+        border-radius: 4px;
+    }
+
+    /* --- NAVBAR --- */
+    .main-header.navbar {
+        min-height: 46px !important;
+        background: linear-gradient(180deg, #232526 0%, #414345 100%) !important;
+        border-bottom: 1.5px solid #232526;
+        box-shadow: 0 2px 8px rgba(44, 44, 44, 0.07);
+        padding-top: 0.1rem;
+        padding-bottom: 0.1rem;
+    }
+
+    .main-header .navbar-nav .nav-link {
+        font-size: 0.93rem;
+        padding-top: 0.18rem !important;
+        padding-bottom: 0.18rem !important;
+        color: #fff !important;
+        border-radius: 0.22rem;
+        transition: background 0.18s, color 0.18s;
+    }
+
+    .main-header .navbar-nav .nav-link:hover,
+    .main-header .navbar-nav .show>.nav-link {
+        background: rgba(44, 44, 44, 0.13);
+        color: #fff !important;
+    }
+
+    .main-header .navbar-nav .dropdown-menu {
+        font-size: 0.95rem;
+        margin-top: 0.5rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 2px 8px rgba(44, 44, 44, 0.10);
+        border: none;
+        background: #fff;
+        color: #232526;
+    }
+
+    .main-header .navbar-nav .dropdown-item:active,
+    .main-header .navbar-nav .dropdown-item:focus,
+    .main-header .navbar-nav .dropdown-item:hover {
+        background: linear-gradient(90deg, #0e94a0, #0bbffb) !important;
+        color: #fff !important;
+    }
+
+    .main-header .navbar-nav .img-circle {
+        width: 28px !important;
+        height: 28px !important;
+        border: 2px solid #fff;
+        box-shadow: 0 1px 4px rgba(11, 191, 251, 0.13);
+        object-fit: cover;
+    }
+
+    .badge.navbar-badge {
+        background: #fff;
+        color: #0e94a0;
+        font-weight: bold;
+    }
+
+    /* Navbar con línea inferior de acento */
+    .main-header.navbar {
+        border-bottom: 3px solid #0bbffb;
+        box-shadow: 0 2px 8px rgba(14, 148, 160, 0.10);
+    }
+
+    /* Menú desplegable oscuro */
+    .main-header .navbar-nav .dropdown-menu {
+        background: #232526;
+        color: #fff;
+        border: none;
+        box-shadow: 0 2px 8px rgba(14, 148, 160, 0.10);
+    }
+
+    .main-header .navbar-nav .dropdown-item {
+        color: #fff;
+    }
+
+    .main-header .navbar-nav .dropdown-item:active,
+    .main-header .navbar-nav .dropdown-item:focus,
+    .main-header .navbar-nav .dropdown-item:hover {
+        background: linear-gradient(90deg, #0e94a0, #0bbffb) !important;
+        color: #fff !important;
+    }
+
+    /* Mejor alineación de íconos */
+    .main-header .navbar-nav .nav-link,
+    .nav-sidebar .nav-link {
+        display: flex;
+        align-items: center;
+    }
+
+    .content-wrapper {
+        padding-top: 56px;
+        /* Ajusta según la altura real de tu navbar */
+    }
+    </style>
+
+    <style>
+    /* Dropdown usuario mejor integrado */
+    .main-header .navbar-nav .dropdown-menu {
+        background: #232526;
+        color: #fff;
+        border: none;
+        box-shadow: 0 4px 16px rgba(14, 148, 160, 0.13);
+        min-width: 210px;
+        padding: 0.5rem 0;
+    }
+
+    .main-header .navbar-nav .dropdown-item {
+        color: #fff;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.55rem 1.2rem;
+        transition: background 0.18s, color 0.18s;
+    }
+
+    .main-header .navbar-nav .dropdown-item:active,
+    .main-header .navbar-nav .dropdown-item:focus,
+    .main-header .navbar-nav .dropdown-item:hover {
+        background: linear-gradient(90deg, #0e94a0, #0bbffb) !important;
+        color: #fff !important;
+    }
+
+    .main-header .navbar-nav .dropdown-item.text-danger {
+        color: #ff7675 !important;
+    }
+
+    .main-header .navbar-nav .dropdown-item.text-danger:hover {
+        color: #fff !important;
+    }
+
+    .main-header .navbar-nav .dropdown-item-text {
+        color: #0bbffb;
+        font-size: 1.05em;
+        text-align: center;
+        padding-bottom: 0.3rem;
+    }
+    </style>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
 
     <div class="wrapper" id="content-wrapper">
 
-        <?php include('navbar.php'); ?>
+        <!-- Navbar -->
+        <nav class="main-header navbar navbar-expand navbar-dark bg-dark shadow-sm mb-0 fixed-top">
+            <div class="container-fluid">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" data-widget="pushmenu" href="#" role="button" aria-label="Menú lateral">
+                            <i class="fas fa-bars"></i>
+                        </a>
+                    </li>
+                </ul>
+
+                <ul class="navbar-nav ml-auto">
+                    <!-- Notifications -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" data-toggle="dropdown" href="#" role="button" aria-expanded="false">
+                            <i class="far fa-bell"></i>
+                            <span class="badge badge-light navbar-badge" id="notification-counter">0</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right"
+                            style="max-height: 500px; overflow-y: auto;">
+                            <span class="dropdown-header" id="notification-header">0 Notificaciones</span>
+                            <div class="dropdown-divider"></div>
+                            <div id="notification-list" class="px-3">
+                                <!-- Notificaciones dinámicas -->
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <a href="#" class="dropdown-item dropdown-footer" id="mark-all-read">Marcar todas como
+                                leídas</a>
+                        </div>
+                    </li>
+
+
+                    <!-- Dark Mode Toggle -->
+                    <li class="nav-item d-flex align-items-center">
+                        <span class="mr-2 text-dark" aria-label="Modo oscuro">🌙</span>
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="darkModeSwitch"
+                                aria-label="Activar/desactivar modo oscuro">
+                            <label class="custom-control-label" for="darkModeSwitch"></label>
+                        </div>
+                    </li>
+
+                    <!-- Usuario actual -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link d-flex align-items-center" data-toggle="dropdown" href="#" role="button"
+                            aria-expanded="false">
+                            <img src="<?php
+                                        echo !empty($_SESSION['foto_usuario'])
+                                            ? $URL . '/' . $_SESSION['foto_usuario']
+                                            : $URL . 'public/images/logo.jpg';
+                                        ?>" class="img-circle elevation-2 mr-2" alt="User Image"
+                                style="width: 32px; height: 32px; object-fit: cover;">
+                            <span class="d-none d-md-inline text-white font-weight-bold">
+                                <?php echo htmlspecialchars($_SESSION['nombres'] . " " . $_SESSION['apellidos'] ?? 'Usuario'); ?>
+                            </span>
+                            <i class="fas fa-angle-down ml-1"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <span class="dropdown-item-text font-weight-bold">
+                                <?php echo htmlspecialchars($_SESSION['nombres'] . " " . $_SESSION['apellidos'] ?? 'Usuario'); ?>
+                            </span>
+                            <div class="dropdown-divider"></div>
+                            <a href="<?php echo $URL; ?>App/views/usuarios/update.php?id=<?php echo $_SESSION['id_usuario']; ?>"
+                                class="dropdown-item">
+                                <i class="fas fa-user-cog mr-2"></i> Mi perfil
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a href="<?php echo $URL; ?>App/controllers/login/cerrar_sesion.php"
+                                class="dropdown-item text-danger">
+                                <i class="fas fa-sign-out-alt mr-2"></i> Cerrar sesión
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
 
 
         <!-- Sidebar -->
@@ -104,21 +399,7 @@ if (!isset($_SESSION['sesion_usuario'])) {
             </a>
 
             <div class="sidebar">
-                <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-                    <div class="image">
-                        <img src="<?php
-                                    echo !empty($_SESSION['foto_usuario'])
-                                        ? $URL . '/' . $_SESSION['foto_usuario']
-                                        : $URL . 'public/images/logo.jpg';
-                                    ?>" class="img-circle elevation-2" alt="User Image"
-                            style="width: 34px; height: 34px; object-fit: cover;">
-                    </div>
-                    <div class="info">
-                        <a href="#" class="d-block">
-                            <?php echo $_SESSION['nombres'] . " " . $_SESSION['apellidos'] ?? 'Usuario'; ?>
-                        </a>
-                    </div>
-                </div>
+
 
                 <!-- Sidebar Menu -->
                 <nav class="mt-2">
@@ -467,9 +748,16 @@ if (!isset($_SESSION['sesion_usuario'])) {
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
+                                    <a href="<?php echo $URL; ?>App/views/pagos/historial_renovaciones_general.php"
+                                        class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Historial general</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
                                     <a href="<?php echo $URL; ?>App/views/pagos/index.php" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
-                                        <p>Historial de pagos</p>
+                                        <p>Historial de usuarios</p>
                                     </a>
                                 </li>
 
@@ -550,40 +838,6 @@ if (!isset($_SESSION['sesion_usuario'])) {
                             </ul>
                         </li>
                         <!--Fin Usuarios-->
-
-
-                        <!--Reportes y Estadisticas-->
-                        <li class="nav-item has-treeview">
-                            <a href="#" class="nav-link">
-                                <i class="nav-icon fas fa-chart-line"></i>
-                                <p>Reportes / Estadisticas <i class="right fas fa-angle-left"></i></p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="<?php echo $URL; ?>mantenimientos/index.php" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Listado de reportes</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="<?php echo $URL; ?>mantenimientos/index.php" class="nav-link">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Ver Estadisticas</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <!--Fin Reportes y estadistica-->
-
-                        <!--Cerrar Session-->
-                        <li class="nav-item">
-                            <a href="<?php echo $URL; ?>App/controllers/login/cerrar_sesion.php"
-                                class="nav-link text-danger" onclick="confirmarLogout(event)">
-                                <i class="nav-icon fas fa-sign-out-alt"></i>
-                                <p>Cerrar Sesión</p>
-                            </a>
-                        </li>
-                        <!--Fin Cerrar Session-->
                     </ul>
                 </nav>
             </div>
