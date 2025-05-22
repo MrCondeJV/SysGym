@@ -2,7 +2,7 @@
 
 include('../../config.php');
 if (session_status() === PHP_SESSION_NONE) session_start();
-
+$creado_por = $_SESSION['id_usuario'] ?? null; // Ajusta según tu sistema de login
 
 $tipo_documento = trim($_POST['tipo_documento'] ?? '');
 $numero_documento = trim($_POST['numero_documento'] ?? '');
@@ -17,7 +17,7 @@ $direccion = trim($_POST['direccion'] ?? '');
 $url_foto = trim($_POST['url_foto'] ?? '');
 $contacto_emergencia_nombre = trim($_POST['contacto_emergencia_nombre'] ?? '');
 $contacto_emergencia_telefono = trim($_POST['contacto_emergencia_telefono'] ?? '');
-$creado_por = trim($_POST['creado_por'] ?? '');
+#$creado_por = trim($_POST['creado_por'] ?? '');
 
 $errores = [];
 
@@ -73,4 +73,9 @@ $stmt->execute([
 
 $id_miembro = $pdo->lastInsertId();
 
-echo json_encode(['id_miembro' => $id_miembro]);
+#echo json_encode(['id_miembro' => $id_miembro]);
+
+$_SESSION['mensaje'] = '¡Miembro registrado exitosamente!';
+$_SESSION['icono'] = 'success';
+header('Location: ../../views/miembros/index.php'); // Ajusta la ruta según tu estructura
+exit;

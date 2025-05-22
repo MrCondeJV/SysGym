@@ -169,13 +169,13 @@ endif;
                                             required>
                                     </div>
                                 </div>
-
+                                <!--
                                 <div class="form-group">
                                     <label for="creado_por">Creado por</label>
                                     <input type="text" name="creado_por" class="form-control"
                                         placeholder="Usuario que registra..." required>
                                 </div>
-
+-->
                                 <hr>
                                 <div class="form-group text-center">
                                     <a href="index.php" class="btn btn-secondary">Cancelar</a>
