@@ -804,6 +804,14 @@ if (!isset($_SESSION['sesion_usuario'])) {
                             </ul>
                         </li>
                         <!--Fin Usuarios-->
+                        <!--Reportes-->
+                        <li class="nav-item">
+                            <a href="<?php echo $URL; ?>App/views/reportes/index.php" class="nav-link">
+                                <i class="nav-icon fas fa-chart-bar"></i>
+                                <p>Reportes y Estadísticas</p>
+                            </a>
+                        </li>
+                        <!--Fin Reportes-->
                     </ul>
                 </nav>
             </div>
