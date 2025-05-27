@@ -32,7 +32,7 @@
 
     <div class="login-box">
         <div class="login-logo">
-            <img src="/sysgym/public/images/logo.jpg" alt="Logo">
+            <img src="/sysgym/public/images/efim.png" alt="Logo">
             <h3 class="mt-2"><b>Sistema de Administracion Gym</b></h3>
         </div>
 
