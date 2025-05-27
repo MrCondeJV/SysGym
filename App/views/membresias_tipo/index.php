@@ -26,7 +26,7 @@ include('../layout/sesion.php');
     <div class="content">
         <div class="container-fluid">
             <div class="row justify-content-center">
-                <div class="col-lg-11 col-md-12 col-sm-12 mx-auto">
+                <div class="col-lg-12 col-md-12 col-sm-12 mx-auto">
                     <div class="card card-info">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <h3 class="card-title">Membresías Registradas</h3>
@@ -34,7 +34,7 @@ include('../layout/sesion.php');
 
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table id="tiposTable" class="table table-bordered table-striped table-sm text-center"
+                                <table id="example1" class="table table-bordered table-striped table-sm text-center"
                                     style="table-layout: fixed; width: 100%;">
                                     <thead>
                                         <tr>
@@ -102,22 +102,7 @@ include('../layout/sesion.php');
 <!-- /.content-wrapper -->
 
 <!-- DataTables -->
-<script>
-$(function() {
-    $('#tiposTable').DataTable({
-        "paging": true,
-        "lengthChange": true,
-        "searching": true,
-        "ordering": true,
-        "info": true,
-        "autoWidth": false,
-        "responsive": true,
-        "language": {
-            "url": "//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
-        }
-    });
-});
-</script>
+<script src="datatable.js"></script>
 
 <script src="delete.js"></script> <!-- Botón eliminar con SweetAlert, ejemplo -->
 
