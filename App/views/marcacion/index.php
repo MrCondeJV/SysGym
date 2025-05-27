@@ -336,6 +336,10 @@ $accesos = [
                     <div id="marcacion-resultado" class="mt-3"></div>
                 </div>
             </div>
+            <div style="margin-top:18px; width:100%;">
+    <input type="text" id="manual-numero-documento" class="form-control" placeholder="Número de documento" style="margin-bottom:8px;">
+    <button class="btn btn-buscar" id="btn-manual-ingreso" style="width:100%;">Ingreso/Salida Manual</button>
+</div>
         </div>
     </section>
 </div>
@@ -497,9 +501,72 @@ $accesos = [
     document.getElementById('btn-pagar').addEventListener('click', () => {
         window.location.href = '../membresias/create.php';
     });
-    document.getElementById('btn-buscar').addEventListener('click', () => {
-        alert('Funcionalidad de búsqueda por documento en desarrollo.');
+   
+    document.getElementById('btn-manual-ingreso').addEventListener('click', async () => {
+    const numeroDocumento = document.getElementById('manual-numero-documento').value.trim();
+    if (!numeroDocumento) {
+        mostrarEstado('Ingrese un número de documento.', 'warning', 'fa-exclamation-triangle');
+        return;
+    }
+
+    // Buscar miembro por número de documento
+    const resp = await fetch('http://localhost/SysGym/App/controllers/miembros/get_miembro_doc.php?numero_documento=' + encodeURIComponent(numeroDocumento));
+    const usuario = await resp.json();
+
+    if (!usuario.success || !usuario.miembro) {
+        mostrarEstado('No se encontró un miembro con ese documento.', 'danger', 'fa-times-circle');
+        return;
+    }
+
+    // Mostrar datos del usuario
+    document.getElementById('foto-miembro').src = usuario.miembro.url_foto || '/sysgym/public/images/avatar_default.png';
+    document.getElementById('nombre-miembro').textContent = usuario.miembro.nombres + ' ' + usuario.miembro.apellidos;
+    document.getElementById('estado-miembro').textContent = usuario.miembro.estado || '';
+    document.getElementById('id-miembro').textContent = usuario.miembro.id_miembro;
+    document.getElementById('tipo-documento-miembro').textContent = usuario.miembro.tipo_documento || '-';
+    document.getElementById('numero-documento-miembro').textContent = usuario.miembro.numero_documento || '-';
+    document.getElementById('correo-miembro').textContent = usuario.miembro.correo_electronico || '';
+    document.getElementById('telefono-miembro').textContent = usuario.miembro.telefono || '';
+    document.getElementById('direccion-miembro').textContent = usuario.miembro.direccion || '';
+    document.getElementById('fecha-nacimiento').textContent = usuario.miembro.fecha_nacimiento || '';
+    document.getElementById('genero-miembro').textContent = usuario.miembro.genero || '';
+    document.getElementById('contacto-emergencia').textContent =
+        (usuario.miembro.contacto_emergencia_nombre || '-') +
+        ' (' + (usuario.miembro.contacto_emergencia_telefono || '-') + ')';
+
+    // Mostrar datos de membresía si existen
+   
+        document.getElementById('fecha-inicio').textContent = usuario.miembro.fecha_inicio || '-';
+        document.getElementById('fecha-fin').textContent = usuario.miembro.fecha_fin || '-';
+        document.getElementById('dias-vigentes').textContent = usuario.miembro.dias_vigentes || '-';
+        document.getElementById('dias').textContent = usuario.miembro.dias_total || '-';
+    
+
+    // Validar días vigentes antes de registrar acceso
+    const diasVigentes = parseInt(usuario.membresia?.dias_vigentes, 10) || 0;
+    if (diasVigentes <= 0) {
+        mostrarModalMembresiaVencida();
+        return;
+    }
+
+    // Actualizar historial de accesos
+    actualizarHistorialAccesos(usuario.miembro.id_miembro);
+
+    // Registrar acceso manual
+    fetch('http://localhost/SysGym/App/controllers/accesos/registrar_acceso.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'id_miembro=' + encodeURIComponent(usuario.miembro.id_miembro) + '&metodo_acceso=manual'
+    })
+    .then(resp => resp.json())
+    .then(res => {
+        if (res.success) {
+            mostrarEstado(res.message, 'success', 'fa-door-open');
+        } else {
+            mostrarEstado(res.message, 'danger', 'fa-exclamation-triangle');
+        }
     });
+});
 
     // Función para cerrar el modal de membresía vencida
     function cerrarModalMembresiaVencida() {

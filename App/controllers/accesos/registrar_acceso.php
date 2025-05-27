@@ -1,15 +1,28 @@
 <?php
 include('../../config.php');
-session_start(); // Asegúrate de iniciar la sesión
+session_start();
 header('Content-Type: application/json');
 
 $id_miembro = $_POST['id_miembro'] ?? null;
+$numero_documento = $_POST['numero_documento'] ?? null;
 $metodo = $_POST['metodo_acceso'] ?? 'huella';
-// Toma el id_usuario de la sesión
 $id_usuario = $_SESSION['id_usuario'] ?? null;
 
-if (!$id_miembro) {
-    echo json_encode(['success' => false, 'message' => 'ID miembro requerido']);
+if ($id_miembro) {
+    // Usar id_miembro directamente
+} elseif ($numero_documento) {
+    // Buscar id_miembro por número de documento
+    $stmt = $pdo->prepare("SELECT id_miembro FROM miembros WHERE numero_documento = ?");
+    $stmt->execute([$numero_documento]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($row) {
+        $id_miembro = $row['id_miembro'];
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Miembro no encontrado con ese número de documento']);
+        exit;
+    }
+} else {
+    echo json_encode(['success' => false, 'message' => 'ID miembro o número de documento requerido']);
     exit;
 }
 
