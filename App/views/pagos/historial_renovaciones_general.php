@@ -138,7 +138,7 @@ foreach ($renovaciones as $r) {
                                 <div class="mt-3 text-right">
                                     <span class="h5">
                                         <strong>Total:</strong>
-                                        <span class="badge badge-primary">
+                                        <span class="badge badge-primary" id="total-renovaciones-js">
                                             $<?= number_format($total, 2, ',', '.') ?>
                                         </span>
                                     </span>
@@ -160,13 +160,82 @@ foreach ($renovaciones as $r) {
 <!-- DataTables -->
 <script>
 $(function() {
-    $('#renovacionesGeneralTable').DataTable({
+    var table = $('#renovacionesGeneralTable').DataTable({
         "responsive": true,
         "autoWidth": false,
         "language": {
             "url": "https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
-        }
+        },
+        dom: 'Bfrtip',
+        buttons: [{
+                extend: 'pdfHtml5',
+                text: '<i class="fas fa-file-pdf"></i> Exportar PDF',
+                className: 'btn btn-danger mb-2',
+                title: 'Historial General de Renovaciones',
+                orientation: 'landscape',
+                pageSize: 'A4',
+                exportOptions: {
+                    columns: ':visible'
+                },
+                customize: function(doc) {
+                    doc.styles.tableHeader = {
+                        fillColor: '#007bff',
+                        color: 'white',
+                        alignment: 'center',
+                        bold: true,
+                        fontSize: 11
+                    };
+                    doc.styles.title = {
+                        color: '#007bff',
+                        fontSize: 18,
+                        alignment: 'center'
+                    };
+                    doc.content[1].margin = [0, 0, 0, 0];
+                    doc.defaultStyle.fontSize = 10;
+                }
+            },
+            {
+                extend: 'excelHtml5',
+                text: '<i class="fas fa-file-excel"></i> Exportar Excel',
+                className: 'btn btn-success mb-2',
+                title: 'Historial General de Renovaciones',
+                exportOptions: {
+                    columns: ':visible'
+                }
+            },
+            {
+                extend: 'print',
+                text: '<i class="fas fa-print"></i> Imprimir',
+                className: 'btn btn-secondary mb-2',
+                title: 'Historial General de Renovaciones',
+                exportOptions: {
+                    columns: ':visible'
+                }
+            }
+        ]
     });
+
+    function actualizarTotal() {
+        var total = 0;
+        // La columna de precio es la 6 (índice 6, empieza en 0)
+        table.rows({
+            search: 'applied'
+        }).every(function() {
+            var data = this.data();
+            // Extrae el número del badge
+            var precio = $(data[6]).text().replace(/[^0-9,.-]+/g, "").replace('.', '').replace(',',
+                '.');
+            total += parseFloat(precio) || 0;
+        });
+        $('#total-renovaciones-js').text('$' + total.toLocaleString('es-ES', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }));
+    }
+
+    table.on('draw', actualizarTotal);
+    table.on('search', actualizarTotal);
+    actualizarTotal();
 });
 </script>
 

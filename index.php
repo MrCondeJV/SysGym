@@ -7,6 +7,47 @@ include_once('App/controllers/clases/clases_hoy.php'); // Debe definir $clases_h
 include_once('App/controllers/ventas/ingresos_mes.php'); // Debe definir $ingresos_mes
 include_once('App/controllers/miembros/nuevos_mes.php'); // Debe definir $nuevos_miembros y $porcentaje_nuevos
 
+
+date_default_timezone_set('America/Bogota');
+$dias = [
+    'Sunday' => 'domingo',
+    'Monday' => 'lunes',
+    'Tuesday' => 'martes',
+    'Wednesday' => 'miércoles',
+    'Thursday' => 'jueves',
+    'Friday' => 'viernes',
+    'Saturday' => 'sábado'
+];
+$dia_semana = $dias[date('l')];
+
+// Mostrar todas las clases del día actual, sin importar la hora
+$stmt = $pdo->prepare("
+    SELECT c.*, e.nombres AS instructor_nombre, e.apellidos AS instructor_apellido
+    FROM clases c
+    LEFT JOIN entrenadores e ON c.id_entrenador = e.id_entrenador
+    WHERE c.dia_semana = ?
+      AND c.cancelada = 0
+    ORDER BY 
+      CASE 
+        WHEN LENGTH(c.horario) = 8 THEN c.horario
+        ELSE SUBSTRING_INDEX(c.horario, ' ', 1)
+      END ASC
+");
+
+$stmt->execute([$dia_semana]);
+$proximas_clases = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
+//Ultimos accesos
+$stmt = $pdo->prepare("
+    SELECT ha.fecha_entrada, m.nombres, m.apellidos
+    FROM historialaccesos ha
+    INNER JOIN miembros m ON ha.id_miembro = m.id_miembro
+    ORDER BY ha.fecha_entrada DESC
+    LIMIT 5
+");
+$stmt->execute();
+$ultimos_accesos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <style>
@@ -195,27 +236,36 @@ include_once('App/controllers/miembros/nuevos_mes.php'); // Debe definir $nuevos
             <!-- Próximas clases -->
             <div class="row mt-4">
                 <div class="col-lg-6">
-                    <div class="card card-info shadow-sm">
+                    <div class="card card-maroon shadow-sm">
                         <div class="card-header">
-                            <h5 class="card-title"><i class="fas fa-calendar-alt text-info me-2"></i>Próximas Clases
+                            <h5 class="card-title">Próximas Clases
                             </h5>
                         </div>
                         <div class="card-body">
+
                             <ul class="list-group list-group-flush">
+                                <?php if (empty($proximas_clases)): ?>
+                                <li class="list-group-item text-center text-muted">
+                                    No hay más clases programadas para hoy.
+                                </li>
+                                <?php else: ?>
+                                <?php foreach ($proximas_clases as $clase): ?>
                                 <li class="list-group-item d-flex justify-content-between align-items-center py-2">
                                     <div>
-                                        <strong>8:00 AM</strong> - Spinning
-                                        <small class="d-block text-muted">Instructor: Carlos</small>
+                                        <strong>
+                                            <?= htmlspecialchars($clase['horario']) ?>
+                                        </strong> - <?= htmlspecialchars($clase['nombre']) ?>
+                                        <small class="d-block text-muted">
+                                            Instructor:
+                                            <?= htmlspecialchars($clase['instructor_nombre'] . ' ' . $clase['instructor_apellido']) ?>
+                                        </small>
                                     </div>
-                                    <span class="badge badge-danger rounded-pill">12/15</span>
+                                    <span class="badge badge-primary rounded-pill">
+                                        <?= $clase['capacidad_maxima'] ?> cupos
+                                    </span>
                                 </li>
-                                <li class="list-group-item d-flex justify-content-between align-items-center py-2">
-                                    <div>
-                                        <strong>10:00 AM</strong> - CrossFit
-                                        <small class="d-block text-muted">Instructor: Laura</small>
-                                    </div>
-                                    <span class="badge badge-success rounded-pill">8/10</span>
-                                </li>
+                                <?php endforeach; ?>
+                                <?php endif; ?>
                             </ul>
                         </div>
                     </div>
@@ -223,51 +273,64 @@ include_once('App/controllers/miembros/nuevos_mes.php'); // Debe definir $nuevos
 
                 <!-- Retos activos -->
                 <div class="col-lg-6">
-                    <div class="card card-warning shadow-sm">
+                    <div class="card card-indigo shadow-sm">
                         <div class="card-header">
-                            <h5 class="card-title"><i class="fas fa-trophy text-warning me-2"></i>Retos Activos</h5>
+                            <h5 class="card-title">Últimos 5 ingresos
+                            </h5>
                         </div>
                         <div class="card-body">
                             <ul class="list-group list-group-flush">
+                                <?php if (empty($ultimos_accesos)): ?>
+                                <li class="list-group-item text-center text-muted">
+                                    No hay ingresos recientes.
+                                </li>
+                                <?php else: ?>
+                                <?php foreach ($ultimos_accesos as $acceso): ?>
                                 <li class="list-group-item d-flex justify-content-between align-items-center py-2">
                                     <div>
-                                        <strong>Maratón 30 días</strong>
-                                        <small class="d-block text-muted">Running</small>
+                                        <strong><?= htmlspecialchars($acceso['nombres'] . ' ' . $acceso['apellidos']) ?></strong>
+                                        <small class="d-block text-muted">
+                                            <?= date('d/m/Y H:i', strtotime($acceso['fecha_entrada'])) ?>
+                                        </small>
                                     </div>
-                                    <span class="badge badge-primary rounded-pill">45 participantes</span>
+                                    <span class="badge badge-primary rounded-pill">
+                                        Ingresó
+                                    </span>
                                 </li>
-                                <li class="list-group-item d-flex justify-content-between align-items-center py-2">
-                                    <div>
-                                        <strong>Summer Body</strong>
-                                        <small class="d-block text-muted">Pérdida de peso</small>
-                                    </div>
-                                    <span class="badge badge-primary rounded-pill">63 participantes</span>
-                                </li>
+                                <?php endforeach; ?>
+                                <?php endif; ?>
                             </ul>
                         </div>
                     </div>
                 </div>
             </div>
+
             <!-- Botones de Acción Rápida -->
             <div class="row mt-3">
                 <div class="col-lg-4 col-6">
                     <div class="card shadow-sm">
                         <div class="card-body text-center">
-                            <button class="btn btn-primary w-100">Agregar Nueva Clase</button>
+                            <a href="App/views/clases/create.php" class="btn btn-primary w-100">
+                                Agregar Nueva Clase
+                            </a>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-4 col-6">
                     <div class="card shadow-sm">
                         <div class="card-body text-center">
-                            <button class="btn btn-success w-100">Ver Nuevos Miembros</button>
+                            <a href="App/views/miembros/index.php" class="btn btn-success w-100">
+                                Ver Miembros
+                            </a>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-4 col-6">
                     <div class="card shadow-sm">
                         <div class="card-body text-center">
-                            <button class="btn btn-warning w-100">Ver Pagos Pendientes</button>
+                            <a href="App/views/pagos/historial_renovaciones_general.php" class="btn btn-warning w-100">
+                                Ver Pagos
+                            </a>
                         </div>
                     </div>
                 </div>
