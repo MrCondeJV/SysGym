@@ -8,7 +8,24 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Filtro de fechas
+$id_usuario_actual = $_SESSION['id_usuario'] ?? null;
+
+if (!$id_usuario_actual) {
+    die("No hay usuario autenticado.");
+}
+
+// Obtener el rol del usuario
+$stmtRol = $pdo->prepare("SELECT rol FROM usuariossistema WHERE id_usuario = :id_usuario");
+$stmtRol->execute([':id_usuario' => $id_usuario_actual]);
+$usuario = $stmtRol->fetch(PDO::FETCH_ASSOC);
+
+if (!$usuario) {
+    die("Usuario no encontrado.");
+}
+
+$rol_usuario = $usuario['rol'];
+
+// Construir condiciones del filtro
 $where = [];
 $params = [];
 
@@ -19,6 +36,12 @@ if (!empty($_GET['fecha_inicio'])) {
 if (!empty($_GET['fecha_fin'])) {
     $where[] = "DATE(r.fecha) <= :fecha_fin";
     $params[':fecha_fin'] = $_GET['fecha_fin'];
+}
+
+// Filtrar solo si NO es admin
+if ($rol_usuario !== 'admin') {
+    $where[] = "r.renovado_por = :id_usuario";
+    $params[':id_usuario'] = $id_usuario_actual;
 }
 
 $where_sql = $where ? 'WHERE ' . implode(' AND ', $where) : '';
@@ -41,6 +64,7 @@ $stmt = $pdo->prepare("
     $where_sql
     ORDER BY r.fecha DESC
 ");
+
 $stmt->execute($params);
 $renovaciones = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -48,6 +72,7 @@ $total = 0;
 foreach ($renovaciones as $r) {
     $total += floatval($r['precio']);
 }
+
 ?>
 
 <div class="content-wrapper">
@@ -306,7 +331,7 @@ fetch('/SysGym/public/images/base64.txt')
                                         return {
                                             margin: [20, 10, 20, 0],
                                             columns: [{
-                                                    text: "Escuela de formacion Infanteria de Marina | Copyright © 2025 Mamba Code.",
+                                                    text: "Escuela de formacion Infanteria de Marina | DITIC ESFIM",
                                                     alignment: "center",
                                                     style: "footer"
                                                 },

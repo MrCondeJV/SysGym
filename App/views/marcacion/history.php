@@ -2,8 +2,8 @@
 // filepath: c:\xampp\htdocs\SysGym\App\views\marcacion\history.php
 include('../../config.php');
 include('../layout/parte1.php');
-include('../../controllers/marcacion/list_historial.php');
 include('../layout/sesion.php');
+include('../../controllers/marcacion/list_historial.php');
 ?>
 
 <div class="content-wrapper">
@@ -213,7 +213,7 @@ fetch("/SysGym/public/images/base64.txt")
                                         return {
                                             margin: [20, 10, 20, 0],
                                             columns: [{
-                                                    text: "Escuela de formacion Infanteria de Marina | Copyright © 2025 Mamba Code.",
+                                                    text: "Escuela de formacion Infanteria de Marina | DITIC ESFIM",
                                                     alignment: "center",
                                                     style: "footer",
                                                 },
