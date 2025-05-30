@@ -4,6 +4,7 @@
 include('../../config.php');
 include('../layout/parte1.php');
 include('../../controllers/ventas/historial_ventas.php');
+include('../../controllers/ventas/listado_ventas_general.php');
 include('../layout/sesion.php');
 
 $fecha_inicio = $_GET['fecha_inicio'] ?? '';
@@ -48,7 +49,7 @@ $fecha_fin = $_GET['fecha_fin'] ?? '';
             <!-- Fin filtro de fechas -->
 
             <div class="row justify-content-center">
-                <div class="col-lg-10 col-md-12">
+                <div class="col-lg-12 col-md-12">
                     <div class="card card-info">
                         <div class="card-header">
                             <h3 class="card-title">Ventas Registradas</h3>
@@ -89,6 +90,14 @@ $fecha_fin = $_GET['fecha_fin'] ?? '';
                                         <?php endif; ?>
                                     </tbody>
                                 </table>
+                                 <div class="mt-3 text-right">
+                                    <span class="h5">
+                                        <strong>Total:</strong>
+                                        <span class="badge badge-primary" id="total-ventas-js">
+                                            $<?= number_format($total_ventas, 2, ',', '.') ?>
+                                        </span>
+                                    </span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -97,5 +106,32 @@ $fecha_fin = $_GET['fecha_fin'] ?? '';
         </div>
     </div>
 </div>
+
+<!-- DataTables -->
+<script>
+
+    function actualizarTotal() {
+        var total = 0;
+        // La columna de precio es la 6 (índice 6, empieza en 0)
+        table.rows({
+            search: 'applied'
+        }).every(function() {
+            var data = this.data();
+            // Extrae el número del badge
+            var precio = $(data[6]).text().replace(/[^0-9,.-]+/g, "").replace('.', '').replace(',',
+                '.');
+            total += parseFloat(precio) || 0;
+        });
+        $('#total-ventas-js').text('$' + total.toLocaleString('es-ES', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }));
+    }
+
+    table.on('draw', actualizarTotal);
+    table.on('search', actualizarTotal);
+    actualizarTotal();
+
+</script>
 <script src="datatable.js"></script>
 <?php include('../layout/parte2.php'); ?>

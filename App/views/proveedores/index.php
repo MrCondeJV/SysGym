@@ -41,6 +41,14 @@ include('../layout/sesion.php');
                         </div>
 
                         <div class="card-body">
+
+                             <!-- Botón Agregar Proveedor -->
+                                <div class="mb-3 text-right">
+                                    <a href="create.php" class="btn btn-success">
+                                        <i class="fas fa-user-plus"></i> Agregar Proveedor
+                                    </a>
+                                </div>
+
                             <div class="table-responsive">
                                 <table id="example1" class="table table-bordered table-striped table-sm text-center" style="table-layout: fixed; width: 100%;">
                                     <thead>

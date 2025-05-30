@@ -34,6 +34,12 @@ include('../layout/sesion.php');
 
                         <div class="card-body">
                             <div class="table-responsive">
+                                 <!-- Botón Agregar Mmbresia -->
+                                <div class="mb-3 text-right">
+                                    <a href="create.php" class="btn btn-success">
+                                        <i class="fas fa-user-plus"></i> Agregar Membresia
+                                    </a>
+                                </div>
                                 <table id="example1" class="table table-bordered table-striped table-sm text-center"
                                     style="table-layout: fixed; width: 100%;">
                                     <thead>

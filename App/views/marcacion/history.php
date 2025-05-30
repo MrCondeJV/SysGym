@@ -41,7 +41,7 @@ include('../layout/sesion.php');
                                     <thead>
                                         <tr>
                                             <th style="width: 5%;">Nro</th>
-                                            <th style="width: 10%;">ID Miembro</th>
+                                            <th style="width: 10%;">Documento</th>
                                             <th style="width: 18%;">Nombre</th>
                                             <th style="width: 16%;">Fecha y Hora Entrada</th>
                                             <th style="width: 16%;">Fecha y Hora Salida</th>
@@ -57,7 +57,7 @@ include('../layout/sesion.php');
                                         ?>
                                             <tr>
                                                 <td><?= ++$contador ?></td>
-                                                <td><span class="badge badge-info"><?= htmlspecialchars($r['id_miembro']) ?></span></td>
+                                                <td><?= htmlspecialchars($r['numero_documento']) ?></td>
                                                 <td><?= htmlspecialchars($r['nombres'] . ' ' . $r['apellidos']) ?></td>
                                                 <td><?= htmlspecialchars($r['fecha_entrada']) ?></td>
                                                 <td><?= $r['fecha_salida'] ? htmlspecialchars($r['fecha_salida']) : '<span class="text-muted">-</span>' ?></td>

@@ -4,7 +4,7 @@
 $busqueda = $_GET['buscar'] ?? '';
 $params = [];
 $sql = "SELECT h.id_acceso, h.fecha_entrada, h.fecha_salida, h.metodo_acceso, 
-               m.id_miembro, m.nombres, m.apellidos, m.url_foto,
+               m.id_miembro, m.nombres, m.apellidos, m.numero_documento, m.url_foto,
                u.nombres AS usuario
         FROM historialaccesos h
         INNER JOIN miembros m ON h.id_miembro = m.id_miembro

@@ -3,39 +3,11 @@ include('App/config.php');
 include('App/views/layout/sesion.php');
 include('App/views/layout/parte1.php');
 include_once('App/controllers/miembros/contar_activos.php'); // Debe definir $miembros_activos y $miembros_activos_semana
-include_once('App/controllers/clases/clases_hoy.php'); // Debe definir $clases_hoy, $clases_manana, $clases_tarde
 include_once('App/controllers/ventas/ingresos_mes.php'); // Debe definir $ingresos_mes
 include_once('App/controllers/miembros/nuevos_mes.php'); // Debe definir $nuevos_miembros y $porcentaje_nuevos
 
 
 date_default_timezone_set('America/Bogota');
-$dias = [
-    'Sunday' => 'domingo',
-    'Monday' => 'lunes',
-    'Tuesday' => 'martes',
-    'Wednesday' => 'miércoles',
-    'Thursday' => 'jueves',
-    'Friday' => 'viernes',
-    'Saturday' => 'sábado'
-];
-$dia_semana = $dias[date('l')];
-
-// Mostrar todas las clases del día actual, sin importar la hora
-$stmt = $pdo->prepare("
-    SELECT c.*, e.nombres AS instructor_nombre, e.apellidos AS instructor_apellido
-    FROM clases c
-    LEFT JOIN entrenadores e ON c.id_entrenador = e.id_entrenador
-    WHERE c.dia_semana = ?
-      AND c.cancelada = 0
-    ORDER BY 
-      CASE 
-        WHEN LENGTH(c.horario) = 8 THEN c.horario
-        ELSE SUBSTRING_INDEX(c.horario, ' ', 1)
-      END ASC
-");
-
-$stmt->execute([$dia_semana]);
-$proximas_clases = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
 //Ultimos accesos
@@ -192,9 +164,7 @@ $ultimos_accesos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <div class="mb-3">
                                 <i class="fas fa-calendar-check fa-3x text-primary"></i>
                             </div>
-                            <h3 class="fw-bold"><?= htmlspecialchars($clases_hoy) ?></h3>
-                            <small><?= htmlspecialchars($clases_manana) ?> mañana,
-                                <?= htmlspecialchars($clases_tarde) ?> tarde</small>
+                           
                         </div>
                     </div>
                 </div>

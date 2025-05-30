@@ -30,6 +30,14 @@ include('../../controllers/membresias/list_membership.php');
                             <h3 class="card-title">Membresías Actuales</h3>
                         </div>
                         <div class="card-body">
+
+                        <!-- Botón Renovar Membresia -->
+                                <div class="mb-3 text-right">
+                                    <a href="create.php" class="btn btn-primary">
+                                        <i class="fas fa-gem"></i> Renovar Membresia
+                                    </a>
+                                </div>
+
                             <div class="table-responsive">
                                 <table id="membresiasTable"
                                     class="table table-bordered table-striped table-sm text-center">

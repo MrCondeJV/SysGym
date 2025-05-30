@@ -304,8 +304,12 @@ $accesos = [
                         </span>
                     </div>
                     <div class="marcacion-actions">
-                        <button class="btn btn-membresia" id="btn-pagar"><i class="fas fa-money-bill-wave"></i> Renovar Membresía</button>
-                        
+                        <button class="btn btn-membresia" id="btn-pagar">
+        <i class="fas fa-money-bill-wave"></i> Renovar Membresía
+    </button>
+    <button class="btn btn-buscar" id="btn-ver-historial">
+        <i class="fas fa-history"></i> Ver Historial de Ingresos
+    </button>
                     </div>
                     <div>
                         <h5 class="mb-2" style="color:#1976d2;"><i class="fas fa-door-open"></i> Últimos Ingresos</h5>
@@ -501,6 +505,9 @@ $accesos = [
     document.getElementById('btn-pagar').addEventListener('click', () => {
         window.location.href = '../membresias/create.php';
     });
+    document.getElementById('btn-ver-historial').addEventListener('click', () => {
+        window.location.href = '../marcacion/history.php';
+    });
    
     document.getElementById('btn-manual-ingreso').addEventListener('click', async () => {
     const numeroDocumento = document.getElementById('manual-numero-documento').value.trim();
@@ -543,13 +550,13 @@ $accesos = [
     
 
     // Validar días vigentes antes de registrar acceso
-    const diasVigentes = parseInt(usuario.membresia?.dias_vigentes, 10) || 0;
+    const diasVigentes = parseInt(usuario.miembro?.dias_vigentes, 10) || 0;
     if (diasVigentes <= 0) {
         mostrarModalMembresiaVencida();
         return;
     }
 
-    // Actualizar historial de accesos
+    // Actualizar Historial de accesos
     actualizarHistorialAccesos(usuario.miembro.id_miembro);
 
     // Registrar acceso manual

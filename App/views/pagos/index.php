@@ -46,15 +46,15 @@ $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <div class="content">
         <div class="container-fluid">
             <div class="row justify-content-center">
-                <div class="col-md-10">
+                <div class="col-md-12">
                     <div class="card card-info card-outline">
                         <div class="card-header">
                             <h3 class="card-title"><i class="fas fa-users"></i> Usuarios con renovaciones</h3>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table id="usuariosTable" class="table table-bordered table-striped table-hover">
-                                    <thead class="thead-dark">
+                                <table id="example1" class="table table-bordered table-striped table-hover">
+                                    <thead >
                                         <tr>
                                             <th>#</th>
                                             <th>Nombre</th>
@@ -107,17 +107,6 @@ $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
 </div>
 
-<!-- DataTables -->
-<script>
-$(function() {
-    $('#usuariosTable').DataTable({
-        "responsive": true,
-        "autoWidth": false,
-        "language": {
-            "url": "https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
-        }
-    });
-});
-</script>
+<script src="datatable.js"></script>
 
 <?php include('../layout/parte2.php'); ?>

@@ -30,7 +30,7 @@ include('../layout/sesion.php');
     <div class="content">
         <div class="container-fluid">
             <div class="row justify-content-center">
-                <div class="col-lg-10 col-md-10 col-sm-12 mx-auto">
+                <div class="col-lg-12 col-md-12 col-sm-12 mx-auto">
                     <div class="card card-info">
                         <div class="card-header">
                             <h3 class="card-title">Usuarios Registrados</h3>
@@ -42,6 +42,14 @@ include('../layout/sesion.php');
                         </div>
 
                         <div class="card-body">
+
+                             <!-- Botón Agregar Usuario -->
+                                <div class="mb-3 text-right">
+                                    <a href="create.php" class="btn btn-success">
+                                        <i class="fas fa-user-plus"></i> Agregar Usuario
+                                    </a>
+                                </div>
+
                             <div class="table-responsive">
                                 <table id="example1" class="table table-bordered table-striped table-sm text-center"
                                     style="table-layout: fixed; width: 100%;">

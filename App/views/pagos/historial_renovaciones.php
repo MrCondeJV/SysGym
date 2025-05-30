@@ -58,8 +58,8 @@ $renovaciones = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table id="renovacionesTable" class="table table-bordered table-striped table-hover">
-                                    <thead class="thead-dark">
+                                <table id="example1" class="table table-bordered table-striped table-hover">
+                                    <thead>
                                         <tr>
                                             <th>#</th>
                                             <th>Miembro</th>
@@ -133,61 +133,6 @@ $renovaciones = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
 </div>
 <script>
-$(function() {
-    var table = $('#renovacionesTable').DataTable({
-        "responsive": true,
-        "autoWidth": false,
-        "language": {
-            "url": "https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json"
-        },
-        dom: 'Bfrtip',
-        buttons: [{
-                extend: 'pdfHtml5',
-                text: '<i class="fas fa-file-pdf"></i> Exportar PDF',
-                className: 'btn btn-danger mb-2',
-                title: 'Historial de Renovaciones',
-                orientation: 'landscape',
-                pageSize: 'A4',
-                exportOptions: {
-                    columns: ':visible'
-                },
-                customize: function(doc) {
-                    doc.styles.tableHeader = {
-                        fillColor: '#007bff',
-                        color: 'white',
-                        alignment: 'center',
-                        bold: true,
-                        fontSize: 12
-                    };
-                    doc.styles.title = {
-                        color: '#007bff',
-                        fontSize: 18,
-                        alignment: 'center'
-                    };
-                    doc.content[1].margin = [0, 0, 0, 0];
-                    doc.defaultStyle.fontSize = 10;
-                }
-            },
-            {
-                extend: 'excelHtml5',
-                text: '<i class="fas fa-file-excel"></i> Exportar Excel',
-                className: 'btn btn-success mb-2',
-                title: 'Historial de Renovaciones',
-                exportOptions: {
-                    columns: ':visible'
-                }
-            },
-            {
-                extend: 'print',
-                text: '<i class="fas fa-print"></i> Imprimir',
-                className: 'btn btn-secondary mb-2',
-                title: 'Historial de Renovaciones',
-                exportOptions: {
-                    columns: ':visible'
-                }
-            }
-        ]
-    });
 
     function actualizarTotal() {
         var total = 0;
@@ -210,7 +155,8 @@ $(function() {
     table.on('draw', actualizarTotal);
     table.on('search', actualizarTotal);
     actualizarTotal();
-});
+
 </script>
+<script src="datatable.js"></script>
 
 <?php include('../layout/parte2.php'); ?>
