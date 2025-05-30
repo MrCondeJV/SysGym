@@ -1,8 +1,8 @@
 <?php
 include('../../config.php');
 include('../layout/parte1.php');
-include('../../controllers/usuarios/list_user.php');
 include('../layout/sesion.php');
+include('../../controllers/usuarios/list_user.php');
 ?>
 
 <!-- Content Wrapper. Contains page content -->
@@ -43,12 +43,12 @@ include('../layout/sesion.php');
 
                         <div class="card-body">
 
-                             <!-- Botón Agregar Usuario -->
-                                <div class="mb-3 text-right">
-                                    <a href="create.php" class="btn btn-success">
-                                        <i class="fas fa-user-plus"></i> Agregar Usuario
-                                    </a>
-                                </div>
+                            <!-- Botón Agregar Usuario -->
+                            <div class="mb-3 text-right">
+                                <a href="create.php" class="btn btn-success">
+                                    <i class="fas fa-user-plus"></i> Agregar Usuario
+                                </a>
+                            </div>
 
                             <div class="table-responsive">
                                 <table id="example1" class="table table-bordered table-striped table-sm text-center"

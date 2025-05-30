@@ -3,9 +3,10 @@
 
 include('../../config.php');
 include('../layout/parte1.php');
+include('../layout/sesion.php');
 include('../../controllers/ventas/historial_ventas.php');
 include('../../controllers/ventas/listado_ventas_general.php');
-include('../layout/sesion.php');
+
 
 $fecha_inicio = $_GET['fecha_inicio'] ?? '';
 $fecha_fin = $_GET['fecha_fin'] ?? '';
@@ -254,7 +255,7 @@ fetch('/SysGym/public/images/base64.txt')
                                         return {
                                             margin: [20, 10, 20, 0],
                                             columns: [{
-                                                    text: "Escuela de formacion Infanteria de Marina | Copyright © 2025 Mamba Code.",
+                                                    text: "Escuela de formacion Infanteria de Marina | DITIC ESFIM",
                                                     alignment: "center",
                                                     style: "footer"
                                                 },
