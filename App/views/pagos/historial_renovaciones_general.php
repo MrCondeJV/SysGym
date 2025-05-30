@@ -1,6 +1,12 @@
 <?php
 include('../../config.php');
 include('../layout/parte1.php');
+include('../layout/sesion.php');
+
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 // Filtro de fechas
 $where = [];
@@ -87,8 +93,7 @@ foreach ($renovaciones as $r) {
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table id="example1"
-                                    class="table table-bordered table-striped table-hover">
+                                <table id="example1" class="table table-bordered table-striped table-hover">
                                     <thead>
                                         <tr>
                                             <th>#</th>
@@ -157,32 +162,259 @@ foreach ($renovaciones as $r) {
     </div>
 </div>
 
+<?php include('../layout/parte2.php'); ?>
 <!-- DataTables -->
 <script>
+var nombreEmpleado = "<?php echo strtoupper($nombre_usuario); ?>";
 
-    function actualizarTotal() {
-        var total = 0;
-        // La columna de precio es la 6 (índice 6, empieza en 0)
-        table.rows({
-            search: 'applied'
-        }).every(function() {
-            var data = this.data();
-            // Extrae el número del badge
-            var precio = $(data[6]).text().replace(/[^0-9,.-]+/g, "").replace('.', '').replace(',',
-                '.');
-            total += parseFloat(precio) || 0;
+fetch('/SysGym/public/images/base64.txt')
+    .then(response => response.text())
+    .then(base64Image => {
+        $(function() {
+            // Declarar table en ámbito accesible para usar dentro de customize
+            var table = $('#example1').DataTable({
+                dom: 'Bfrtip',
+                pageLength: 10,
+                language: {
+                    emptyTable: "No hay información",
+                    info: "Mostrando _START_ a _END_ de _TOTAL_ Usuarios",
+                    infoEmpty: "Mostrando 0 a 0 de 0 Usuarios",
+                    infoFiltered: "(Filtrado de _MAX_ total Usuarios)",
+                    infoPostFix: "",
+                    thousands: ",",
+                    lengthMenu: "Mostrar _MENU_ Usuarios",
+                    loadingRecords: "Cargando...",
+                    processing: "Procesando...",
+                    search: "Buscador:",
+                    zeroRecords: "Sin resultados encontrados",
+                    paginate: {
+                        first: "Primero",
+                        last: "Último",
+                        next: "Siguiente",
+                        previous: "Anterior",
+                    },
+                },
+                responsive: true,
+                lengthChange: true,
+                autoWidth: false,
+                buttons: [{
+                        extend: "collection",
+                        text: '<i class="fas fa-file-export"></i> Reportes',
+                        className: "btn btn-success",
+                        buttons: [{
+                                extend: "copy",
+                                text: '<i class="fas fa-copy"></i> Copiar',
+                                className: "btn btn-secondary",
+                                exportOptions: {
+                                    columns: ":not(:last-child)"
+                                },
+                            },
+                            {
+                                extend: "pdf",
+                                text: '<i class="fas fa-file-pdf"></i> PDF',
+                                className: "btn btn-danger",
+                                filename: "Reporte_Renovaciones_Usuarios",
+                                title: "Lista de Renovaciones de Usuarios",
+                                orientation: "landscape",
+                                customize: function(doc) {
+                                    // Usar la variable table, no this.api()
+                                    var data = table.rows({
+                                        search: 'applied'
+                                    }).data();
+                                    var totalPDF = 0;
+                                    for (var i = 0; i < data.length; i++) {
+                                        var precioText = $('<div>').html(data[i][6])
+                                            .text();
+                                        var precioNum = parseFloat(precioText.replace(
+                                                /[^0-9,.-]+/g, '').replace('.', '')
+                                            .replace(',', '.')) || 0;
+                                        totalPDF += precioNum;
+                                    }
+                                    totalPDF = totalPDF.toLocaleString('es-ES', {
+                                        minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2
+                                    });
+
+                                    // Insertar total antes de la tabla
+                                    doc.content.unshift({
+                                        text: 'Total: $' + totalPDF,
+                                        fontSize: 12,
+                                        bold: true,
+                                        margin: [0, 0, 0, 10],
+                                        alignment: 'right'
+                                    });
+
+                                    if (doc.content[2] && doc.content[2].table) {
+                                        doc.content[2].table.widths = Array(doc.content[
+                                            2].table.body[0].length).fill("*");
+
+                                        doc.styles.tableHeader.alignment = "center";
+                                        doc.styles.tableHeader.fillColor = "#0066cc";
+                                        doc.styles.tableHeader.color = "white";
+                                        doc.styles.tableHeader.fontSize = 12;
+
+                                        var body = doc.content[2].table.body;
+                                        for (var i = 1; i < body.length; i++) {
+                                            if (i % 2 === 0) {
+                                                body[i].forEach(cell => cell.fillColor =
+                                                    "#f2f2f2");
+                                            }
+                                        }
+                                        body.forEach(row => {
+                                            row.forEach(cell => {
+                                                cell.alignment =
+                                                    "center";
+                                                cell.fontSize = 10;
+                                            });
+                                        });
+                                        doc.content[2].margin = [0, 10, 0, 0];
+                                    }
+
+                                    doc.content.unshift({
+                                        text: "Listado detallado de renovaciones",
+                                        fontSize: 10,
+                                        color: "#333",
+                                        alignment: "center",
+                                        margin: [0, 5, 0, 10],
+                                    });
+                                    doc.content.unshift({
+                                        image: base64Image.trim(),
+                                        width: 100,
+                                        alignment: "center",
+                                        margin: [0, -30, 0, 10],
+                                    });
+                                    var fechaActual = new Date().toLocaleDateString();
+                                    doc.content.unshift({
+                                        columns: [{
+                                                text: "Fecha del reporte: " +
+                                                    fechaActual,
+                                                fontSize: 10,
+                                                color: "#333"
+                                            },
+                                            {
+                                                text: "Generado por: " +
+                                                    nombreEmpleado,
+                                                fontSize: 10,
+                                                color: "#333",
+                                                alignment: "right"
+                                            }
+                                        ],
+                                        margin: [0, 0, 0, 10],
+                                    });
+
+                                    doc.footer = function(currentPage, pageCount) {
+                                        return {
+                                            margin: [20, 10, 20, 0],
+                                            columns: [{
+                                                    text: "Escuela de formacion Infanteria de Marina | Copyright © 2025 Mamba Code.",
+                                                    alignment: "center",
+                                                    style: "footer"
+                                                },
+                                                {
+                                                    text: "Comentario (si es impreso): _________________________",
+                                                    alignment: "center",
+                                                    style: "footer"
+                                                },
+                                                {
+                                                    text: "Página " +
+                                                        currentPage + " de " +
+                                                        pageCount,
+                                                    alignment: "right",
+                                                    fontSize: 10,
+                                                    color: "#666"
+                                                }
+                                            ]
+                                        };
+                                    };
+
+                                    doc.styles.footer = {
+                                        fontSize: 10,
+                                        italics: true,
+                                        color: "#666"
+                                    };
+
+                                    doc.headers = function(currentPage, pageCount) {
+                                        return {
+                                            text: "Reporte de Usuarios | Página " +
+                                                currentPage + " de " + pageCount,
+                                            fontSize: 10,
+                                            color: "#333",
+                                            alignment: "center",
+                                            margin: [0, 10, 0, 0],
+                                        };
+                                    };
+                                },
+                                exportOptions: {
+                                    columns: ":not(:first-child):not(:eq(6))"
+
+                                }
+                            },
+                            {
+                                extend: "csv",
+                                text: '<i class="fas fa-file-csv"></i> CSV',
+                                className: "btn btn-info",
+                                filename: "Reporte_Usuarios",
+                                exportOptions: {
+                                    columns: ":not(:last-child)"
+                                }
+                            },
+                            {
+                                extend: "excel",
+                                text: '<i class="fas fa-file-excel"></i> Excel',
+                                className: "btn btn-success",
+                                filename: "Reporte_Usuarios",
+                                title: "Lista de Usuarios",
+                                exportOptions: {
+                                    columns: ":not(:last-child)"
+                                }
+                            },
+                            {
+                                extend: "print",
+                                text: '<i class="fas fa-print"></i> Imprimir',
+                                className: "btn btn-warning",
+                                title: "Lista de Usuarios",
+                                customize: function(win) {
+                                    $(win.document.body).css("font-size", "12px");
+                                    $(win.document.body).find("table").addClass(
+                                        "display").css("font-size", "12px");
+                                },
+                                exportOptions: {
+                                    columns: ":not(:last-child)"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        extend: "colvis",
+                        text: '<i class="fas fa-columns"></i> Columnas',
+                        className: "btn btn-primary",
+                        collectionLayout: "fixed three-column"
+                    }
+                ]
+            });
+
+            function actualizarTotal() {
+                var total = 0;
+                table.rows({
+                    search: 'applied'
+                }).every(function() {
+                    var data = this.data();
+                    var precio = $(data[6]).text().replace(/[^0-9,.-]+/g, "").replace('.', '')
+                        .replace(',', '.');
+                    total += parseFloat(precio) || 0;
+                });
+                $('#total-renovaciones-js').text('$' + total.toLocaleString('es-ES', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }));
+            }
+
+            table.on('draw', actualizarTotal);
+            table.on('search', actualizarTotal);
+            actualizarTotal();
         });
-        $('#total-renovaciones-js').text('$' + total.toLocaleString('es-ES', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        }));
-    }
-
-    table.on('draw', actualizarTotal);
-    table.on('search', actualizarTotal);
-    actualizarTotal();
-
+    })
+    .catch(error => {
+        console.error("Error al cargar el archivo Base64:", error);
+    });
 </script>
-<script src="datatable.js"></script>
-
-<?php include('../layout/parte2.php'); ?>

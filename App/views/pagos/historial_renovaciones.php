@@ -133,30 +133,79 @@ $renovaciones = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
 </div>
 <script>
+$(function() {
+    $("#example1").DataTable({
+        "pageLength": 10,
+        "language": {
+            "emptyTable": "No hay información",
+            "info": "Mostrando _START_ a _END_ de _TOTAL_ Usuarios",
+            "infoEmpty": "Mostrando 0 a 0 de 0 Usuarios",
+            "infoFiltered": "(Filtrado de _MAX_ total Usuarios)",
+            "infoPostFix": "",
+            "thousands": ",",
+            "lengthMenu": "Mostrar _MENU_ Usuarios",
+            "loadingRecords": "Cargando...",
+            "processing": "Procesando...",
+            "search": "Buscador:",
+            "zeroRecords": "Sin resultados encontrados",
+            "paginate": {
+                "first": "Primero",
+                "last": "Ultimo",
+                "next": "Siguiente",
+                "previous": "Anterior"
+            }
+        },
+        "responsive": true,
+        "lengthChange": true,
+        "autoWidth": false,
+        buttons: [{
+                extend: 'collection',
+                text: 'Reportes',
+                orientation: 'landscape',
+                buttons: [{
+                    text: 'Copiar',
+                    extend: 'copy',
+                }, {
+                    extend: 'pdf'
+                }, {
+                    extend: 'csv'
+                }, {
+                    extend: 'excel'
+                }, {
+                    text: 'Imprimir',
+                    extend: 'print'
+                }]
+            },
+            {
+                extend: 'colvis',
+                text: 'Visor de columnas',
+                collectionLayout: 'fixed three-column'
+            }
+        ],
+    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+});
 
-    function actualizarTotal() {
-        var total = 0;
-        // La columna de precio es la 6 (índice 6, empieza en 0)
-        table.rows({
-            search: 'applied'
-        }).every(function() {
-            var data = this.data();
-            // Extrae el número del badge
-            var precio = $(data[6]).text().replace(/[^0-9,.-]+/g, "").replace('.', '').replace(',',
+function actualizarTotal() {
+    var total = 0;
+    // La columna de precio es la 6 (índice 6, empieza en 0)
+    table.rows({
+        search: 'applied'
+    }).every(function() {
+        var data = this.data();
+        // Extrae el número del badge
+        var precio = $(data[6]).text().replace(/[^0-9,.-]+/g, "").replace('.', '').replace(',',
             '.');
-            total += parseFloat(precio) || 0;
-        });
-        $('#total-renovaciones-js').text('$' + total.toLocaleString('es-ES', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        }));
-    }
+        total += parseFloat(precio) || 0;
+    });
+    $('#total-renovaciones-js').text('$' + total.toLocaleString('es-ES', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }));
+}
 
-    table.on('draw', actualizarTotal);
-    table.on('search', actualizarTotal);
-    actualizarTotal();
-
+table.on('draw', actualizarTotal);
+table.on('search', actualizarTotal);
+actualizarTotal();
 </script>
-<script src="datatable.js"></script>
 
 <?php include('../layout/parte2.php'); ?>
