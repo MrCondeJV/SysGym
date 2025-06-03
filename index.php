@@ -20,6 +20,17 @@ $stmt = $pdo->prepare("
 ");
 $stmt->execute();
 $ultimos_accesos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
+// 1. Miembros registrados por mes (año actual)
+$anio = date('Y');
+$meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+$miembros_por_mes = array_fill(1, 12, 0);
+$stmt = $pdo->prepare("SELECT MONTH(fecha_registro) as mes, COUNT(*) as cantidad FROM miembros WHERE YEAR(fecha_registro) = ? GROUP BY mes");
+$stmt->execute([$anio]);
+foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
+    $miembros_por_mes[(int)$row['mes']] = (int)$row['cantidad'];
+}
 ?>
 
 <style>
@@ -164,7 +175,7 @@ $ultimos_accesos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <div class="mb-3">
                                 <i class="fas fa-calendar-check fa-3x text-primary"></i>
                             </div>
-                           
+
                         </div>
                     </div>
                 </div>
