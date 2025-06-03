@@ -4,7 +4,7 @@
 include('../../config.php');
 include('../layout/parte1.php');
 include('../layout/sesion.php');
-include('../../controllers/ventas/historial_ventas.php');
+#include('../../controllers/ventas/historial_ventas.php');
 include('../../controllers/ventas/listado_ventas_general.php');
 
 
