@@ -1,6 +1,5 @@
 <?php
 
-
 include('../../config.php');
 session_start();
 
@@ -8,7 +7,7 @@ $nombre_usuario = $_POST['nombre_usuario'] ?? '';
 $password_user = $_POST['password_user'] ?? '';
 
 // Consulta para buscar usuario en la tabla usuariossistema
-$sql = "SELECT * FROM usuariossistema WHERE nombres = :nombre_usuario LIMIT 1";
+$sql = "SELECT * FROM usuariossistema WHERE nombre_usuario = :nombre_usuario LIMIT 1";
 $query = $pdo->prepare($sql);
 $query->bindParam(':nombre_usuario', $nombre_usuario, PDO::PARAM_STR);
 $query->execute();
@@ -17,6 +16,14 @@ $usuario = $query->fetch(PDO::FETCH_ASSOC);
 if ($usuario) {
     if (strtolower($usuario['estado']) !== 'activo') {
         $_SESSION['mensaje'] = "Acceso denegado: Usuario inactivo.";
+        header('Location: ../../views/login/index.php');
+        exit;
+    }
+
+    // Validar rol permitido (ejemplo: solo roles con ID 1 y 2 pueden ingresar)
+    $roles_permitidos = [1, 2, 3];  // Ajusta según tus roles válidos
+    if (!in_array($usuario['rol'], $roles_permitidos)) {
+        $_SESSION['mensaje'] = "Acceso denegado: Rol no autorizado.";
         header('Location: ../../views/login/index.php');
         exit;
     }
@@ -37,7 +44,7 @@ if ($usuario) {
         header('Location: ../../../index.php');
         exit;
     }
-} 
+}
 
 $_SESSION['mensaje'] = "Error: Datos incorrectos";
 header('Location: ../../views/login/index.php');

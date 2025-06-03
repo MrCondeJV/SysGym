@@ -2,6 +2,37 @@
 include('../../config.php');
 include('../layout/parte1.php');
 
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+$id_usuario_actual = $_SESSION['id_usuario'] ?? null;
+if (!$id_usuario_actual) {
+    die("No hay usuario autenticado.");
+}
+
+// Obtener id de rol del usuario
+$stmtRol = $pdo->prepare("SELECT rol FROM usuariossistema WHERE id_usuario = :id_usuario");
+$stmtRol->execute([':id_usuario' => $id_usuario_actual]);
+$usuario = $stmtRol->fetch(PDO::FETCH_ASSOC);
+
+if (!$usuario) {
+    die("Usuario no encontrado.");
+}
+
+$id_rol = $usuario['rol'];
+
+// Obtener nombre del rol
+$stmtNombreRol = $pdo->prepare("SELECT nombre FROM roles WHERE id = :id_rol");
+$stmtNombreRol->execute([':id_rol' => $id_rol]);
+$rol_info = $stmtNombreRol->fetch(PDO::FETCH_ASSOC);
+
+if (!$rol_info) {
+    die("Rol no encontrado.");
+}
+
+$nombre_rol = $rol_info['nombre'];
+
 $id_miembro = isset($_GET['id_miembro']) ? intval($_GET['id_miembro']) : 0;
 if ($id_miembro <= 0) {
     echo "<div class='alert alert-danger'>Usuario no válido.</div>";
@@ -9,8 +40,16 @@ if ($id_miembro <= 0) {
     exit;
 }
 
-// Consulta renovaciones del usuario
-$stmt = $pdo->prepare("
+$where = "r.id_miembro = ?";
+$params = [$id_miembro];
+
+// Solo si NO es administrador, filtro por renovado_por
+if ($nombre_rol !== 'Administrador') {
+    $where .= " AND r.renovado_por = ?";
+    $params[] = $id_usuario_actual;
+}
+
+$sql = "
     SELECT r.*, 
            mp.nombre AS metodo_pago, 
            t.nombre AS tipo_membresia, 
@@ -25,11 +64,15 @@ $stmt = $pdo->prepare("
     JOIN tiposmembresia t ON m.id_tipo_membresia = t.id_tipo_membresia
     JOIN miembros me ON r.id_miembro = me.id_miembro
     LEFT JOIN usuariossistema u ON r.renovado_por = u.id_usuario
-    WHERE r.id_miembro = ?
+    WHERE $where
     ORDER BY r.fecha DESC
-");
-$stmt->execute([$id_miembro]);
+";
+
+$stmt = $pdo->prepare($sql);
+$stmt->execute($params);
 $renovaciones = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
 ?>
 
 <div class="content-wrapper">

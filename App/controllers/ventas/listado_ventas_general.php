@@ -3,13 +3,19 @@ include('../../config.php');
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+
 $id_usuario_actual = $_SESSION['id_usuario'] ?? null;
 if (!$id_usuario_actual) {
     die("No hay usuario autenticado.");
 }
 
-// Obtener rol del usuario
-$stmtRol = $pdo->prepare("SELECT rol FROM usuariossistema WHERE id_usuario = :id_usuario");
+// Obtener el nombre del rol del usuario
+$stmtRol = $pdo->prepare("
+    SELECT r.nombre AS nombre_rol 
+    FROM usuariossistema u
+    JOIN roles r ON u.rol = r.id
+    WHERE u.id_usuario = :id_usuario
+");
 $stmtRol->execute([':id_usuario' => $id_usuario_actual]);
 $usuario = $stmtRol->fetch(PDO::FETCH_ASSOC);
 
@@ -17,13 +23,13 @@ if (!$usuario) {
     die("Usuario no encontrado.");
 }
 
-$rol_usuario = $usuario['rol'];
+$rol_usuario = $usuario['nombre_rol'];
 
 // Definir condiciones y parámetros para filtro
 $where = '';
 $params = [];
 
-if ($rol_usuario !== 'admin') {
+if (strtolower($rol_usuario) !== 'administrador') {
     $where = "WHERE id_usuario = ?";
     $params[] = $id_usuario_actual;
 }
