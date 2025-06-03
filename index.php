@@ -6,11 +6,9 @@ include_once('App/controllers/miembros/contar_activos.php'); // Debe definir $mi
 include_once('App/controllers/ventas/ingresos_mes.php'); // Debe definir $ingresos_mes
 include_once('App/controllers/miembros/nuevos_mes.php'); // Debe definir $nuevos_miembros y $porcentaje_nuevos
 
-
 date_default_timezone_set('America/Bogota');
 
-
-//Ultimos accesos
+// Consulta para obtener los últimos accesos
 $stmt = $pdo->prepare("
     SELECT ha.fecha_entrada, m.nombres, m.apellidos
     FROM historialaccesos ha
@@ -21,16 +19,43 @@ $stmt = $pdo->prepare("
 $stmt->execute();
 $ultimos_accesos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+//productos mas vendidos
+$stmt = $pdo->prepare("
+    SELECT 
+        p.nombre,
+        p.codigo_barras,
+        SUM(dv.cantidad) AS total_vendido,
+        p.precio,
+        (SUM(dv.cantidad) * p.precio) AS ingresos_generados
+    FROM detallesventa dv
+    JOIN productos p ON dv.id_producto = p.id_producto
+    GROUP BY dv.id_producto
+    ORDER BY total_vendido DESC
+    LIMIT 5
+");
+$stmt->execute();
+$productos_vendidos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// 1. Miembros registrados por mes (año actual)
-$anio = date('Y');
-$meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-$miembros_por_mes = array_fill(1, 12, 0);
-$stmt = $pdo->prepare("SELECT MONTH(fecha_registro) as mes, COUNT(*) as cantidad FROM miembros WHERE YEAR(fecha_registro) = ? GROUP BY mes");
-$stmt->execute([$anio]);
-foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
-    $miembros_por_mes[(int)$row['mes']] = (int)$row['cantidad'];
-}
+
+// Consulta para obtener ventas recientes con nombre del usuario que realizó la venta
+$stmt = $pdo->query("
+    SELECT 
+        v.fecha_venta, 
+        CONCAT(u.nombres, ' ', u.apellidos) AS nombre_usuario,
+        v.total,
+        v.numero_factura
+    FROM ventas v
+    LEFT JOIN usuariossistema u ON v.id_usuario = u.id_usuario
+    ORDER BY v.fecha_venta DESC
+    LIMIT 5
+");
+$ventas_recientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Consulta para contar accesos hoy
+$hoy = date('Y-m-d');
+$stmt = $pdo->prepare("SELECT COUNT(*) FROM historialaccesos WHERE DATE(fecha_entrada) = ?");
+$stmt->execute([$hoy]);
+$accesos_hoy = $stmt->fetchColumn();
 ?>
 
 <style>
@@ -41,6 +66,7 @@ foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
     }
 }
 </style>
+
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <!-- Main content -->
@@ -82,7 +108,6 @@ foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
                 font-size: 1.5rem;
                 color: #e0e0e0;
                 margin-right: 0.5rem;
-                /*filter: drop-shadow(0 2px 4px #0e94a088);*/
                 opacity: 0.92;
             }
 
@@ -93,9 +118,7 @@ foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
                 color: inherit;
                 -webkit-background-clip: text;
                 background-clip: text;
-                /* estándar */
                 -webkit-text-fill-color: transparent;
-                /* text-fill-color: transparent; <-- ELIMINAR ESTA LÍNEA */
                 animation: gradientMoveFormal 4s linear infinite alternate;
                 font-weight: bold;
                 letter-spacing: 1.2px;
@@ -137,6 +160,7 @@ foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
                 }
             }
             </style>
+
             <div class="row mb-3 mt-4">
                 <div class="col">
                     <div class="titulo-bienvenida-corporativo">
@@ -146,6 +170,7 @@ foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
                     </div>
                 </div>
             </div>
+
             <!-- Tarjetas de métricas -->
             <div class="row">
                 <!-- Miembros Activos -->
@@ -165,17 +190,18 @@ foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
                     </div>
                 </div>
 
-                <!-- Clases Hoy -->
+                <!-- Accesos Hoy -->
                 <div class="col-lg-3 col-6">
                     <div class="card shadow-sm">
                         <div class="card-header bg-primary text-white">
-                            <h5 class="card-title">Clases Hoy</h5>
+                            <h5 class="card-title">Accesos Hoy</h5>
                         </div>
                         <div class="card-body text-center">
                             <div class="mb-3">
-                                <i class="fas fa-calendar-check fa-3x text-primary"></i>
+                                <i class="fas fa-door-open fa-3x text-primary"></i>
                             </div>
-
+                            <h3 class="fw-bold"><?= htmlspecialchars($accesos_hoy) ?></h3>
+                            <small>Entradas registradas</small>
                         </div>
                     </div>
                 </div>
@@ -204,7 +230,7 @@ foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
                         </div>
                         <div class="card-body text-center">
                             <div class="mb-3">
-                                <i class="fas fa-heartbeat fa-3x text-success"></i>
+                                <i class="fas fa-user-plus fa-3x text-success"></i>
                             </div>
                             <h3 class="fw-bold"><?= htmlspecialchars($nuevos_miembros) ?></h3>
                             <small
@@ -214,50 +240,63 @@ foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
                 </div>
             </div>
 
-            <!-- Próximas clases -->
+            <!-- Sección de información -->
             <div class="row mt-4">
+                <!-- Productos Más Vendidos -->
                 <div class="col-lg-6">
-                    <div class="card card-maroon shadow-sm">
+                    <div class="card card-primary shadow-sm">
                         <div class="card-header">
-                            <h5 class="card-title">Próximas Clases
+                            <h5 class="card-title">
+                                <i class="fas fa-trophy"></i> Productos Más Vendidos
                             </h5>
                         </div>
                         <div class="card-body">
-
-                            <ul class="list-group list-group-flush">
-                                <?php if (empty($proximas_clases)): ?>
-                                <li class="list-group-item text-center text-muted">
-                                    No hay más clases programadas para hoy.
-                                </li>
-                                <?php else: ?>
-                                <?php foreach ($proximas_clases as $clase): ?>
-                                <li class="list-group-item d-flex justify-content-between align-items-center py-2">
-                                    <div>
-                                        <strong>
-                                            <?= htmlspecialchars($clase['horario']) ?>
-                                        </strong> - <?= htmlspecialchars($clase['nombre']) ?>
-                                        <small class="d-block text-muted">
-                                            Instructor:
-                                            <?= htmlspecialchars($clase['instructor_nombre'] . ' ' . $clase['instructor_apellido']) ?>
-                                        </small>
-                                    </div>
-                                    <span class="badge badge-primary rounded-pill">
-                                        <?= $clase['capacidad_maxima'] ?> cupos
-                                    </span>
-                                </li>
-                                <?php endforeach; ?>
-                                <?php endif; ?>
-                            </ul>
+                            <div class="table-responsive">
+                                <table class="table table-hover table-sm">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Producto</th>
+                                            <th class="text-center">Unidades</th>
+                                            <th class="text-end">Ingresos</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php if (empty($productos_vendidos)): ?>
+                                        <tr>
+                                            <td colspan="3" class="text-center text-muted py-3">No hay datos de ventas
+                                            </td>
+                                        </tr>
+                                        <?php else: ?>
+                                        <?php foreach ($productos_vendidos as $producto): ?>
+                                        <tr>
+                                            <td>
+                                                <strong><?= htmlspecialchars($producto['nombre']) ?></strong>
+                                                <small class="d-block text-muted">Código:
+                                                    <?= htmlspecialchars($producto['codigo_barras']) ?></small>
+                                            </td>
+                                            <td class="text-center">
+                                                <span class="badge bg-primary rounded-pill">
+                                                    <?= (int)$producto['total_vendido'] ?>
+                                                </span>
+                                            </td>
+                                            <td class="text-end text-success fw-bold">
+                                                $<?= number_format($producto['ingresos_generados'], 2) ?>
+                                            </td>
+                                        </tr>
+                                        <?php endforeach; ?>
+                                        <?php endif; ?>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Retos activos -->
+                <!-- Últimos accesos -->
                 <div class="col-lg-6">
                     <div class="card card-indigo shadow-sm">
                         <div class="card-header">
-                            <h5 class="card-title">Últimos 5 ingresos
-                            </h5>
+                            <h5 class="card-title">Últimos 5 ingresos</h5>
                         </div>
                         <div class="card-body">
                             <ul class="list-group list-group-flush">
@@ -286,13 +325,54 @@ foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
                 </div>
             </div>
 
+            <!-- Ventas recientes -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="card card-success shadow-sm">
+                        <div class="card-header">
+                            <h5 class="card-title">Ventas Recientes</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Fecha</th>
+                                            <th>Factura</th>
+                                            <th>Realizado por</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php if (empty($ventas_recientes)): ?>
+                                        <tr>
+                                            <td colspan="4" class="text-center text-muted">No hay ventas recientes</td>
+                                        </tr>
+                                        <?php else: ?>
+                                        <?php foreach ($ventas_recientes as $venta): ?>
+                                        <tr>
+                                            <td><?= date('d/m/Y H:i', strtotime($venta['fecha_venta'])) ?></td>
+                                            <td><?= htmlspecialchars($venta['numero_factura'] ?? 'N/A') ?></td>
+                                            <td><?= htmlspecialchars($venta['nombre_usuario'] ?? 'Sistema') ?></td>
+                                            <td>$<?= number_format($venta['total'], 2) ?></td>
+                                        </tr>
+                                        <?php endforeach; ?>
+                                        <?php endif; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Botones de Acción Rápida -->
             <div class="row mt-3">
                 <div class="col-lg-4 col-6">
                     <div class="card shadow-sm">
                         <div class="card-body text-center">
-                            <a href="App/views/clases/create.php" class="btn btn-primary w-100">
-                                Agregar Nueva Clase
+                            <a href="App/views/miembros/create.php" class="btn btn-primary w-100">
+                                <i class="fas fa-user-plus"></i> Nuevo Miembro
                             </a>
                         </div>
                     </div>
@@ -300,8 +380,8 @@ foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
                 <div class="col-lg-4 col-6">
                     <div class="card shadow-sm">
                         <div class="card-body text-center">
-                            <a href="App/views/miembros/index.php" class="btn btn-success w-100">
-                                Ver Miembros
+                            <a href="App/views/ventas/index.php" class="btn btn-success w-100">
+                                <i class="fas fa-cash-register"></i> Nueva Venta
                             </a>
                         </div>
                     </div>
@@ -310,7 +390,7 @@ foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
                     <div class="card shadow-sm">
                         <div class="card-body text-center">
                             <a href="App/views/pagos/historial_renovaciones_general.php" class="btn btn-warning w-100">
-                                Ver Pagos
+                                <i class="fas fa-money-bill-wave"></i> Ver Pagos
                             </a>
                         </div>
                     </div>
@@ -319,7 +399,6 @@ foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
 
         </div>
     </section>
-
 </div>
 
 <?php include('App/views/layout/parte2.php'); ?>
