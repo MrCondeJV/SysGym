@@ -3,7 +3,6 @@ include('../../config.php');
 include('../layout/parte1.php');
 include('../layout/sesion.php');
 
-
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -14,8 +13,13 @@ if (!$id_usuario_actual) {
     die("No hay usuario autenticado.");
 }
 
-// Obtener el rol del usuario
-$stmtRol = $pdo->prepare("SELECT rol FROM usuariossistema WHERE id_usuario = :id_usuario");
+// Obtener el nombre del rol del usuario
+$stmtRol = $pdo->prepare("
+    SELECT r.nombre AS nombre_rol 
+    FROM usuariossistema u
+    JOIN roles r ON u.rol = r.id
+    WHERE u.id_usuario = :id_usuario
+");
 $stmtRol->execute([':id_usuario' => $id_usuario_actual]);
 $usuario = $stmtRol->fetch(PDO::FETCH_ASSOC);
 
@@ -23,7 +27,7 @@ if (!$usuario) {
     die("Usuario no encontrado.");
 }
 
-$rol_usuario = $usuario['rol'];
+$rol_usuario = $usuario['nombre_rol'];
 
 // Construir condiciones del filtro
 $where = [];
@@ -38,8 +42,8 @@ if (!empty($_GET['fecha_fin'])) {
     $params[':fecha_fin'] = $_GET['fecha_fin'];
 }
 
-// Filtrar solo si NO es admin
-if ($rol_usuario !== 'admin') {
+// Filtrar solo si NO es administrador
+if (strtolower($rol_usuario) !== 'administrador') {
     $where[] = "r.renovado_por = :id_usuario";
     $params[':id_usuario'] = $id_usuario_actual;
 }

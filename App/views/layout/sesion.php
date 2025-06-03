@@ -82,12 +82,13 @@ setcookie(
         'samesite' => 'Lax'
     ]
 );
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-// Si hay un usuario en sesión, obtener datos
 if (isset($_SESSION['sesion_usuario'])) {
     $nombre_usuario = $_SESSION['sesion_usuario'];
 
-    // Nueva estructura: solo tabla usuariossistema
     $sql = "SELECT 
                 id_usuario,
                 nombres,
@@ -113,14 +114,19 @@ if (isset($_SESSION['sesion_usuario'])) {
         $_SESSION['id_usuario'] = $usuario['id_usuario'];
         $_SESSION['nombres'] = $usuario['nombres'];
         $_SESSION['apellidos'] = $usuario['apellidos'];
-        $_SESSION['rol'] = $usuario['rol'];
+        $_SESSION['rol'] = $usuario['rol']; // aquí guardas el ID del rol
         $_SESSION['telefono'] = $usuario['telefono'];
         $_SESSION['correo_electronico'] = $usuario['correo_electronico'];
         $_SESSION['ultimo_acceso'] = $usuario['ultimo_acceso'];
         $_SESSION['estado'] = $usuario['estado'];
         $_SESSION['creado_en'] = $usuario['creado_en'];
+
+        // Opcional: cargar el nombre del rol y guardarlo también
+        $stmtRol = $pdo->prepare("SELECT nombre FROM roles WHERE id = :id_rol");
+        $stmtRol->execute([':id_rol' => $usuario['rol']]);
+        $rol_info = $stmtRol->fetch(PDO::FETCH_ASSOC);
+        $_SESSION['nombre_rol'] = $rol_info ? $rol_info['nombre'] : null;
     } else {
-        // Si no se encuentra el usuario, destruir la sesión
         session_destroy();
         header('Location: /SysGym/App/views/login/index.php');
         exit();
@@ -129,4 +135,3 @@ if (isset($_SESSION['sesion_usuario'])) {
     header('Location: /SysGym/App/views/login/index.php');
     exit();
 }
-?>

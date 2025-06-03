@@ -13,61 +13,32 @@ foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
     $miembros_por_mes[(int)$row['mes']] = (int)$row['cantidad'];
 }
 
-// 2. Miembros registrados por semana (semana actual)
-$semana = date('W');
-$dias_semana = ['Monday' => 'Lunes', 'Tuesday' => 'Martes', 'Wednesday' => 'Miércoles', 'Thursday' => 'Jueves', 'Friday' => 'Viernes', 'Saturday' => 'Sábado', 'Sunday' => 'Domingo'];
-$miembros_por_dia = array_fill_keys(array_keys($dias_semana), 0);
-$stmt = $pdo->prepare("SELECT DAYNAME(fecha_registro) as dia, COUNT(*) as cantidad FROM miembros WHERE YEAR(fecha_registro) = ? AND WEEK(fecha_registro, 1) = ? GROUP BY dia");
-$stmt->execute([$anio, $semana]);
-foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
-    $miembros_por_dia[$row['dia']] = (int)$row['cantidad'];
-}
+// 2. Miembros por estado (activo/inactivo)
+$stmt = $pdo->query("SELECT estado, COUNT(*) as cantidad FROM miembros GROUP BY estado");
+$miembros_estado = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-
-// 3. Clases más populares (por inscripciones)
-// Clases más populares por cantidad de veces programadas
+// 3. Membresías por tipo
 $stmt = $pdo->query("
-    SELECT nombre, COUNT(*) AS veces_programada
-    FROM clases
-    GROUP BY nombre
-    ORDER BY veces_programada DESC
-    LIMIT 7
+    SELECT tm.nombre, COUNT(*) as cantidad 
+    FROM membresias m
+    JOIN tiposmembresia tm ON m.id_tipo_membresia = tm.id_tipo_membresia
+    GROUP BY m.id_tipo_membresia
 ");
-$clases_populares = [];
-foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
-    $clases_populares[] = [
-        'nombre' => $row['nombre'],
-        'inscritos' => (int)$row['veces_programada'] // Usamos 'inscritos' para reutilizar el JS
-    ];
-}
+$membresias_tipo = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 // 4. Total de miembros registrados
 $stmt = $pdo->query("SELECT COUNT(*) as total FROM miembros");
 $total_miembros = $stmt->fetchColumn();
 
-// 5. Valor total de las renovaciones
-$stmt = $pdo->query("
-    SELECT SUM(t.precio) as total_renovaciones
-    FROM renovaciones r
-    JOIN membresias m ON r.id_membresia = m.id_membresia
-    JOIN tiposmembresia t ON m.id_tipo_membresia = t.id_tipo_membresia
-");
-$total_renovaciones = $stmt->fetchColumn();
+// 5. Valor total de las ventas
+$stmt = $pdo->query("SELECT SUM(total) as total_ventas FROM ventas");
+$total_ventas = $stmt->fetchColumn();
 
 // 6. Miembros por género
 $stmt = $pdo->query("SELECT genero, COUNT(*) as cantidad FROM miembros GROUP BY genero");
 $miembros_genero = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// 7. Clases programadas por día de la semana
-$stmt = $pdo->query("
-    SELECT dia_semana, COUNT(*) as cantidad
-    FROM clases
-    WHERE cancelada = 0
-    GROUP BY dia_semana
-    ORDER BY FIELD(dia_semana, 'lunes','martes','miércoles','jueves','viernes','sábado','domingo')
-");
-$clases_por_dia = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-// 8. Ingresos por mes (ventas)
+// 7. Ingresos por mes (ventas)
 $ingresos_por_mes = array_fill(1, 12, 0);
 $stmt = $pdo->prepare("SELECT MONTH(fecha_venta) as mes, SUM(total) as ingresos FROM ventas WHERE YEAR(fecha_venta) = ? GROUP BY mes");
 $stmt->execute([date('Y')]);
@@ -75,7 +46,7 @@ foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
     $ingresos_por_mes[(int)$row['mes']] = (float)$row['ingresos'];
 }
 
-// 9. Productos más vendidos (top 5)
+// 8. Productos más vendidos (top 5)
 $stmt = $pdo->query("
     SELECT p.nombre, SUM(dv.cantidad) as cantidad
     FROM detallesventa dv
@@ -86,20 +57,31 @@ $stmt = $pdo->query("
 ");
 $productos_vendidos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// 10. Stock bajo (top 5)
+// 9. Stock bajo (top 5)
 $stmt = $pdo->query("
     SELECT nombre, cantidad_stock
     FROM productos
+    WHERE cantidad_stock < stock_minimo
     ORDER BY cantidad_stock ASC
     LIMIT 5
 ");
 $productos_stock = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// KPI adicional: Entradas del día (historialaccesos)
+// 10. Accesos por día (historialaccesos)
 $hoy = date('Y-m-d');
 $stmt = $pdo->prepare("SELECT COUNT(*) FROM historialaccesos WHERE DATE(fecha_entrada) = ?");
 $stmt->execute([$hoy]);
 $entradas_dia = $stmt->fetchColumn();
+
+// 11. Métodos de pago más utilizados
+$stmt = $pdo->query("
+    SELECT mp.nombre, COUNT(*) as cantidad
+    FROM ventas v
+    JOIN metodos_pago mp ON v.id_metodo_pago = mp.id_metodo
+    GROUP BY v.id_metodo_pago
+    ORDER BY cantidad DESC
+");
+$metodos_pago = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!-- Content Wrapper -->
@@ -142,10 +124,10 @@ $entradas_dia = $stmt->fetchColumn();
                     <div class="card border-0 shadow text-center bg-gradient-success text-white h-100">
                         <div class="card-body d-flex flex-column justify-content-center align-items-center">
                             <div class="mb-2">
-                                <i class="fas fa-sync-alt fa-2x"></i>
+                                <i class="fas fa-shopping-cart fa-2x"></i>
                             </div>
-                            <h6 class="fw-bold mb-1">Total Renovaciones</h6>
-                            <div class="display-5 fw-bold">$<?= number_format($total_renovaciones, 2, ',', '.') ?></div>
+                            <h6 class="fw-bold mb-1">Total Ventas</h6>
+                            <div class="display-5 fw-bold">$<?= number_format($total_ventas, 2, ',', '.') ?></div>
                         </div>
                     </div>
                 </div>
@@ -161,6 +143,7 @@ $entradas_dia = $stmt->fetchColumn();
                     </div>
                 </div>
             </div>
+
             <!-- Charts agrupados en cards -->
             <div class="row">
                 <div class="col-md-6 mb-4">
@@ -177,24 +160,25 @@ $entradas_dia = $stmt->fetchColumn();
                 <div class="col-md-6 mb-4">
                     <div class="card h-100 shadow">
                         <div class="card-header bg-primary text-white text-center">
-                            Miembros registrados esta semana
+                            Miembros por estado
                         </div>
                         <div class="card-body d-flex justify-content-center align-items-center"
                             style="min-height:320px;">
-                            <canvas id="chartMiembrosPorSemana" style="max-width: 100%; max-height: 260px;"></canvas>
+                            <canvas id="chartMiembrosEstado" style="max-width: 100%; max-height: 260px;"></canvas>
                         </div>
                     </div>
                 </div>
             </div>
+
             <div class="row">
                 <div class="col-md-6 mb-4">
                     <div class="card h-100 shadow">
                         <div class="card-header bg-indigo text-white text-center">
-                            Clases más populares
+                            Membresías por tipo
                         </div>
                         <div class="card-body d-flex justify-content-center align-items-center"
                             style="min-height:320px;">
-                            <canvas id="chartClasesPopulares" style="max-width: 100%; max-height: 260px;"></canvas>
+                            <canvas id="chartMembresiasTipo" style="max-width: 100%; max-height: 260px;"></canvas>
                         </div>
                     </div>
                 </div>
@@ -210,18 +194,8 @@ $entradas_dia = $stmt->fetchColumn();
                     </div>
                 </div>
             </div>
+
             <div class="row">
-                <div class="col-md-6 mb-4">
-                    <div class="card h-100 shadow">
-                        <div class="card-header bg-warning text-dark text-center">
-                            Clases programadas por día de la semana
-                        </div>
-                        <div class="card-body d-flex justify-content-center align-items-center"
-                            style="min-height:320px;">
-                            <canvas id="chartClasesPorDia" style="max-width: 100%; max-height: 260px;"></canvas>
-                        </div>
-                    </div>
-                </div>
                 <div class="col-md-6 mb-4">
                     <div class="card h-100 shadow">
                         <div class="card-header bg-warning text-dark text-center">
@@ -233,7 +207,19 @@ $entradas_dia = $stmt->fetchColumn();
                         </div>
                     </div>
                 </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100 shadow">
+                        <div class="card-header bg-warning text-dark text-center">
+                            Métodos de pago más utilizados
+                        </div>
+                        <div class="card-body d-flex justify-content-center align-items-center"
+                            style="min-height:320px;">
+                            <canvas id="chartMetodosPago" style="max-width: 100%; max-height: 260px;"></canvas>
+                        </div>
+                    </div>
+                </div>
             </div>
+
             <div class="row">
                 <div class="col-md-6 mb-4">
                     <div class="card h-100 shadow">
@@ -249,7 +235,7 @@ $entradas_dia = $stmt->fetchColumn();
                 <div class="col-md-6 mb-4">
                     <div class="card h-100 shadow">
                         <div class="card-header bg-danger text-white text-center">
-                            Stock bajo (Top 5)
+                            Stock bajo (Productos bajo mínimo)
                         </div>
                         <div class="card-body d-flex justify-content-center align-items-center"
                             style="min-height:320px;">
@@ -283,17 +269,17 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Miembros por semana
-    const labelsSemana = <?= json_encode(array_values($dias_semana)) ?>;
-    const dataSemana = <?= json_encode(array_values($miembros_por_dia)) ?>;
-    new Chart(document.getElementById('chartMiembrosPorSemana'), {
-        type: 'bar',
+    // Miembros por estado
+    const labelsEstado = <?= json_encode(array_column($miembros_estado, 'estado')) ?>;
+    const dataEstado = <?= json_encode(array_column($miembros_estado, 'cantidad')) ?>;
+    new Chart(document.getElementById('chartMiembrosEstado'), {
+        type: 'pie',
         data: {
-            labels: labelsSemana,
+            labels: labelsEstado,
             datasets: [{
-                label: 'Miembros registrados',
-                data: dataSemana,
-                backgroundColor: '#28a745'
+                label: 'Miembros',
+                data: dataEstado,
+                backgroundColor: ['#28a745', '#dc3545', '#ffc107']
             }]
         },
         options: {
@@ -301,19 +287,17 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Clases más populares
-    const labelsClases = <?= json_encode(array_column($clases_populares, 'nombre')) ?>;
-    const dataClases = <?= json_encode(array_column($clases_populares, 'inscritos')) ?>;
-    new Chart(document.getElementById('chartClasesPopulares'), {
+    // Membresías por tipo
+    const labelsMembresias = <?= json_encode(array_column($membresias_tipo, 'nombre')) ?>;
+    const dataMembresias = <?= json_encode(array_column($membresias_tipo, 'cantidad')) ?>;
+    new Chart(document.getElementById('chartMembresiasTipo'), {
         type: 'doughnut',
         data: {
-            labels: labelsClases,
+            labels: labelsMembresias,
             datasets: [{
-                label: 'Veces Programada',
-                data: dataClases,
-                backgroundColor: ['#0bbffb', '#28a745', '#ffc107', '#dc3545', '#6610f2',
-                    '#fd7e14', '#20c997'
-                ]
+                label: 'Membresías',
+                data: dataMembresias,
+                backgroundColor: ['#0bbffb', '#28a745', '#ffc107', '#dc3545']
             }]
         },
         options: {
@@ -331,25 +315,7 @@ document.addEventListener('DOMContentLoaded', function() {
             datasets: [{
                 label: 'Miembros',
                 data: dataGenero,
-                backgroundColor: ['#0bbffb', '#28a745', '#ffc107', '#dc3545']
-            }]
-        },
-        options: {
-            responsive: true
-        }
-    });
-
-    // Clases programadas por día
-    const labelsDias = <?= json_encode(array_column($clases_por_dia, 'dia_semana')) ?>;
-    const dataDias = <?= json_encode(array_column($clases_por_dia, 'cantidad')) ?>;
-    new Chart(document.getElementById('chartClasesPorDia'), {
-        type: 'bar',
-        data: {
-            labels: labelsDias,
-            datasets: [{
-                label: 'Clases programadas',
-                data: dataDias,
-                backgroundColor: '#6610f2'
+                backgroundColor: ['#0bbffb', '#28a745', '#ffc107']
             }]
         },
         options: {
@@ -370,6 +336,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 backgroundColor: 'rgba(255,193,7,0.2)',
                 fill: true,
                 tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+
+    // Métodos de pago
+    const labelsMetodos = <?= json_encode(array_column($metodos_pago, 'nombre')) ?>;
+    const dataMetodos = <?= json_encode(array_column($metodos_pago, 'cantidad')) ?>;
+    new Chart(document.getElementById('chartMetodosPago'), {
+        type: 'bar',
+        data: {
+            labels: labelsMetodos,
+            datasets: [{
+                label: 'Veces utilizado',
+                data: dataMetodos,
+                backgroundColor: '#6610f2'
             }]
         },
         options: {

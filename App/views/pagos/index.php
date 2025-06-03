@@ -1,32 +1,95 @@
 <?php
 include('../../config.php');
 include('../layout/parte1.php');
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-// Consulta usuarios que han hecho renovaciones
-$stmt = $pdo->query("
-    SELECT 
-        me.id_miembro, 
-        me.nombres, 
-        me.apellidos, 
-        me.numero_documento,
-        COUNT(r.id_renovacion) AS total_renovaciones,
-        CONCAT(u.nombres, ' ', u.apellidos) AS nombre_usuario_renovo
-    FROM miembros me
-    JOIN renovaciones r ON me.id_miembro = r.id_miembro
-    LEFT JOIN (
-        SELECT r1.id_miembro, r1.renovado_por
-        FROM renovaciones r1
-        WHERE r1.fecha = (
-            SELECT MAX(r2.fecha) 
-            FROM renovaciones r2 
-            WHERE r2.id_miembro = r1.id_miembro
-        )
-    ) ult ON ult.id_miembro = me.id_miembro
-    LEFT JOIN usuariossistema u ON ult.renovado_por = u.id_usuario
-    GROUP BY me.id_miembro, me.nombres, me.apellidos, me.numero_documento, nombre_usuario_renovo
-    ORDER BY me.nombres
-");
+$id_usuario_actual = $_SESSION['id_usuario'] ?? null;
+if (!$id_usuario_actual) {
+    die("No hay usuario autenticado.");
+}
+
+// Obtener id de rol del usuario
+$stmtRol = $pdo->prepare("SELECT rol FROM usuariossistema WHERE id_usuario = :id_usuario");
+$stmtRol->execute([':id_usuario' => $id_usuario_actual]);
+$usuario = $stmtRol->fetch(PDO::FETCH_ASSOC);
+
+if (!$usuario) {
+    die("Usuario no encontrado.");
+}
+
+$id_rol = $usuario['rol'];
+
+// Obtener nombre del rol real
+$stmtNombreRol = $pdo->prepare("SELECT nombre FROM roles WHERE id = :id_rol");
+$stmtNombreRol->execute([':id_rol' => $id_rol]);
+$rol_info = $stmtNombreRol->fetch(PDO::FETCH_ASSOC);
+
+if (!$rol_info) {
+    die("Rol no encontrado.");
+}
+
+$nombre_rol = $rol_info['nombre'];
+
+// Ajustar lógica según rol real
+if ($nombre_rol === 'Administrador') {
+    // Usuario con rol Administrador ve todo
+    $sql = "
+        SELECT 
+            me.id_miembro, 
+            me.nombres, 
+            me.apellidos, 
+            me.numero_documento,
+            COUNT(r.id_renovacion) AS total_renovaciones,
+            CONCAT(u.nombres, ' ', u.apellidos) AS nombre_usuario_renovo
+        FROM miembros me
+        JOIN renovaciones r ON me.id_miembro = r.id_miembro
+        LEFT JOIN (
+            SELECT r1.id_miembro, r1.renovado_por
+            FROM renovaciones r1
+            WHERE r1.fecha = (
+                SELECT MAX(r2.fecha) 
+                FROM renovaciones r2 
+                WHERE r2.id_miembro = r1.id_miembro
+            )
+        ) ult ON ult.id_miembro = me.id_miembro
+        LEFT JOIN usuariossistema u ON ult.renovado_por = u.id_usuario
+        GROUP BY me.id_miembro, me.nombres, me.apellidos, me.numero_documento, nombre_usuario_renovo
+        ORDER BY me.nombres
+    ";
+    $stmt = $pdo->query($sql);
+} else {
+    // Otros roles solo ven renovaciones hechas por ellos mismos
+    $sql = "
+        SELECT 
+            me.id_miembro, 
+            me.nombres, 
+            me.apellidos, 
+            me.numero_documento,
+            COUNT(r.id_renovacion) AS total_renovaciones,
+            CONCAT(u.nombres, ' ', u.apellidos) AS nombre_usuario_renovo
+        FROM miembros me
+        JOIN renovaciones r ON me.id_miembro = r.id_miembro AND r.renovado_por = ?
+        LEFT JOIN (
+            SELECT r1.id_miembro, r1.renovado_por
+            FROM renovaciones r1
+            WHERE r1.fecha = (
+                SELECT MAX(r2.fecha) 
+                FROM renovaciones r2 
+                WHERE r2.id_miembro = r1.id_miembro
+            )
+        ) ult ON ult.id_miembro = me.id_miembro
+        LEFT JOIN usuariossistema u ON ult.renovado_por = u.id_usuario
+        GROUP BY me.id_miembro, me.nombres, me.apellidos, me.numero_documento, nombre_usuario_renovo
+        ORDER BY me.nombres
+    ";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$id_usuario_actual]);
+}
+
 $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 
 <div class="content-wrapper">
@@ -54,7 +117,7 @@ $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table id="example1" class="table table-bordered table-striped table-hover">
-                                    <thead >
+                                    <thead>
                                         <tr>
                                             <th>#</th>
                                             <th>Nombre</th>
