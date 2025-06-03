@@ -353,9 +353,10 @@ if (!isset($_SESSION['sesion_usuario'])) {
                             </a>
                             <div class="dropdown-divider"></div>
                             <a href="<?php echo $URL; ?>App/controllers/login/cerrar_sesion.php"
-                                class="dropdown-item text-danger">
+                                class="dropdown-item text-danger" onclick="confirmarLogout(event)">
                                 <i class="fas fa-sign-out-alt mr-2"></i> Cerrar sesión
                             </a>
+
                         </div>
                     </li>
                 </ul>
@@ -473,7 +474,7 @@ if (!isset($_SESSION['sesion_usuario'])) {
                             </ul>
                         </li>
                         <!--Fin Membresias-->
-                        
+
                         <!--Marcacion Entrada-->
                         <li class="nav-item has-treeview">
                             <a href="#" class="nav-link">
@@ -517,7 +518,7 @@ if (!isset($_SESSION['sesion_usuario'])) {
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Agregar Producto</p>
                                     </a>
-                                </li>                              
+                                </li>
                             </ul>
                         </li>
                         <!--Fin Productos-->
@@ -604,7 +605,7 @@ if (!isset($_SESSION['sesion_usuario'])) {
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Listado de Compras</p> <!-- Con reporte de todo lo comprado -->
                                     </a>
-                                </li>                              
+                                </li>
 
                             </ul>
                         </li>
