@@ -1,18 +1,17 @@
 <?php
-include(__DIR__ . '../modalsesion.php');
-include(__DIR__ . '../btndark.php');
 
 ob_start(); // Inicia el buffer de salida
 // Verificar si la sesión está iniciada, si no, iniciarla
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-
-//Si no hay sesión activa, redirigir al login
+/*
+// Si no hay sesión activa, redirigir al login
 if (!isset($_SESSION['sesion_usuario'])) {
     header('Location: ../login/index.php');
     exit();
 }
+*/
 
 ?>
 
@@ -682,3 +681,8 @@ if (!isset($_SESSION['sesion_usuario'])) {
             display: none;
         }
         </style>
+
+        <?php
+        include(__DIR__ . '../modalsesion.php');
+        include(__DIR__ . '../btndark.php');
+        ?>
