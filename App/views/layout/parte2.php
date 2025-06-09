@@ -5,7 +5,7 @@
 
     </div>
     <!-- Default to the left -->
-    <strong>Copyright &copy; 2025 <a>Mamba Code</a>.</strong> All rights reserved.
+    <strong>Copyright &copy; 2025 <a>DITIC ESFIM</a>. - </strong>Desarrollado por: <strong>Ing. Luis Barrios</strong>. All rights reserved.
 </footer>
 </div>
 <!-- ./wrapper -->
