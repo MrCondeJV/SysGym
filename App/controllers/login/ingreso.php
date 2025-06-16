@@ -8,7 +8,7 @@ $nombre_usuario = $_POST['nombre_usuario'] ?? '';
 $password_user = $_POST['password_user'] ?? '';
 
 // Consulta para buscar usuario en la tabla usuariossistema
-$sql = "SELECT * FROM usuariossistema WHERE nombres = :nombre_usuario LIMIT 1";
+$sql = "SELECT * FROM usuariossistema WHERE nombre_usuario = :nombre_usuario LIMIT 1";
 $query = $pdo->prepare($sql);
 $query->bindParam(':nombre_usuario', $nombre_usuario, PDO::PARAM_STR);
 $query->execute();

@@ -1,5 +1,10 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 include ('../../config.php');
+
 
 session_start();
 if(isset($_SESSION['sesion_usuario'])){
@@ -7,5 +12,5 @@ if(isset($_SESSION['sesion_usuario'])){
     session_destroy(); // Destruye la sesión
 }
 $URL = rtrim($URL, '/'); // Elimina cualquier barra extra al final
-header('Location: '.$URL.'/App/views/login/index.php');
+header('Location: ' . $URL . '/App/views/login/index.php');
 exit; // Asegura que no se ejecute más código después de la redirección

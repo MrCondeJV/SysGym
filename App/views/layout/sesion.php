@@ -3,7 +3,7 @@
 include(__DIR__ . '/../../config.php');
 
 // Configuración de la sesión para 15 minutos
-$session_lifetime = 900; // 15 minutos en segundos
+$session_lifetime = 20000; // 15 minutos en segundos
 
 // Configuración segura de la sesión
 if (session_status() === PHP_SESSION_NONE) {

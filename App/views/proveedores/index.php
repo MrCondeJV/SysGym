@@ -53,14 +53,14 @@ include('../layout/sesion.php');
                                 <table id="example1" class="table table-bordered table-striped table-sm text-center" style="table-layout: fixed; width: 100%;">
                                     <thead>
                                         <tr>
-                                            <th class="align-middle" style="width: 10%;">Nro</th>
+                                            <th class="align-middle" style="width: 5%;">Nro</th>
                                             <th class="align-middle" style="width: 30%;">Nombre</th>
                                             <th class="align-middle" style="width: 15%;">Contacto</th>
                                             <th class="align-middle" style="width: 15%;">Telefono</th>
                                             <th class="align-middle" style="width: 25%;">Correo Electronico</th>
                                              <th class="align-middle" style="width: 15%;">Direccion</th>
                                               <th class="align-middle" style="width: 15%;">Notas</th>
-                                            <th class="align-middle" style="width: 10%;">Acciones</th>
+                                            <th class="align-middle" style="width: 15%;">Acciones</th>
                                         </tr>
                                     </thead>
                                     <tbody>

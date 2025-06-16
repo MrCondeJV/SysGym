@@ -5,10 +5,9 @@ include(__DIR__ . '../../vendor/autoload.php');
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../'); // Si .env está en la raíz
 $dotenv->load();
 
-
-// Obtener las variables de entorno (usando $_ENV)
+// Obtener las variables de entorno
 if (!defined('SERVIDOR')) {
-    define('SERVIDOR', $_ENV['DB_HOST'] ?? ''); // Valor por defecto como fallback
+    define('SERVIDOR', $_ENV['DB_HOST'] ?? '');
 }
 
 if (!defined('USUARIO')) {
@@ -23,8 +22,8 @@ if (!defined('BD')) {
     define('BD', $_ENV['DB_NAME'] ?? '');
 }
 
-// Crear la cadena de conexión (añadiendo el puerto que estaba en tu .env)
-$servidor = "mysql:dbname=" . BD . ";host=" . SERVIDOR . ";port=" . ($_ENV['DB_PORT'] ?? '3306');
+// Crear la cadena de conexión
+$servidor = "mysql:dbname=" . BD . ";host=" . SERVIDOR;
 
 try {
     $pdo = new PDO(
@@ -33,18 +32,24 @@ try {
         PASSWORD,
         [
             PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8",
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, // Para manejar errores correctamente
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC // Para obtener resultados como array asociativo
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
         ]
     );
-    //echo "La conexión a la base de datos fue con éxito";
+    //echo "Conexión exitosa.";
 } catch (PDOException $e) {
-    // Mejor práctica: registrar el error y mostrar un mensaje genérico
-    error_log("Error de conexión a BD: " . $e->getMessage());
-    die("Error al conectar a la base de datos. Por favor intente más tarde.");
+    // Mostrar información de depuración solo durante el desarrollo
+    die("
+        <strong>Error al conectar a la base de datos:</strong><br>
+        <strong>Mensaje:</strong> {$e->getMessage()}<br>
+        <strong>Host:</strong> " . SERVIDOR . "<br>
+        <strong>Usuario:</strong> " . USUARIO . "<br>
+        <strong>Base de datos:</strong> " . BD . "<br>
+        <strong>DSN:</strong> {$servidor}
+    ");
 }
 
-$URL = "http://localhost/SysGym/";
+$URL = "https://gimnasio.esfim.edu.co/SysGym/";
 
 date_default_timezone_set("America/Bogota");
 $fechaHora = date('Y-m-d H:i:s');

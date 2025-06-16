@@ -55,8 +55,8 @@ if (isset($_SESSION['mensaje'])) {
     <title>Sistema de Gym</title>
     <link rel="icon" href="/public/images/logo.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700&display=swap">
-    <link rel="stylesheet" href="/sysgym/public/templates/AdminLTE-3.2.0/plugins/fontawesome-free/css/all.min.css">
-    <link rel="stylesheet" href="/sysgym/public/templates/AdminLTE-3.2.0/dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="/SysGym/public/templates/AdminLTE-3.2.0/plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="/SysGym/public/templates/AdminLTE-3.2.0/dist/css/adminlte.min.css">
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         #video-bg {
@@ -143,7 +143,7 @@ if (isset($_SESSION['mensaje'])) {
 <body>
     <!-- Video de fondo -->
     <video id="video-bg" autoplay muted loop>
-        <source src="/sysgym/public/videos/video.mp4" type="video/mp4">
+        <source src="/SysGym/public/videos/video.mp4" type="video/mp4">
         Tu navegador no soporta el video de fondo.
     </video>
     <!-- Gradiente encima del video -->
@@ -173,7 +173,7 @@ if (isset($_SESSION['mensaje'])) {
             <div class="col-lg-6 mb-5 mb-lg-0 position-relative">
                 <div class="bg-glass p-4 p-md-5">
                     <div class="text-center mb-4">
-                        <img src="/sysgym/public/images/efim.png" alt="Logo" style="width:120px;">
+                        <img src="/SysGym/public/images/efim.png" alt="Logo" style="width:120px;">
                         <h3 class="mt-2 mb-0" style="color:#1976d2;"><b>Sistema de Administración Gym</b></h3>
                     </div>
                     <div class="card card-outline card-light" style="box-shadow:20px; border:none;">
@@ -235,13 +235,12 @@ if (isset($_SESSION['mensaje'])) {
     </div>
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="/sysgym/public/templates/AdminLTE-3.2.0/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="/sysgym/public/templates/AdminLTE-3.2.0/dist/js/adminlte.min.js"></script>
+    <script src="/SysGym/public/templates/AdminLTE-3.2.0/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/SysGym/public/templates/AdminLTE-3.2.0/dist/js/adminlte.min.js"></script>
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-messaging-compat.js"></script>
-    <!-- Firebase -->
-    <script src="<?php echo $URL; ?>/app/controllers/firebase/script.js"></script>
+ 
     <script>
         $(document).ready(function() {
             if (localStorage.getItem("sessionExpired") === "true") {
@@ -257,7 +256,7 @@ if (isset($_SESSION['mensaje'])) {
                 }).then(() => {
                     localStorage.removeItem("sessionExpired");
                     window.location.href = window.location.origin +
-                        "/SysGym/app/views/login/index.php";
+                        "/SysGym/App/views/login/index.php";
                 });
             }
         });

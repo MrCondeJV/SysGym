@@ -2,6 +2,7 @@
 session_start();
 include('../../config.php');
 include('../layout/parte1.php');
+include('../layout/sesion.php');
 include('../../controllers/membresias/list_membership.php');
 ?>
 

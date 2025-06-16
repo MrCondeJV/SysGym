@@ -22,7 +22,7 @@ if (!isset($_SESSION['sesion_usuario'])) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Administración Gym</title>
-    <link rel="icon" href="<?php echo $URL; ?>/public/images/logo.ico" type="image/x-icon">
+    <link rel="icon" href="<?php echo $URL; ?>/public/images/efim.png" type="image/x-icon">
 
     <script src="<?php echo $URL; ?>/public/css/darkmode.js"></script>
 
@@ -150,7 +150,7 @@ if (!isset($_SESSION['sesion_usuario'])) {
 
     .nav-sidebar .nav-treeview .nav-link.active,
     .nav-sidebar .nav-treeview .nav-link:hover {
-        background: rgba(255, 255, 255, 0.10) !important;
+        background: rgba(255, 255, 255, 0.10) !important; 
         color: #fff !important;
     }
 
@@ -334,7 +334,7 @@ if (!isset($_SESSION['sesion_usuario'])) {
                             <img src="<?php
                                         echo !empty($_SESSION['foto_usuario'])
                                             ? $URL . '/' . $_SESSION['foto_usuario']
-                                            : $URL . 'public/images/logo.jpg';
+                                            : $URL . 'public/images/efim.png';
                                         ?>" class="img-circle elevation-2 mr-2" alt="User Image"
                                 style="width: 32px; height: 32px; object-fit: cover;">
                             <span class="d-none d-md-inline text-white font-weight-bold">
@@ -368,12 +368,12 @@ if (!isset($_SESSION['sesion_usuario'])) {
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <a href="#" class="nav-link brand-link d-flex flex-column align-items-center">
                 <div class="logo-img rounded-circle overflow-hidden shadow-lg mb-2">
-                    <img src="<?php echo $URL; ?>/public/images/logo.jpg" alt="KEMUEL S.A.S Logo"
+                    <img src="<?php echo $URL; ?>/public/images/efim.png" alt="ESFIM Logo"
                         class="img-fluid h-100 w-100" style="object-fit: cover;">
                 </div>
                 <span class="brand-text text-white text-center">
                     <span class="font-weight-bold d-block" style="font-size: 0.9em">GYM</span>
-                    <span class="font-weight-light d-block" style="font-size: 0.6em">MambaCode</span>
+                    <span class="font-weight-light d-block" style="font-size: 0.6em">Ecuela de Formación de I.M</span>
                 </span>
             </a>
 

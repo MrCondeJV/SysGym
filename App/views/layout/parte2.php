@@ -32,7 +32,8 @@ function confirmarLogout(event) {
         }
     }).then((result) => {
         if (result.isConfirmed) {
-            window.location.href = "<?php echo $URL; ?>/app/controllers/login/cerrar_sesion.php";
+            window.location.href = "<?php echo rtrim($URL, '/'); ?>/App/controllers/login/cerrar_sesion.php";
+
         }
     });
 }

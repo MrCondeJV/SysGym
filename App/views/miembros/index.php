@@ -152,7 +152,7 @@ include('../layout/sesion.php');
 <script>
     $(document).ready(function() {
         const HUELLA_API_URL = 'http://localhost:5000/registrar_huella';
-        const GUARDAR_HUELLA_URL = 'http://localhost/SysGym/App/controllers/huellasdigitales/guardar_huella.php';
+        const GUARDAR_HUELLA_URL = 'https://gimnasio.esfim.edu.co/SysGym/App/controllers/huellasdigitales/guardar_huella.php';
         const MODAL_HUELLA = $('#modalHuella');
         const ESTADO_HUELLA = $('#estadoHuella');
         const SPINNER_HUELLA = $('#spinnerHuella');

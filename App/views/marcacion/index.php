@@ -267,7 +267,7 @@ $accesos = [
             <div class="marcacion-flexrow">
                 <!-- Columna izquierda: Foto y lector -->
                 <div class="marcacion-col-left">
-                    <img src="<?= htmlspecialchars($miembro['url_foto'] ?? '/sysgym/public/images/avatar.png') ?>" alt="Foto" class="foto-miembro" id="foto-miembro">
+                    <img src="<?= htmlspecialchars($miembro['url_foto'] ?? '/SysGym/public/images/avatar.png') ?>" alt="Foto" class="foto-miembro" id="foto-miembro">
                     <div class="nombre-miembro" id="nombre-miembro">
                         <?= htmlspecialchars(($miembro['nombres'] ?? '') . ' ' . ($miembro['apellidos'] ?? '')) ?>
                     </div>
@@ -408,7 +408,7 @@ $accesos = [
                 );
 
                 // --- NUEVO BLOQUE: Consultar info del usuario y mostrarla ---
-                fetch('http://localhost/SysGym/App/controllers/miembros/get_miembro.php?id=' + encodeURIComponent(data.id_miembro))
+                fetch('https://gimnasio.esfim.edu.co/SysGym/App/controllers/miembros/get_miembro.php?id=' + encodeURIComponent(data.id_miembro))
                     .then(resp => resp.json())
                     .then(usuario => {
                         if (usuario.success && usuario.miembro) {
@@ -445,7 +445,7 @@ $accesos = [
                             actualizarHistorialAccesos(data.id_miembro);
 
                             // Registrar acceso
-                            fetch('http://localhost/SysGym/App/controllers/accesos/registrar_acceso.php', {
+                            fetch('https://gimnasio.esfim.edu.co/SysGym/App/controllers/accesos/registrar_acceso.php', {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/x-www-form-urlencoded'
@@ -478,7 +478,7 @@ $accesos = [
 
     // Función para actualizar el historial de accesos
     function actualizarHistorialAccesos(idMiembro) {
-        fetch('http://localhost/SysGym/App/controllers/accesos/get_historial.php?id_miembro=' + encodeURIComponent(idMiembro))
+        fetch('https://gimnasio.esfim.edu.co/SysGym/App/controllers/accesos/get_historial.php?id_miembro=' + encodeURIComponent(idMiembro))
             .then(resp => resp.json())
             .then(data => {
                 const tbody = document.getElementById('tabla-ingresos');
@@ -517,7 +517,7 @@ $accesos = [
     }
 
     // Buscar miembro por número de documento
-    const resp = await fetch('http://localhost/SysGym/App/controllers/miembros/get_miembro_doc.php?numero_documento=' + encodeURIComponent(numeroDocumento));
+    const resp = await fetch('https://gimnasio.esfim.edu.co/SysGym/App/controllers/miembros/get_miembro_doc.php?numero_documento=' + encodeURIComponent(numeroDocumento));
     const usuario = await resp.json();
 
     if (!usuario.success || !usuario.miembro) {
@@ -526,7 +526,7 @@ $accesos = [
     }
 
     // Mostrar datos del usuario
-    document.getElementById('foto-miembro').src = usuario.miembro.url_foto || '/sysgym/public/images/avatar_default.png';
+    document.getElementById('foto-miembro').src = usuario.miembro.url_foto || '/SysGym/public/images/avatar_default.png';
     document.getElementById('nombre-miembro').textContent = usuario.miembro.nombres + ' ' + usuario.miembro.apellidos;
     document.getElementById('estado-miembro').textContent = usuario.miembro.estado || '';
     document.getElementById('id-miembro').textContent = usuario.miembro.id_miembro;
@@ -560,7 +560,7 @@ $accesos = [
     actualizarHistorialAccesos(usuario.miembro.id_miembro);
 
     // Registrar acceso manual
-    fetch('http://localhost/SysGym/App/controllers/accesos/registrar_acceso.php', {
+    fetch('https://gimnasio.esfim.edu.co/SysGym/App/controllers/accesos/registrar_acceso.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: 'id_miembro=' + encodeURIComponent(usuario.miembro.id_miembro) + '&metodo_acceso=manual'
