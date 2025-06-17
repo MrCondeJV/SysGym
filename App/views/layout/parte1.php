@@ -385,6 +385,12 @@ if (!isset($_SESSION['sesion_usuario'])) {
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
                         <?php if (isset($_SESSION['id_usuario']) && $_SESSION['rol'] == 3): ?>
                             <!-- Solo veedor: mostrar solo la opción de verificar miembro -->
+                             <li class="nav-item">
+                                <a href="<?php echo $URL; ?>index.php" class="nav-link">
+                                    <i class="nav-icon fas fa-eye"></i>
+                                    <p>Inicio</p>
+                                </a>
+                            </li>
                             <li class="nav-item">
                                 <a href="<?php echo $URL; ?>App/views/miembros/verificar.php" class="nav-link">
                                     <i class="nav-icon fas fa-eye"></i>
