@@ -400,6 +400,13 @@ if (!isset($_SESSION['sesion_usuario'])) {
                             </li>
                         <?php else: ?>
                             <!-- Aquí va TODO el resto del menú completo, tal como lo tienes ahora -->
+
+                             <li class="nav-item">
+                                <a href="<?php echo $URL; ?>index.php" class="nav-link">
+                                    <i class="nav-icon fas fa-eye"></i>
+                                    <p>Inicio</p>
+                                </a>
+                            </li>
                             <!--Clientes-->
                             <li class="nav-item has-treeview">
                                 <a href="#" class="nav-link">
