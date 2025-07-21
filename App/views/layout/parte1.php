@@ -347,16 +347,17 @@ if (!isset($_SESSION['sesion_usuario'])) {
                                 <?php echo htmlspecialchars($_SESSION['nombres'] . " " . $_SESSION['apellidos'] ?? 'Usuario'); ?>
                             </span>
                             <div class="dropdown-divider"></div>
-                            <a href="<?php echo $URL; ?>App/views/usuarios/update.php?id=<?php echo $_SESSION['id_usuario']; ?>"
-                                class="dropdown-item">
-                                <i class="fas fa-user-cog mr-2"></i> Mi perfil
-                            </a>
-                            <div class="dropdown-divider"></div>
+                            <?php if (!isset($_SESSION['rol']) || $_SESSION['rol'] != 3): ?>
+                                <a href="<?php echo $URL; ?>App/views/usuarios/update.php?id=<?php echo $_SESSION['id_usuario']; ?>"
+                                    class="dropdown-item">
+                                    <i class="fas fa-user-cog mr-2"></i> Mi perfil
+                                </a>
+                                <div class="dropdown-divider"></div>
+                            <?php endif; ?>
                             <a href="<?php echo $URL; ?>App/controllers/login/cerrar_sesion.php"
                                 class="dropdown-item text-danger" onclick="confirmarLogout(event)">
                                 <i class="fas fa-sign-out-alt mr-2"></i> Cerrar sesión
                             </a>
-
                         </div>
                     </li>
                 </ul>
@@ -385,6 +386,12 @@ if (!isset($_SESSION['sesion_usuario'])) {
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu">
                         <?php if (isset($_SESSION['id_usuario']) && $_SESSION['rol'] == 3): ?>
                             <!-- Solo veedor: mostrar solo la opción de verificar miembro -->
+                             <li class="nav-item">
+                                <a href="<?php echo $URL; ?>index.php" class="nav-link">
+                                    <i class="nav-icon fas fa-home"></i>
+                                    <p>Inicio</p>
+                                </a>
+                            </li>
                             <li class="nav-item">
                                 <a href="<?php echo $URL; ?>App/views/miembros/verificar.php" class="nav-link">
                                     <i class="nav-icon fas fa-eye"></i>
@@ -393,6 +400,13 @@ if (!isset($_SESSION['sesion_usuario'])) {
                             </li>
                         <?php else: ?>
                             <!-- Aquí va TODO el resto del menú completo, tal como lo tienes ahora -->
+
+                             <li class="nav-item">
+                                <a href="<?php echo $URL; ?>index.php" class="nav-link">
+                                    <i class="nav-icon fas fa-home"></i>
+                                    <p>Inicio</p>
+                                </a>
+                            </li>
                             <!--Clientes-->
                             <li class="nav-item has-treeview">
                                 <a href="#" class="nav-link">
@@ -600,7 +614,7 @@ if (!isset($_SESSION['sesion_usuario'])) {
                                     <li class="nav-item">
                                         <a href="<?php echo $URL; ?>App/views/proveedores/index_compras.php"
                                             class="nav-link">
-                                            <i class="far fa-circle nav-icon"></i>
+                                            <i class="far fa-circle nav-icon"></i>I
                                             <p>Listado de Compras</p> <!-- Con reporte de todo lo comprado -->
                                         </a>
                                     </li>
@@ -611,7 +625,29 @@ if (!isset($_SESSION['sesion_usuario'])) {
 
                             <!--Usuarios sistema-->
                             <li class="nav-item has-treeview">
-                                <!-- ... -->
+                                <a href="#" class="nav-link">
+                                    <i class="nav-icon fas fa-handshake"></i>
+                                    <p>
+                                        Usuarios
+                                        <i class="right fas fa-angle-left"></i>
+                                    </p>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item">
+                                        <a href="<?php echo $URL; ?>App/views/usuarios/index.php" class="nav-link">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>Listado Usuarios</p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="<?php echo $URL; ?>App/views/usuarios/create.php" class="nav-link">
+                                            <i class="far fa-circle nav-icon"></i>
+                                            <p>Agregar Usuario</p>
+                                        </a>
+                                    </li>
+                                    
+
+                                </ul>
                             </li>
                             <!--Fin Usuarios-->
                             <!--Reportes-->

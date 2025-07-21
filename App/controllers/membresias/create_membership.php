@@ -54,6 +54,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             VALUES (?, ?, ?, ?, ?, ?)");
         $insert->execute([$id_miembro, $id_tipo_membresia, $creado_por, $fecha_inicio, $fecha_fin, $numero_factura]);
 
+        // Obtener el id de la membresía recién creada
+        $id_membresia = $pdo->lastInsertId();
+
+        // Insertar registro en la tabla renovaciones
+        $insertRenovacion = $pdo->prepare("INSERT INTO renovaciones 
+            (id_membresia, id_miembro, numero_factura, id_metodo_pago, renovado_por, observaciones, fecha)
+            VALUES (?, ?, ?, ?, ?, ?, NOW())");
+        // Puedes ajustar id_metodo_pago y observaciones según tu formulario, aquí se ponen valores por defecto
+        $id_metodo_pago = 1; // Por defecto, o cámbialo según tu lógica/formulario
+        $observaciones = 'Registro de nueva membresía';
+        $insertRenovacion->execute([
+            $id_membresia,
+            $id_miembro,
+            $numero_factura,
+            $id_metodo_pago,
+            $creado_por,
+            $observaciones
+        ]);
+
         $_SESSION['success'] = "Membresía registrada correctamente.";
         header("Location: ../../views/membresias/index.php");
         exit();
