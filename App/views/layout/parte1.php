@@ -388,7 +388,11 @@ if (!isset($_SESSION['sesion_usuario'])) {
                             <!-- Solo veedor: mostrar solo la opción de verificar miembro -->
                              <li class="nav-item">
                                 <a href="<?php echo $URL; ?>index.php" class="nav-link">
+<<<<<<< HEAD
                                     <i class="nav-icon fas fa-home"></i>
+=======
+                                    <i class="nav-icon fas fa-eye"></i>
+>>>>>>> 975e4bc785667283d6d5c0dbebf8eb4dcce3d17e
                                     <p>Inicio</p>
                                 </a>
                             </li>
