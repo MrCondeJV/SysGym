@@ -10,7 +10,7 @@ if (!$numero_documento) {
     exit;
 }
 
-// Trae los datos del miembro y su membresía activa más reciente
+// Trae los datos del miembro y su membresía más reciente (vigente o no)
 $stmt = $pdo->prepare("
     SELECT m.*, 
            mb.id_membresia,
@@ -22,8 +22,7 @@ $stmt = $pdo->prepare("
            DATEDIFF(mb.fecha_fin, mb.fecha_inicio) AS dias_total
     FROM miembros m
     LEFT JOIN membresias mb 
-        ON mb.id_miembro = m.id_miembro 
-        AND mb.fecha_fin >= CURDATE()
+        ON mb.id_miembro = m.id_miembro
     WHERE m.numero_documento = ?
     ORDER BY mb.fecha_fin DESC
     LIMIT 1
@@ -36,17 +35,22 @@ if (!$miembro) {
     exit;
 }
 
-// Validar estado del miembro
+$advertencias = [];
+
+// Verificar estado del miembro
 if (isset($miembro['estado']) && strtolower($miembro['estado']) !== 'activo') {
-    echo json_encode(['success' => false, 'message' => 'El miembro no está activo']);
-    exit;
+    $advertencias[] = 'El miembro no está activo';
 }
 
-// Validar membresía activa y días vigentes
-if (empty($miembro['id_membresia']) || $miembro['dias_vigentes'] <= 0) {
-    echo json_encode(['success' => false, 'message' => 'La membresía está vencida o no existe. Debe renovar.']);
-    exit;
+// Verificar membresía y días vigentes
+if (empty($miembro['id_membresia'])) {
+    $advertencias[] = 'No tiene membresía registrada';
+} elseif ($miembro['dias_vigentes'] <= 0) {
+    $advertencias[] = 'La membresía está vencida';
 }
+
+// Agregar advertencias al resultado
+$miembro['advertencias'] = $advertencias;
 
 echo json_encode(['success' => true, 'miembro' => $miembro]);
 ?>

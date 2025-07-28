@@ -14,7 +14,7 @@ $stmt = $pdo->prepare("
     FROM historialaccesos ha
     INNER JOIN miembros m ON ha.id_miembro = m.id_miembro
     ORDER BY ha.fecha_entrada DESC
-    LIMIT 20
+    LIMIT 5
 ");
 $stmt->execute();
 $ultimos_accesos = $stmt->fetchAll(PDO::FETCH_ASSOC);

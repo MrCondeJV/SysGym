@@ -342,7 +342,7 @@ $accesos = [
             </div>
             <div style="margin-top:18px; width:100%;">
     <input type="text" id="manual-numero-documento" class="form-control" placeholder="Número de documento" style="margin-bottom:8px;">
-    <button class="btn btn-buscar" id="btn-manual-ingreso" style="width:100%;">Ingreso/Salida Manual</button>
+    <button class="btn btn-buscar" id="btn-manual-ingreso" style="width:100%;">Ingreso Manual</button>
 </div>
         </div>
     </section>
@@ -525,6 +525,16 @@ $accesos = [
         return;
     }
 
+    // Verificar si hay advertencias
+    if (usuario.miembro.advertencias && usuario.miembro.advertencias.length > 0) {
+        const advertenciasTexto = usuario.miembro.advertencias.join(', ');
+        const confirmar = confirm(`ADVERTENCIA: ${advertenciasTexto}.\n\n¿Desea continuar con el ingreso manual?`);
+        if (!confirmar) {
+            mostrarEstado('Ingreso cancelado por el usuario.', 'warning', 'fa-exclamation-triangle');
+            return;
+        }
+    }
+
     // Mostrar datos del usuario
     document.getElementById('foto-miembro').src = usuario.miembro.url_foto || '/SysGym/public/images/avatar_default.png';
     document.getElementById('nombre-miembro').textContent = usuario.miembro.nombres + ' ' + usuario.miembro.apellidos;
@@ -549,12 +559,7 @@ $accesos = [
         document.getElementById('dias').textContent = usuario.miembro.dias_total || '-';
     
 
-    // Validar días vigentes antes de registrar acceso
-    const diasVigentes = parseInt(usuario.miembro?.dias_vigentes, 10) || 0;
-    if (diasVigentes <= 0) {
-        mostrarModalMembresiaVencida();
-        return;
-    }
+    // Los días vigentes ahora se manejan como advertencias, no como bloqueo
 
     // Actualizar Historial de accesos
     actualizarHistorialAccesos(usuario.miembro.id_miembro);

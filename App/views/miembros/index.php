@@ -157,7 +157,7 @@ include('../layout/sesion.php');
         const ESTADO_HUELLA = $('#estadoHuella');
         const SPINNER_HUELLA = $('#spinnerHuella');
 
-        $('.btn-huella').on('click', async function(e) {
+        $(document).on('click', '.btn-huella', async function(e) {
             e.preventDefault();
             const idMiembro = $(this).data('id');
 

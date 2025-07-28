@@ -59,7 +59,6 @@ include('../../controllers/marcacion/list_historial.php');
                                             <th style="width: 10%;">Documento</th>
                                             <th style="width: 18%;">Nombre</th>
                                             <th style="width: 16%;">Fecha y Hora Entrada</th>
-                                            <th style="width: 16%;">Fecha y Hora Salida</th>
                                             <th style="width: 10%;">Método</th>
                                             <th style="width: 15%;">Registrado por</th>
                                         </tr>
@@ -75,8 +74,6 @@ include('../../controllers/marcacion/list_historial.php');
                                                     <td><?= htmlspecialchars($r['numero_documento']) ?></td>
                                                     <td><?= htmlspecialchars($r['nombres'] . ' ' . $r['apellidos']) ?></td>
                                                     <td><?= htmlspecialchars($r['fecha_entrada']) ?></td>
-                                                    <td><?= $r['fecha_salida'] ? htmlspecialchars($r['fecha_salida']) : '<span class="text-muted">-</span>' ?>
-                                                    </td>
                                                     <td>
                                                         <?php
                                                         if ($r['metodo_acceso'] === 'huella') {
