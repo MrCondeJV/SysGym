@@ -83,6 +83,25 @@ if (isset($_SESSION['mensaje'])) {
             z-index: -1;
         }
 
+        /* Estructura principal para evitar scroll */
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 120px); /* Resta la altura del footer */
+            padding: 20px 0;
+        }
+
         .bg-glass {
             background-color: hsla(0, 0%, 100%, 0.90) !important;
             backdrop-filter: saturate(200%) blur(25px);
@@ -108,23 +127,55 @@ if (isset($_SESSION['mensaje'])) {
             color: #fff;
         }
 
+        /* Footer fijo en la parte inferior */
+        .login-footer {
+            margin-top: auto;
+            background: rgba(25, 118, 210, 0.10);
+            border-top: 1px solid #e3e3e3;
+            padding: 15px 0;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .login-footer .footer-text {
+            font-size: 1rem;
+            color: #e3eafc;
+            margin-bottom: 5px;
+        }
+
+        .login-footer .footer-dev {
+            font-size: 0.95rem;
+            color: #f8f9fa;
+        }
+
         @media (max-width: 991px) {
             .bg-glass {
                 border-radius: 1.2rem;
+            }
+            
+            .main-content {
+                min-height: calc(100vh - 100px);
+                padding: 15px 0;
             }
         }
 
         @media (max-width: 768px) {
             .bg-glass {
                 border-radius: 0.7rem;
-                padding: 1.2rem !important;
             }
-        }
 
-        @media (max-width: 600px) {
-            .bg-glass {
-                border-radius: 0.3rem;
-                padding: 0.7rem !important;
+            .main-content {
+                min-height: calc(100vh - 90px);
+                padding: 10px 0;
+            }
+
+            .login-footer .footer-text {
+                font-size: 0.9rem;
+            }
+
+            .login-footer .footer-dev {
+                font-size: 0.85rem;
             }
 
             .info-pago h3,
@@ -135,6 +186,25 @@ if (isset($_SESSION['mensaje'])) {
             .info-pago p,
             .info-pago small {
                 font-size: 0.95rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                min-height: calc(100vh - 80px);
+                padding: 5px 0;
+            }
+
+            .login-footer {
+                padding: 10px 0;
+            }
+
+            .login-footer .footer-text {
+                font-size: 0.85rem;
+            }
+
+            .login-footer .footer-dev {
+                font-size: 0.8rem;
             }
         }
     </style>
@@ -149,90 +219,91 @@ if (isset($_SESSION['mensaje'])) {
     <!-- Gradiente encima del video -->
     <div id="gradient-bg"></div>
 
-    <div class="container px-4 py-5 px-md-5 text-center text-lg-start my-5">
-        <div class="row gx-lg-5 align-items-center mb-5 justify-content-center">
-            <!-- Info de pago (izquierda) -->
-            <div class="col-lg-5 mb-5 mb-lg-0 info-pago">
-               
-                <h1 class="fw-bold mb-3">¡Hazte miembro!</h1>
-                <h2 class="mb-3"><i class="fas fa-credit-card"></i> Pago de Membresía</h2>
-                <p class="mb-4">
-                    Accede a todos los beneficios, clases y zonas exclusivas.<br>
-                    ¡Haz tu pago de membresía en línea de forma fácil y segura!
-                </p>
-                <a href="https://www.zonapagos.net/formulariosNV/?cod=BTK3a53qAPJK5dFzuUb9xsIzfpnpHCAhBLb588U2ARZAoy3ei0%2FDcFxcc8D82hku4RRINKB1Jvp8TQjAnQ2jFqpPmEJ8XgQHIWF4xwOUsT1S7stXzfxEZv3USAH0vdODvJbaMjt1h6Ata51BYT8vbzXtRVqnFFpOqMtBKwqDEsa9Sqkj9d2lm0t8x6Fmwer7L%2F%2BSwl4%2FUN9BoockmksSefLwBZPZdZwnYCZZn5FHubReD4Auj%2F%2FUIXh9lG%2FK%2Ba%2FAj%2FHDwxVvEvv4VO47q25Gog%3D%3D"
-                    class="btn btn-light font-weight-bold mb-3" target="_blank" rel="noopener">
-                    <i class="fas fa-arrow-right"></i> Pagar Membresía
-                </a>
-                <div>
-                    <small>¿Tienes dudas? <a href="mailto:info@gym.com"
-                            style="color:#1976d2;text-decoration:underline;">Contáctanos</a></small>
-                </div>
-            </div>
-            <!-- Login (derecha) -->
-            <div class="col-lg-6 mb-5 mb-lg-0 position-relative">
-                <div class="bg-glass p-4 p-md-5">
-                    <div class="text-center mb-4">
-                        <img src="/SysGym/public/images/efim.png" alt="Logo" style="width:120px;">
-                        <h3 class="mt-2 mb-0" style="color:#1976d2;"><b>Sistema de Administración Gym</b></h3>
+    <div class="main-content">
+        <div class="container px-4 py-5 px-md-5 text-center text-lg-start">
+            <div class="row gx-lg-5 align-items-center mb-5 justify-content-center">
+                <!-- Info de pago (izquierda) -->
+                <div class="col-lg-5 mb-5 mb-lg-0 info-pago">
+                   
+                    <h1 class="fw-bold mb-3">¡Hazte miembro!</h1>
+                    <h2 class="mb-3"><i class="fas fa-credit-card"></i> Pago de Membresía</h2>
+                    <p class="mb-4">
+                        Accede a todos los beneficios, clases y zonas exclusivas.<br>
+                        ¡Haz tu pago de membresía en línea de forma fácil y segura!
+                    </p>
+                    <a href="https://www.zonapagos.net/formulariosNV/?cod=BTK3a53qAPJK5dFzuUb9xsIzfpnpHCAhBLb588U2ARZAoy3ei0%2FDcFxcc8D82hku4RRINKB1Jvp8TQjAnQ2jFqpPmEJ8XgQHIWF4xwOUsT1S7stXzfxEZv3USAH0vdODvJbaMjt1h6Ata51BYT8vbzXtRVqnFFpOqMtBKwqDEsa9Sqkj9d2lm0t8x6Fmwer7L%2F%2BSwl4%2FUN9BoockmksSefLwBZPZdZwnYCZZn5FHubReD4Auj%2F%2FUIXh9lG%2FK%2Ba%2FAj%2FHDwxVvEvv4VO47q25Gog%3D%3D"
+                        class="btn btn-light font-weight-bold mb-3" target="_blank" rel="noopener">
+                        <i class="fas fa-arrow-right"></i> Pagar Membresía
+                    </a>
+                    <div>
+                        <small>¿Tienes dudas? <a href="mailto:info@gym.com"
+                                style="color:#1976d2;text-decoration:underline;">Contáctanos</a></small>
                     </div>
-                    <div class="card card-outline card-light" style="box-shadow:20px; border:none;">
-                        <div class="card-body">
-                            <p class="login-box-msg" style="font-size:1.1rem; color:#1976d2; font-weight:600;">
-                                <i class="fas fa-sign-in-alt"></i> Ingresa a tu cuenta
-                            </p>
-                            <?php if ($wait_message): ?>
-                            <div class="alert alert-warning text-center" id="wait-message">
-                                <?= $wait_message ?>
+                </div>
+                <!-- Login (derecha) -->
+                <div class="col-lg-6 mb-5 mb-lg-0 position-relative">
+                    <div class="bg-glass p-4 p-md-5">
+                        <div class="text-center mb-4">
+                            <img src="/SysGym/public/images/efim.png" alt="Logo" style="width:120px;">
+                            <h3 class="mt-2 mb-0" style="color:#1976d2;"><b>Sistema de Administración Gym</b></h3>
+                        </div>
+                        <div class="card card-outline card-light" style="box-shadow:20px; border:none;">
+                            <div class="card-body">
+                                <p class="login-box-msg" style="font-size:1.1rem; color:#1976d2; font-weight:600;">
+                                    <i class="fas fa-sign-in-alt"></i> Ingresa a tu cuenta
+                                </p>
+                                <?php if ($wait_message): ?>
+                                <div class="alert alert-warning text-center" id="wait-message">
+                                    <?= $wait_message ?>
+                                </div>
+                                <script>
+                                    // Deshabilita el formulario mientras espera
+                                    document.addEventListener('DOMContentLoaded', function() {
+                                        let btn = document.querySelector('button[type="submit"]');
+                                        if(btn) btn.disabled = true;
+                                        let wait = <?= $_SESSION['login_lock_time'] - $now ?>;
+                                        let msg = document.getElementById('wait-message');
+                                        let interval = setInterval(function() {
+                                            wait--;
+                                            if (wait > 0) {
+                                                msg.innerText = "Demasiados intentos fallidos. Por favor espera " + wait + " segundos para volver a intentar.";
+                                            } else {
+                                                clearInterval(interval);
+                                                msg.style.display = "none";
+                                                if(btn) btn.disabled = false;
+                                            }
+                                        }, 1000);
+                                    });
+                                </script>
+                                <?php endif; ?>
+                                <form action="../../controllers/login/ingreso.php" method="post" autocomplete="on" <?= $wait_message ? 'onsubmit="return false;"' : '' ?>>
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text bg-white border-end-0"><i class="fas fa-user"></i></span>
+                                        <input type="text" name="nombre_usuario" class="form-control border-start-0"
+                                            placeholder="Nombre de usuario" required autocomplete="username" <?= $wait_message ? 'disabled' : '' ?>>
+                                    </div>
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text bg-white border-end-0"><i class="fas fa-lock"></i></span>
+                                        <input type="password" name="password_user" class="form-control border-start-0"
+                                            placeholder="Contraseña" required autocomplete="current-password" <?= $wait_message ? 'disabled' : '' ?>>
+                                        <span class="input-group-text bg-white border-start-0" style="cursor:pointer;"
+                                            onclick="togglePassword(this)">
+                                            <i class="fas fa-eye" id="togglePassIcon"></i>
+                                        </span>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary btn-block w-100 mb-2"
+                                        style="font-weight:600;" <?= $wait_message ? 'disabled' : '' ?>>
+                                        <i class="fas fa-arrow-right"></i> Ingresar
+                                    </button>
+                                </form>
                             </div>
-                            <script>
-                                // Deshabilita el formulario mientras espera
-                                document.addEventListener('DOMContentLoaded', function() {
-                                    let btn = document.querySelector('button[type="submit"]');
-                                    if(btn) btn.disabled = true;
-                                    let wait = <?= $_SESSION['login_lock_time'] - $now ?>;
-                                    let msg = document.getElementById('wait-message');
-                                    let interval = setInterval(function() {
-                                        wait--;
-                                        if (wait > 0) {
-                                            msg.innerText = "Demasiados intentos fallidos. Por favor espera " + wait + " segundos para volver a intentar.";
-                                        } else {
-                                            clearInterval(interval);
-                                            msg.style.display = "none";
-                                            if(btn) btn.disabled = false;
-                                        }
-                                    }, 1000);
-                                });
-                            </script>
-                            <?php endif; ?>
-                            <form action="../../controllers/login/ingreso.php" method="post" autocomplete="on" <?= $wait_message ? 'onsubmit="return false;"' : '' ?>>
-                                <div class="input-group mb-3">
-                                    <span class="input-group-text bg-white border-end-0"><i class="fas fa-user"></i></span>
-                                    <input type="text" name="nombre_usuario" class="form-control border-start-0"
-                                        placeholder="Nombre de usuario" required autocomplete="username" <?= $wait_message ? 'disabled' : '' ?>>
-                                </div>
-                                <div class="input-group mb-3">
-                                    <span class="input-group-text bg-white border-end-0"><i class="fas fa-lock"></i></span>
-                                    <input type="password" name="password_user" class="form-control border-start-0"
-                                        placeholder="Contraseña" required autocomplete="current-password" <?= $wait_message ? 'disabled' : '' ?>>
-                                    <span class="input-group-text bg-white border-start-0" style="cursor:pointer;"
-                                        onclick="togglePassword(this)">
-                                        <i class="fas fa-eye" id="togglePassIcon"></i>
-                                    </span>
-                                </div>
-                                <button type="submit" class="btn btn-primary btn-block w-100 mb-2"
-                                    style="font-weight:600;" <?= $wait_message ? 'disabled' : '' ?>>
-                                    <i class="fas fa-arrow-right"></i> Ingresar
-                                </button>
-                            </form>
-
-
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="/SysGym/public/templates/AdminLTE-3.2.0/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -291,14 +362,13 @@ if (isset($_SESSION['mensaje'])) {
     </script>
 
     <!-- Footer -->
-    <footer class="text-center py-3"
-    style="background:rgba(25,118,210,0.10); border-top:1px solid #e3e3e3; margin-top:40px;">
-    <div style="font-size:1rem; color:#e3eafc;">
-        &copy; <?php echo date('Y'); ?> DITIC ESFIM. Todos los derechos reservados.
-    </div>
-    <div style="font-size:0.95rem; color:#f8f9fa;">
-        Desarrolladores del proyecto: <span id="devs">Ing. Luis Barrios</span>
-    </div>
-</footer>
+    <footer class="login-footer">
+        <div class="footer-text">
+            &copy; <?php echo date('Y'); ?> DITIC ESFIM. Todos los derechos reservados.
+        </div>
+        <div class="footer-dev">
+            Desarrolladores del proyecto: <span id="devs">Ing. Luis Barrios</span>
+        </div>
+    </footer>
 </body>
 </html>
