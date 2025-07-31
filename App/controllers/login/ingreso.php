@@ -17,7 +17,7 @@ $usuario = $query->fetch(PDO::FETCH_ASSOC);
 if ($usuario) {
     if (strtolower($usuario['estado']) !== 'activo') {
         $_SESSION['mensaje'] = "Acceso denegado: Usuario inactivo.";
-        header('Location: ../../views/login/index.php');
+        header('Location: /SysGym/App/views/login/index.php');
         exit;
     }
 
@@ -34,11 +34,11 @@ if ($usuario) {
         $stmt_update->execute([$usuario['id_usuario']]);
 
         // Redirigir al inicio general
-        header('Location: ../../../index.php');
+        header('Location: /SysGym/index.php');
         exit;
     }
 }
 
 $_SESSION['mensaje'] = "Error: Datos incorrectos";
-header('Location: ../../views/login/index.php');
+header('Location: /SysGym/App/views/login/index.php');
 exit;

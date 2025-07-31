@@ -88,6 +88,7 @@ if (isset($_SESSION['mensaje'])) {
             margin: 0;
             padding: 0;
             min-height: 100vh;
+            
             display: flex;
             flex-direction: column;
             overflow-x: hidden;
@@ -276,7 +277,7 @@ if (isset($_SESSION['mensaje'])) {
                                     });
                                 </script>
                                 <?php endif; ?>
-                                <form action="../../controllers/login/ingreso.php" method="post" autocomplete="on" <?= $wait_message ? 'onsubmit="return false;"' : '' ?>>
+                                <form action="/SysGym/App/controllers/login/ingreso.php" method="post" autocomplete="on" <?= $wait_message ? 'onsubmit="return false;"' : '' ?>>
                                     <div class="input-group mb-3">
                                         <span class="input-group-text bg-white border-end-0"><i class="fas fa-user"></i></span>
                                         <input type="text" name="nombre_usuario" class="form-control border-start-0"
